@@ -1,6 +1,7 @@
-import type { ResolverHook } from "../types";
 import { defineResolver } from "../utils/define-resolver";
 
 export function createMemoryResolver() {
-	return defineResolver({});
+	return defineResolver({
+		resolve: async (specifier, parentUrl, resolve) => {},
+	});
 }

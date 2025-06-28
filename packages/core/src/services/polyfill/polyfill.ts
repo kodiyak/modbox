@@ -1,65 +1,68 @@
 import { z } from "zod";
+import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
-import type { FetcherHook, ResolverHook } from "./types";
+import type {
+	EsmsInitOptions,
+	FetcherHook,
+	PolyfillInitOptions,
+	ResolverHook,
+} from "./types";
 
-expor
+export class PolyfillModules {
+	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
-ass PolyfillModules {
-	privat
-readonly events = new EventEmitter(z.object({}), "PolyfillModules");
-
-	priv
-
-readonly fetcher: FetcherHook;
-
+	private readonly fetcher: FetcherHook;
 	private readonly resolver: ResolverHook;
+	private readonly logger: Logger;
 
-
-
-	constructor(fetcher: Fet
-		this.fetcher = fetcher;
-
-		this.resolver = resolver;
+	private get window() {
+		return globalThis.window || globalThis;
 	}
 
+	public isReady = false;
 
+	constructor(logger: Logger, fetcher: FetcherHook, resolver: ResolverHook) {
+		this.fetcher = fetcher;
+		this.resolver = resolver;
+		this.logger = logger;
+	}
 
+	public async init({ esmsInitOptions }: PolyfillInitOptions) {
+		return new Promise<void>((resolve, reject) => {
+			const script = this.window.document.createElement("script");
+			Object.assign(script, {
+				src: "https://ga.jspm.io/npm:es-module-shims@2.6.1/dist/es-module-shims.js",
+				async: true,
+				onload: () => {
+					this.isReady = true;
+					this.logger.info("[PolyfillModules] initialized successfully.");
+					resolve();
+				},
+				onerror: (error: Event) => {
+					this.logger.error("Failed to load es-module-shims:", error);
+					reject(new Error("Failed to load es-module-shims"));
+				},
+			});
+			Object.assign(this.window, {
+				esmsInitOptions: {
+					...this.getEsmsInitOptions(),
+					...esmsInitOptions,
+					resolve: this.resolver.resolve.bind(this.resolver),
+					fetch: this.fetcher.fetch.bind(this.fetcher),
+				},
+			});
+			this.window.document.head.appendChild(script);
+			this.logger.info("[PolyfillModules] script tag created.");
+		});
+	}
 
-	private getEsmsInitOptions() {
+	private getEsmsInitOptions(): EsmsInitOptions {
 		return {
-
-			sh
-Mode: true,
-			h
-Reload: true,
-
-			hotReloadInterval: 500
-		polyfillEnable: true,
-	
-mapOverrides: true,
-
-			resolve: this.resolver,
-
-	fetch: this.fetcher,
+			shimMode: true,
+			hotReload: true,
+			hotReloadInterval: 500,
+			polyfillEnable: ["all"],
+			mapOverrides: true,
 		};
 	}
-
-
-	
-yn
-
-/**
-		 * @
-do
-
-
-		 * Set up the es-module
-hims polyfill.
-		 * Set up event emitter.
-		 */
-	}
 }
-
-
-
-
