@@ -10,7 +10,7 @@ export type VirtualFile =
 			content: string;
 	  };
 
-export class VirtualFileService {
+export class VirtualFiles {
 	private files = new Map<string, VirtualFile>();
 
 	private getFile(path: string): VirtualFile | undefined {
