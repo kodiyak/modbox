@@ -1,0 +1,12 @@
+{
+  "name": "@modbox/core",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@modbox/eslint-config": "workspace:*",
+    "@modbox/typescript-config": "workspace:*"
+  }
+}
