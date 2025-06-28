@@ -1,38 +1,65 @@
 import { z } from "zod";
 import { EventEmitter } from "../../shared/event-emitter";
-import type { PolyfillDefaultFetcher, PolyfillDefaultResolver } from "./types";
+import type { FetcherHook, ResolverHook } from "./types";
 
-export class PolyfillModules {
-	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
+expor
 
-	private readonly fetcher: PolyfillDefaultFetcher;
-	private readonly resolver: PolyfillDefaultResolver;
+ass PolyfillModules {
+	privat
+readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
-	constructor(
-		fetcher: PolyfillDefaultFetcher,
-		resolver: PolyfillDefaultResolver,
-	) {
+	priv
+
+readonly fetcher: FetcherHook;
+
+	private readonly resolver: ResolverHook;
+
+
+
+	constructor(fetcher: Fet
 		this.fetcher = fetcher;
+
 		this.resolver = resolver;
 	}
 
+
+
+
 	private getEsmsInitOptions() {
 		return {
-			shimMode: true,
-			hotReload: true,
-			hotReloadInterval: 500,
-			polyfillEnable: true,
-			mapOverrides: true,
+
+			sh
+Mode: true,
+			h
+Reload: true,
+
+			hotReloadInterval: 500
+		polyfillEnable: true,
+	
+mapOverrides: true,
+
 			resolve: this.resolver,
-			fetch: this.fetcher,
+
+	fetch: this.fetcher,
 		};
 	}
 
-	async start() {
-		/**
-		 * @todo
-		 * Set up the es-module-shims polyfill.
+
+	
+yn
+
+/**
+		 * @
+do
+
+
+		 * Set up the es-module
+hims polyfill.
 		 * Set up event emitter.
 		 */
 	}
 }
+
+
+
+

@@ -1,6 +1,5 @@
-import type { ResolverHook } from "../types";
 import { defineResolver } from "../utils/define-resolver";
 
-export function createMemoryResolver() {
+export function createBlobResolver() {
 	return defineResolver({});
 }
