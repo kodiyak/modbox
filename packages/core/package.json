@@ -8,7 +8,8 @@
     "lint": "biome lint"
   },
   "dependencies": {
-    "eventemitter3": "5.0.1"
+    "eventemitter3": "5.0.1",
+    "@swc/wasm": "1.12.7"
   },
   "devDependencies": {
     "@modbox/eslint-config": "workspace:*",
