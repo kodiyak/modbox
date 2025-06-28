@@ -27,4 +27,12 @@ export class PolyfillModules {
 			fetch: this.fetcher,
 		};
 	}
+
+	async start() {
+		/**
+		 * @todo
+		 * Set up the es-module-shims polyfill.
+		 * Set up event emitter.
+		 */
+	}
 }
