@@ -4,9 +4,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "biome lint"
   },
-  "dependencies": {},
+  "dependencies": {
+    "eventemitter3": "5.0.1"
+  },
   "devDependencies": {
     "@modbox/eslint-config": "workspace:*",
     "@modbox/typescript-config": "workspace:*"

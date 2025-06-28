@@ -11,7 +11,8 @@
   "dependencies": {
     "next": "^15.3.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
