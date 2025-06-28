@@ -1,6 +1,7 @@
 import type { Logger } from "../../shared";
 import type { VirtualFiles } from "../virtual-files";
 import type { GraphModule } from "./graph-module";
+import type { ModulesExtractor } from "./modules-extractor";
 import type { GraphBuilderOptions } from "./types";
 
 export class GraphBuilder {
@@ -8,12 +9,19 @@ export class GraphBuilder {
 	private readonly fs: VirtualFiles;
 	private readonly options: GraphBuilderOptions;
 	private readonly logger: Logger;
+	private readonly extractor: ModulesExtractor;
 
-	constructor(logger: Logger, fs: VirtualFiles, options: GraphBuilderOptions) {
-		this.modules = new Map();
+	constructor(
+		logger: Logger,
+		fs: VirtualFiles,
+		extractor: ModulesExtractor,
+		options: GraphBuilderOptions,
+	) {
+		this.modules = new Map<string, GraphModule>();
 		this.fs = fs;
 		this.options = options;
 		this.logger = logger;
+		this.extractor = extractor;
 	}
 
 	public addOrUpdateModule(module: GraphModule): void {

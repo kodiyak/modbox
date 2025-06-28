@@ -1,3 +1,5 @@
+import type { ModuleItem } from "@swc/wasm";
+
 export interface GraphModuleProps {
 	path: string;
 	originalPath: string;
@@ -29,6 +31,16 @@ export interface GraphExported {
 	name: string;
 }
 export type ExtractedGraphModule = GraphDependency | GraphExported;
+export interface ModuleExtractorTools {
+	isType: <T extends ModuleItem["type"]>(
+		node: any,
+		type: T,
+	) => node is Extract<ModuleItem, { type: T }>;
+}
+export type ModuleExtractorHandler = (
+	data: { node: ModuleItem; dir: string; path: string },
+	tools: ModuleExtractorTools,
+) => void | Promise<void>;
 
 export interface ModuleAnalysisResult {
 	dependencies: Record<string, string[]>;
@@ -36,9 +48,9 @@ export interface ModuleAnalysisResult {
 	warnings?: string[];
 }
 
-export interface ExtractedDependency {
-	path: string;
-	names: string[];
-	type: "dependencies" | "exported";
-	name?: string;
-}
+// export interface ExtractedDependency {
+// 	path: string;
+// 	names: string[];
+// 	type: "dependencies" | "exported";
+// 	name?: string;
+// }

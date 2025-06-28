@@ -1,7 +1,6 @@
 import { type Module, parseSync, type Script } from "@swc/wasm";
 
 export type ParsedModule = Script | Module;
-
 export function swcParser(content: string): ParsedModule | null {
 	try {
 		const parsed = parseSync(content, {

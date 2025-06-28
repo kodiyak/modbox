@@ -3,7 +3,7 @@ import type {
 	ImportSpecifier,
 	ModuleItem,
 } from "@swc/wasm";
-import type { ParsedModule } from "./swc-parser";
+import type { ParsedModule } from "./utils/swc-parser";
 
 export interface ExtractedDependency {
 	type: "dependency";
