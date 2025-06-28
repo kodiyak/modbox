@@ -1,6 +1,6 @@
-import type { PolyfillResolver } from "../types";
+import type { PolyfillDefaultResolver } from "../types";
 
-export const cacheResolver: PolyfillResolver = (path, parent) => {
+export const cacheResolver: PolyfillDefaultResolver = (path, parent) => {
 	// TODO: Implement.
 	return path;
 };

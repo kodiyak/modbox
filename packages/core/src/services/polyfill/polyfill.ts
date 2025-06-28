@@ -1,14 +1,17 @@
 import { z } from "zod";
 import { EventEmitter } from "../../shared/event-emitter";
-import type { PolyfillFetcher, PolyfillResolver } from "./types";
+import type { PolyfillDefaultFetcher, PolyfillDefaultResolver } from "./types";
 
 export class PolyfillModules {
 	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
-	private readonly fetcher: PolyfillFetcher;
-	private readonly resolver: PolyfillResolver;
+	private readonly fetcher: PolyfillDefaultFetcher;
+	private readonly resolver: PolyfillDefaultResolver;
 
-	constructor(fetcher: PolyfillFetcher, resolver: PolyfillResolver) {
+	constructor(
+		fetcher: PolyfillDefaultFetcher,
+		resolver: PolyfillDefaultResolver,
+	) {
 		this.fetcher = fetcher;
 		this.resolver = resolver;
 	}
