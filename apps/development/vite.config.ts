@@ -7,4 +7,9 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ["@swc/wasm-web"],
 	},
+	resolve: {
+		alias: {
+			"@modbox/core": "../../../packages/core/src/index.ts",
+		},
+	},
 });

@@ -9,7 +9,7 @@ export class GraphModule {
 	public path: string;
 	private originalPath: string;
 	private runtime?: string;
-	public dependencies = new Map<string, Omit<GraphDependency, "type">>();
+	public dependencies = new Map<string, string[]>();
 	public exported: string[] = [];
 
 	constructor(props: GraphModuleInstanceProps) {
@@ -34,7 +34,15 @@ export class GraphModule {
 	addDependencies(dependencies: Omit<GraphDependency, "type">[]) {
 		for (const dep of dependencies) {
 			if (!this.dependencies.has(dep.path)) {
-				this.dependencies.set(dep.path, dep);
+				this.dependencies.set(dep.path, dep.names);
+			} else {
+				const existingNames = this.dependencies.get(dep.path) || [];
+				for (const name of dep.names) {
+					if (!existingNames.includes(name)) {
+						existingNames.push(name);
+					}
+				}
+				this.dependencies.set(dep.path, existingNames);
 			}
 		}
 		return this;

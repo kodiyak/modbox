@@ -1,4 +1,5 @@
 import type { Module, ModuleItem, Script } from "@swc/wasm-web";
+import type { Logger } from "../../shared";
 import type { DependenciesRegistry, ExportsRegistry } from "./registries";
 
 export interface GraphModuleProps {
@@ -37,6 +38,7 @@ export interface ModuleExtractorTools {
 	) => node is Extract<ModuleItem, { type: T }>;
 	exportsRegistry: ExportsRegistry;
 	dependenciesRegistry: DependenciesRegistry;
+	logger: Logger;
 }
 export interface ModuleExtractorHandlerResult {
 	dependencies: GraphDependency[];

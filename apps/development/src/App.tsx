@@ -2,7 +2,7 @@ import { Modbox } from "@modbox/core";
 
 export default function App() {
 	const load = async () => {
-		const modbox = await Modbox.boot({});
+		const modbox = await Modbox.boot({ debug: true });
 		const start = Date.now();
 		modbox.fs.writeFile(
 			"/index.js",
@@ -17,7 +17,7 @@ export default function App() {
 
 		console.log("Modbox initialized successfully", {
 			modbox,
-			modules: modbox.graph.getModules(),
+			modules: modbox.graph.getModules().map((m) => m.toJSON()),
 		});
 		const end = Date.now();
 		console.log(`Initialization took ${end - start}ms`);

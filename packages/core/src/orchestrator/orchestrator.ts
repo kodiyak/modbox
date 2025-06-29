@@ -29,8 +29,8 @@ export class Orchestrator {
 	}
 
 	async mount() {
-		this.logger.info("Mounting orchestrator...");
+		this.logger.info("[Orchestrator] Mounting modules...");
 		this.graph.build();
-		this.logger.info("Orchestrator mounted successfully.");
+		this.logger.info("[Orchestrator] Modules mounted successfully");
 	}
 }

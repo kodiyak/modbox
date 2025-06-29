@@ -46,14 +46,24 @@ export class GraphBuilder {
 	private processFile(filePath: string) {
 		const content = this.fs.readFile(filePath);
 		if (!content) {
-			this.logger.warn(`[GraphBuilder] File not found: ${filePath}`);
+			this.logger.warn(`[GraphBuilder][${filePath}] File not found.`);
 			return;
 		}
 
-		const { exported, dependencies } = this.extractor.processFile(
-			filePath,
-			content,
+		const extractedDependencies = this.extractor.processFile(filePath, content);
+		if (!extractedDependencies) {
+			this.logger.warn(
+				`[GraphBuilder][${filePath}] No dependencies extracted from file.`,
+			);
+			return;
+		}
+
+		const { exported, dependencies } = extractedDependencies;
+		this.logger.debug(
+			`[GraphBuilder][${filePath}] Extracted ${dependencies.length} dependencies and ${exported.length} exports from file.`,
+			{ exported, dependencies },
 		);
+
 		this.addOrUpdateModule(
 			GraphModule.create({
 				path: filePath,

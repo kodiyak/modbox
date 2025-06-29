@@ -46,6 +46,17 @@ export function createDefaultExportsExtractor() {
 				}
 			}
 
+			if (isType(node, "ExportDeclaration")) {
+				if (
+					node.declaration.type === "FunctionDeclaration" ||
+					node.declaration.type === "ClassDeclaration"
+				) {
+					exportsRegistry.addExported({
+						name: node.declaration.identifier.value,
+					});
+				}
+			}
+
 			return {
 				dependencies: dependenciesRegistry.getAll(),
 				exported: exportsRegistry.getAll(),
