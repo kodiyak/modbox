@@ -1,6 +1,6 @@
 import { defineResolver } from "../../utils/define-resolver";
 
-export function createBlobResolver() {
+export function createExternalResolver() {
 	return defineResolver({
 		resolve: (
 			{ path, parent, next },

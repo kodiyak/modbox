@@ -1,4 +1,5 @@
 import type { Logger } from "../../../shared";
+import type { VirtualFiles } from "../../virtual-files";
 import type {
 	BlobsRegistry,
 	ExternalRegistry,
@@ -16,6 +17,7 @@ export class PolyfillResolver {
 	private readonly graphRegistry: GraphRegistry;
 	private readonly modulesRegistry: ModulesRegistry;
 	private readonly externalRegistry: ExternalRegistry;
+	private readonly fs: VirtualFiles;
 
 	constructor(
 		logger: Logger,
@@ -23,6 +25,7 @@ export class PolyfillResolver {
 		graphRegistry: GraphRegistry,
 		modulesRegistry: ModulesRegistry,
 		externalRegistry: ExternalRegistry,
+		fs: VirtualFiles,
 		hooks: ResolverHook[] = [],
 	) {
 		this.hooks = hooks;
@@ -31,15 +34,17 @@ export class PolyfillResolver {
 		this.graphRegistry = graphRegistry;
 		this.modulesRegistry = modulesRegistry;
 		this.externalRegistry = externalRegistry;
+		this.fs = fs;
 
 		this.logger.debug(`Initialized with ${hooks.length} hooks.`);
 	}
 
-	async resolve(
+	resolve(
 		path: string,
 		parent: string,
 		defaultResolve: DefaultResolver,
-	): Promise<string> {
+	): string {
+		this.logger.debug(`Resolving path: ${path} with parent: ${parent}.`);
 		return this.runHooks(path, parent, defaultResolve);
 	}
 
@@ -47,18 +52,25 @@ export class PolyfillResolver {
 		this.hooks.push(hook);
 	}
 
-	private async runHooks(
+	private runHooks(
 		path: string,
 		parent: string,
 		defaultResolve: DefaultResolver,
-	): Promise<string> {
-		const executeHook = async (
+	): string {
+		const executeHook = (
 			index: number,
 			currentPath: string,
 			currentParent: string,
-		): Promise<string> => {
+		): string => {
 			const hook = this.hooks[index];
 			if (!hook) {
+				this.logger.debug(
+					[
+						`No more hooks to execute at index ${index}`,
+						`Using default resolver for path: ${currentPath}`,
+						`Parent: ${currentParent}`,
+					].join("\n"),
+				);
 				return defaultResolve(currentPath, currentParent);
 			}
 
@@ -66,21 +78,24 @@ export class PolyfillResolver {
 				return executeHook(index + 1, currentPath, currentParent);
 			};
 
-			const result = await Promise.resolve(
-				hook.resolve(
-					{
-						path: currentPath,
-						parent: currentParent,
-						next,
-					},
-					{
-						logger: this.logger,
-						blobsRegistry: this.blobsRegistry,
-						graphRegistry: this.graphRegistry,
-						modulesRegistry: this.modulesRegistry,
-						externalRegistry: this.externalRegistry,
-					},
-				),
+			this.logger.debug(
+				`Executing hook "${index}" for path: ${currentPath}, parent: ${currentParent}`,
+				hook.constructor.name,
+			);
+			const result = hook.resolve(
+				{
+					path: currentPath,
+					parent: currentParent,
+					next,
+				},
+				{
+					logger: this.logger.namespace(`HOOK_${index}`),
+					blobsRegistry: this.blobsRegistry,
+					graphRegistry: this.graphRegistry,
+					modulesRegistry: this.modulesRegistry,
+					externalRegistry: this.externalRegistry,
+					fs: this.fs,
+				},
 			);
 
 			if (result !== undefined && typeof result === "string") {

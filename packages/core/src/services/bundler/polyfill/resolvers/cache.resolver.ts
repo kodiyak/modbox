@@ -1,6 +1,6 @@
 import { defineResolver } from "../../utils/define-resolver";
 
-export const createCacheResolver = ({}: {}) => {
+export function createCacheResolver() {
 	return defineResolver({
 		resolve: (
 			{ path, parent, next },
@@ -13,4 +13,4 @@ export const createCacheResolver = ({}: {}) => {
 			},
 		) => {},
 	});
-};
+}

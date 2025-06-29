@@ -1,4 +1,11 @@
 import type { Logger } from "../../../shared";
+import type { VirtualFiles } from "../../virtual-files";
+import type {
+	BlobsRegistry,
+	ExternalRegistry,
+	GraphRegistry,
+	ModulesRegistry,
+} from "../registries";
 import type { FetcherHook, FetcherResult } from "../types";
 
 type DefaultFetcher = (
@@ -9,13 +16,34 @@ type DefaultFetcher = (
 export class PolyfillFetcher {
 	private readonly hooks: FetcherHook[] = [];
 	private readonly logger: Logger;
+	private readonly blobsRegistry: BlobsRegistry;
+	private readonly graphRegistry: GraphRegistry;
+	private readonly modulesRegistry: ModulesRegistry;
+	private readonly externalRegistry: ExternalRegistry;
+	private readonly fs: VirtualFiles;
 
-	constructor(logger: Logger, hooks: FetcherHook[] = []) {
+	constructor(
+		logger: Logger,
+		blobsRegistry: BlobsRegistry,
+		graphRegistry: GraphRegistry,
+		modulesRegistry: ModulesRegistry,
+		externalRegistry: ExternalRegistry,
+		fs: VirtualFiles,
+		hooks: FetcherHook[] = [],
+	) {
 		this.hooks = hooks;
 		this.logger = logger;
+		this.blobsRegistry = blobsRegistry;
+		this.graphRegistry = graphRegistry;
+		this.modulesRegistry = modulesRegistry;
+		this.externalRegistry = externalRegistry;
+		this.fs = fs;
 	}
 
 	async fetch(url: string, opts: RequestInit, defaultFetch: DefaultFetcher) {
+		this.logger.debug(
+			`Fetching URL: ${url} with options: ${JSON.stringify(opts)}`,
+		);
 		return this.runHooks(url, opts, defaultFetch);
 	}
 
@@ -43,18 +71,32 @@ export class PolyfillFetcher {
 			};
 
 			const result = await Promise.resolve(
-				hook.fetch(currentUrl, currentOpts, next),
+				hook.fetch(
+					{
+						url: currentUrl,
+						options: currentOpts,
+						next,
+					},
+					{
+						logger: this.logger,
+						blobsRegistry: this.blobsRegistry,
+						graphRegistry: this.graphRegistry,
+						modulesRegistry: this.modulesRegistry,
+						externalRegistry: this.externalRegistry,
+						fs: this.fs,
+					},
+				),
 			);
 
 			if (result !== undefined && result instanceof Response) {
 				this.logger.debug(
-					`[PolyfillFetcher] Hook ${index} returned a response for ${currentUrl}`,
+					`Hook ${index} returned a response for ${currentUrl}`,
 				);
 				return result;
 			}
 
 			this.logger.debug(
-				`[PolyfillFetcher] Hook ${index} did not return a response for ${currentUrl}, continuing to next hook.`,
+				`Hook ${index} did not return a response for ${currentUrl}, continuing to next hook.`,
 			);
 			return next();
 		};

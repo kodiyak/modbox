@@ -3,8 +3,11 @@ import {
 	BlobsRegistry,
 	Bundler,
 	createDefaultExportsExtractor,
+	createDefaultFetcher,
 	createDefaultImportsExtractor,
+	createGraphResolver,
 	createLoggerExtractor,
+	createVirtualResolver,
 	ExternalRegistry,
 	GraphBuilder,
 	GraphRegistry,
@@ -20,7 +23,11 @@ import { Logger } from "./shared";
 import type { ModboxBootOptions } from "./types";
 
 export class Modbox {
-	static async boot({ debug, fetchers, resolvers }: ModboxBootOptions) {
+	static async boot({
+		debug,
+		fetchers = [],
+		resolvers = [],
+	}: ModboxBootOptions) {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles();
 		const extractor = new ModulesExtractor(Logger.create("modules-extractor"), [
@@ -29,18 +36,29 @@ export class Modbox {
 			createLoggerExtractor(),
 		]);
 		await extractor.preload();
+		const registries = {
+			blobs: new BlobsRegistry(Logger.create("blobs-registry")),
+			graph: new GraphRegistry(Logger.create("graph-registry")),
+			modules: new ModulesRegistry(Logger.create("modules-registry")),
+			external: new ExternalRegistry(Logger.create("external-registry")),
+		};
 		const fetcher = new PolyfillFetcher(
 			Logger.create("modules-fetcher"),
-			fetchers,
+			registries.blobs,
+			registries.graph,
+			registries.modules,
+			registries.external,
+			fs,
+			[createDefaultFetcher(), ...fetchers],
 		);
-		// todo: inject registries
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
-			new BlobsRegistry(Logger.create("blobs-registry")),
-			new GraphRegistry(Logger.create("graph-registry")),
-			new ModulesRegistry(Logger.create("modules-registry")),
-			new ExternalRegistry(Logger.create("external-registry")),
-			resolvers,
+			registries.blobs,
+			registries.graph,
+			registries.modules,
+			registries.external,
+			fs,
+			[createVirtualResolver(), createGraphResolver(), ...resolvers],
 		);
 		const transpiler = new Transpiler(
 			Logger.create("transpiler"),

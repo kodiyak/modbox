@@ -6,6 +6,7 @@ import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
 import type {
 	BundlerBuildOptions,
 	EsmsInitOptions,
+	IImportShim,
 	PolyfillInitOptions,
 } from "./types";
 
@@ -19,6 +20,10 @@ export class Bundler {
 
 	private get window() {
 		return globalThis.window || globalThis;
+	}
+
+	private get shims() {
+		return (this.window as any).importShim as IImportShim;
 	}
 
 	private isReady = false;
@@ -82,8 +87,18 @@ export class Bundler {
 		this.logger.debug(`Options:`, options);
 
 		const transpiledResult = await this.transpiler.transpile();
+		const m = await this.import(entrypoint);
 
-		this.logger.info("Build completed.", transpiledResult);
+		this.logger.info("Build completed.", { m });
+	}
+
+	private import(path: string): Promise<any> {
+		if (!this.isReady) {
+			return Promise.reject(new Error("Bundler is not initialized."));
+		}
+
+		this.logger.debug(`Importing module: ${path}`);
+		return (this.shims as any)(path);
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {

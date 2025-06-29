@@ -1,5 +1,6 @@
 import type { Logger } from "../../shared";
 import type { GraphBuilderOptions } from "../graph";
+import type { VirtualFiles } from "../virtual-files";
 import type {
 	BlobsRegistry,
 	ExternalRegistry,
@@ -8,7 +9,7 @@ import type {
 } from "./registries";
 
 // Resolver [Internal]
-export type ResolverResult = string | Promise<string>;
+export type ResolverResult = string;
 interface ResolveMiddlewareProps {
 	path: string;
 	parent: string;
@@ -17,9 +18,10 @@ interface ResolveMiddlewareProps {
 interface ResolveMiddlewareContext {
 	logger: Logger;
 	blobsRegistry: BlobsRegistry;
-	graphRegistry: GraphRegistry; // Replace with actual type
-	modulesRegistry: ModulesRegistry; // Replace with actual type
-	externalRegistry: ExternalRegistry; // Replace with actual type
+	graphRegistry: GraphRegistry;
+	modulesRegistry: ModulesRegistry;
+	externalRegistry: ExternalRegistry;
+	fs: VirtualFiles;
 }
 type ResolverMiddleware = (
 	props: ResolveMiddlewareProps,
@@ -37,10 +39,22 @@ export interface BundlerBuildOptions extends GraphBuilderOptions {
 
 // Fetcher [Internal]
 export type FetcherResult = Promise<Response | undefined>;
+interface FetcherMiddlewareContext {
+	logger: Logger;
+	blobsRegistry: BlobsRegistry;
+	graphRegistry: GraphRegistry;
+	modulesRegistry: ModulesRegistry;
+	externalRegistry: ExternalRegistry;
+	fs: VirtualFiles;
+}
+interface FetchMiddlewareProps {
+	url: string;
+	options: RequestInit | undefined;
+	next: () => FetcherResult;
+}
 type FetcherMiddleware = (
-	url: string,
-	options: RequestInit | undefined,
-	next: () => FetcherResult,
+	props: FetchMiddlewareProps,
+	context: FetcherMiddlewareContext,
 ) => FetcherResult;
 export type FetcherHook = {
 	fetch: FetcherMiddleware;

@@ -9,9 +9,11 @@ export class Logger {
 		trace: Debugger;
 	};
 
+	private readonly prefix: string;
+
 	constructor(scope = "default") {
-		const parts = `modbox:${scope}`;
-		const logger = debug(parts);
+		this.prefix = `modbox:${scope}`;
+		const logger = debug(this.prefix);
 		this.log = {
 			error: logger.extend("error"),
 			warn: logger.extend("warn"),
@@ -47,5 +49,9 @@ export class Logger {
 
 	trace(message: string, ...args: any[]) {
 		this.log.trace(`${message}`, ...args);
+	}
+
+	namespace(namespace: string) {
+		return Logger.create(`${this.prefix}:${namespace}`);
 	}
 }
