@@ -1,4 +1,20 @@
+import { Modbox } from "@modbox/core";
+
 export default function App() {
+	const load = () => {
+		const modbox = Modbox.boot({
+			debug: true,
+			graphOptions: {
+				basePath: ".",
+				aliasMap: {
+					"@/*": "./src/*",
+				},
+			},
+		});
+
+		console.log("Modbox initialized:", modbox);
+	};
+
 	return (
 		<div
 			style={{
@@ -6,6 +22,10 @@ export default function App() {
 				height: "100vh",
 				background: "#000",
 			}}
-		></div>
+		>
+			<button type={"button"} onClick={load}>
+				Carregar Módulos
+			</button>
+		</div>
 	);
 }

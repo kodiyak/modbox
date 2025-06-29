@@ -5,8 +5,6 @@ import { defineConfig } from "vite";
 export default defineConfig({
 	plugins: [react()],
 	resolve: {
-		alias: {
-			"@modbox/core": "/apps/modbox/core/src",
-		},
+		alias: {},
 	},
 });
