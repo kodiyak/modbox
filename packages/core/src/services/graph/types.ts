@@ -1,4 +1,4 @@
-import type { Module, ModuleItem, Script } from "@swc/wasm";
+import type { Module, ModuleItem, Script } from "@swc/wasm-web";
 
 export interface GraphModuleProps {
 	path: string;

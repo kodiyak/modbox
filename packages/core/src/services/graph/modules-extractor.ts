@@ -1,4 +1,4 @@
-import type { ModuleItem } from "@swc/wasm";
+import type { ModuleItem } from "@swc/wasm-web";
 import type { Logger } from "../../shared";
 import type {
 	ModuleExtractorHandler,

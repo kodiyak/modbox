@@ -1,4 +1,4 @@
-import { parseSync } from "@swc/wasm";
+import { parseSync } from "@swc/wasm-web";
 import type { SWCModule } from "../types";
 
 export function swcParser(content: string): SWCModule | null {

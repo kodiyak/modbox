@@ -1,18 +1,12 @@
-import { Modbox } from "@modbox/core";
+import init, { transform } from "@swc/wasm-web";
 
 export default function App() {
-	const load = () => {
-		const modbox = Modbox.boot({
-			debug: true,
-			graphOptions: {
-				basePath: ".",
-				aliasMap: {
-					"@/*": "./src/*",
-				},
-			},
+	const load = async () => {
+		console.log("Modbox initialized:", {
+			init,
+			transform,
 		});
-
-		console.log("Modbox initialized:", modbox);
+		await init();
 	};
 
 	return (

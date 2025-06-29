@@ -1,4 +1,4 @@
-import { transform } from "@swc/wasm";
+import { transform } from "@swc/wasm-web";
 import type { TranspilerFunction, TranspilerMap } from "./types";
 
 const BASE_SWC_OPTIONS = {
