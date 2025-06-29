@@ -10,9 +10,12 @@
     "lint": "biome lint"
   },
   "dependencies": {
+    "debug": "4.4.1",
+    "@swc/wasm-web": "1.12.7",
     "eventemitter3": "5.0.1"
   },
   "devDependencies": {
+    "@types/debug": "4.1.12",
     "@modbox/eslint-config": "workspace:*",
     "@modbox/typescript-config": "workspace:*"
   }

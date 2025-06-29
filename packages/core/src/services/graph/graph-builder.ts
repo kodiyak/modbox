@@ -27,18 +27,13 @@ export class GraphBuilder {
 	public async build() {
 		this.cleanup();
 		const { files } = this.fs.readdir();
-		this.logger.info(
-			`[GraphBuilder] Building graph from ${files.length} files...`,
-		);
+		this.logger.info(`Building graph from ${files.length} files...`);
 
 		for (const filePath of files) {
 			try {
 				this.processFile(filePath);
 			} catch (error: any) {
-				this.logger.error(
-					`[GraphBuilder] Error building graph for ${filePath}:`,
-					error,
-				);
+				this.logger.error(`Error building graph for ${filePath}:`, error);
 			}
 		}
 	}
@@ -46,21 +41,19 @@ export class GraphBuilder {
 	private processFile(filePath: string) {
 		const content = this.fs.readFile(filePath);
 		if (!content) {
-			this.logger.warn(`[GraphBuilder][${filePath}] File not found.`);
+			this.logger.warn(`File "${filePath}" not found.`);
 			return;
 		}
 
 		const extractedDependencies = this.extractor.processFile(filePath, content);
 		if (!extractedDependencies) {
-			this.logger.warn(
-				`[GraphBuilder][${filePath}] No dependencies extracted from file.`,
-			);
+			this.logger.warn(`No dependencies extracted from "${filePath}" file.`);
 			return;
 		}
 
 		const { exported, dependencies } = extractedDependencies;
 		this.logger.debug(
-			`[GraphBuilder][${filePath}] Extracted ${dependencies.length} dependencies and ${exported.length} exports from file.`,
+			`Extracted "${dependencies.length} dependencies" and "${exported.length} exports" from "${filePath}" file.`,
 			{ exported, dependencies },
 		);
 
@@ -94,9 +87,9 @@ export class GraphBuilder {
 	public removeModule(path: string): void {
 		if (this.modules.has(path)) {
 			this.modules.delete(path);
-			this.logger.info(`[GraphBuilder] Module removed: ${path}`);
+			this.logger.info(`Module removed: ${path}`);
 		} else {
-			this.logger.warn(`[GraphBuilder] Module not found for removal: ${path}`);
+			this.logger.warn(`Module not found for removal: ${path}`);
 		}
 	}
 
@@ -110,14 +103,14 @@ export class GraphBuilder {
 
 		if (!module) {
 			console.warn(
-				`[GraphBuilder] Módulo inicial '${startModuleId}' não encontrado para busca de dependências.`,
+				`Módulo inicial '${startModuleId}' não encontrado para busca de dependências.`,
 			);
 			return allDependencies;
 		}
 
 		if (path.includes(startModuleId)) {
 			console.error(
-				`[GraphBuilder] Ciclo de dependência detectado: ${[...path, startModuleId].join(" -> ")}`,
+				`Ciclo de dependência detectado: ${[...path, startModuleId].join(" -> ")}`,
 			);
 			return allDependencies;
 		}

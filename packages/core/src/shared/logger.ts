@@ -1,41 +1,51 @@
-type DebugLevel = "none" | "error" | "warn" | "info" | "debug" | "trace";
+import debug, { type Debugger } from "debug";
 
 export class Logger {
-	private readonly debugLevel: DebugLevel;
+	private readonly log: {
+		error: Debugger;
+		warn: Debugger;
+		info: Debugger;
+		debug: Debugger;
+		trace: Debugger;
+	};
 
-	constructor(debugLevel: DebugLevel = "none") {
-		this.debugLevel = debugLevel;
+	constructor(scope = "default") {
+		const parts = `modbox:${scope}`;
+		const logger = debug(parts);
+		this.log = {
+			error: logger.extend("error"),
+			warn: logger.extend("warn"),
+			info: logger.extend("info"),
+			debug: logger.extend("debug"),
+			trace: logger.extend("trace"),
+		};
 	}
 
-	private shouldLog(level: number): boolean {
-		const levels = {
-			none: 0,
-			error: 1,
-			warn: 2,
-			info: 3,
-			debug: 4,
-			trace: 5,
-		};
-		return levels[this.debugLevel] >= level;
+	static enable(scope: string) {
+		return debug.enable(`modbox:${scope}`);
+	}
+
+	static create(scope: string = "default"): Logger {
+		return new Logger(scope);
 	}
 
 	error(message: string, ...args: any[]) {
-		if (this.shouldLog(1)) console.error(`[Modbox][ERROR] ${message}`, ...args);
+		this.log.error(`${message}`, ...args);
 	}
 
 	warn(message: string, ...args: any[]) {
-		if (this.shouldLog(2)) console.warn(`[Modbox][WARN] ${message}`, ...args);
+		this.log.warn(`${message}`, ...args);
 	}
 
 	info(message: string, ...args: any[]) {
-		if (this.shouldLog(3)) console.info(`[Modbox][INFO] ${message}`, ...args);
+		this.log.info(`${message}`, ...args);
 	}
 
 	debug(message: string, ...args: any[]) {
-		if (this.shouldLog(4)) console.debug(`[Modbox][DEBUG] ${message}`, ...args);
+		this.log.debug(`${message}`, ...args);
 	}
 
 	trace(message: string, ...args: any[]) {
-		if (this.shouldLog(5)) console.trace(`[Modbox][TRACE] ${message}`, ...args);
+		this.log.trace(`${message}`, ...args);
 	}
 }

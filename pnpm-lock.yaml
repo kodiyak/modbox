@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@swc/wasm-web':
-        specifier: 1.12.7
-        version: 1.12.7
       next:
         specifier: ^15.3.0
         version: 15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -47,7 +44,7 @@ importers:
         version: 5.8.2
       vitest:
         specifier: 3.2.4
-        version: 3.2.4(@types/node@22.15.3)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.3)
 
   apps/development:
     dependencies:
@@ -106,6 +103,12 @@ importers:
 
   packages/core:
     dependencies:
+      '@swc/wasm-web':
+        specifier: 1.12.7
+        version: 1.12.7
+      debug:
+        specifier: 4.4.1
+        version: 4.4.1
       eventemitter3:
         specifier: 5.0.1
         version: 5.0.1
@@ -116,6 +119,9 @@ importers:
       '@modbox/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/debug':
+        specifier: 4.1.12
+        version: 4.1.12
 
   packages/eslint-config:
     devDependencies:
@@ -788,6 +794,9 @@ packages:
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
+  '@types/debug@4.1.12':
+    resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
 
@@ -796,6 +805,9 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/ms@2.1.0':
+    resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
   '@types/node@22.15.3':
     resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
@@ -2578,11 +2590,17 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
 
+  '@types/debug@4.1.12':
+    dependencies:
+      '@types/ms': 2.1.0
+
   '@types/deep-eql@4.0.2': {}
 
   '@types/estree@1.0.8': {}
 
   '@types/json-schema@7.0.15': {}
+
+  '@types/ms@2.1.0': {}
 
   '@types/node@22.15.3':
     dependencies:
@@ -4202,7 +4220,7 @@ snapshots:
       '@types/node': 22.15.3
       fsevents: 2.3.3
 
-  vitest@3.2.4(@types/node@22.15.3):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.15.3):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -4228,6 +4246,7 @@ snapshots:
       vite-node: 3.2.4(@types/node@22.15.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
+      '@types/debug': 4.1.12
       '@types/node': 22.15.3
     transitivePeerDependencies:
       - jiti

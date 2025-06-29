@@ -32,9 +32,7 @@ export class PolyfillResolver {
 		this.modulesRegistry = modulesRegistry;
 		this.externalRegistry = externalRegistry;
 
-		this.logger.debug(
-			`[PolyfillResolver] Initialized with ${hooks.length} hooks.`,
-		);
+		this.logger.debug(`Initialized with ${hooks.length} hooks.`);
 	}
 
 	async resolve(
@@ -86,14 +84,12 @@ export class PolyfillResolver {
 			);
 
 			if (result !== undefined && typeof result === "string") {
-				this.logger.debug(
-					`[PolyfillResolver] Hook ${index} returned a result for ${currentPath}`,
-				);
+				this.logger.debug(`Hook ${index} returned a result for ${currentPath}`);
 				return result;
 			}
 
 			this.logger.debug(
-				`[PolyfillResolver] Hook ${index} did not return a result for ${currentPath}, continuing to next hook.`,
+				`Hook ${index} did not return a result for ${currentPath}, continuing to next hook.`,
 			);
 			return next();
 		};

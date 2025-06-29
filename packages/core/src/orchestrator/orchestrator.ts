@@ -1,5 +1,5 @@
 import type { Bundler, GraphBuilder, VirtualFiles } from "../services";
-import { Logger } from "../shared/logger";
+import type { Logger } from "../shared/logger";
 import type { OrchestratorMountOptions, OrchestratorOptions } from "./types";
 
 export class Orchestrator {
@@ -10,22 +10,23 @@ export class Orchestrator {
 
 	constructor(
 		options: OrchestratorOptions = {},
+		logger: Logger,
 		bundler: Bundler,
 		graph: GraphBuilder,
 		fs: VirtualFiles,
 	) {
-		this.logger = new Logger(options.debug ? "debug" : "none");
+		this.logger = logger;
 		this.bundler = bundler;
 		this.graph = graph;
 		this.fs = fs;
 	}
 
 	async mount(entrypoint: string, options: OrchestratorMountOptions) {
-		this.logger.info("[Orchestrator] Mounting modules...");
+		this.logger.info("Mounting modules...");
 		await this.graph.build();
 		await this.bundler.build(entrypoint, options);
-		this.logger.info("[Orchestrator] Modules mounted successfully");
-		this.logger.debug(`[Orchestrator] Virtual Files`, this.fs.readdir());
-		this.logger.debug(`[Orchestrator] Graph`, this.graph.getModules());
+		this.logger.info("Modules mounted successfully");
+		this.logger.debug(`Virtual Files`, this.fs.readdir());
+		this.logger.debug(`Graph`, this.graph.getModules());
 	}
 }

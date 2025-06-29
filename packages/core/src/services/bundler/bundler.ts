@@ -42,13 +42,13 @@ export class Bundler {
 				onload: () => {
 					this.isReady = true;
 					this.logger.info(
-						"[Bundler][es-module-shims] Initialized successfully.",
+						"[es-module-shims] Initialized successfully.",
 						options,
 					);
 					resolve();
 				},
 				onerror: (error: Event) => {
-					this.logger.error("[Bundler] Failed to load es-module-shims:", error);
+					this.logger.error("Failed to load es-module-shims:", error);
 					reject(new Error("Failed to load es-module-shims"));
 				},
 			});
@@ -61,23 +61,23 @@ export class Bundler {
 				},
 			});
 			this.window.document.head.appendChild(script);
-			this.logger.info("[Bundler] script tag created.");
+			this.logger.info("script tag created.");
 		});
 	}
 
 	public async build(entrypoint: string, options: BundlerBuildOptions) {
 		if (!this.isReady) {
-			this.logger.warn("[Bundler] Not ready, initializing...");
+			this.logger.warn("Not ready, initializing...");
 			await this.init({ esmsInitOptions: this.getEsmsInitOptions() });
 		} else {
-			this.logger.info("[Bundler] Already initialized.");
+			this.logger.info("Already initialized.");
 		}
 
-		this.logger.info("[Bundler] Starting build process...");
-		this.logger.debug(`[Bundler] Entry point: ${entrypoint}`);
-		this.logger.debug(`[Bundler] Options:`, options);
+		this.logger.info("Starting build process...");
+		this.logger.debug(`Entry point: ${entrypoint}`);
+		this.logger.debug(`Options:`, options);
 
-		this.logger.info("[Bundler] Build completed.");
+		this.logger.info("Build completed.");
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {

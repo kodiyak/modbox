@@ -4,7 +4,7 @@ export function createLoggerExtractor() {
 	return defineModuleExtractor(
 		(props, { logger, dependenciesRegistry, exportsRegistry }) => {
 			logger.debug(
-				`[LoggerExtractor][${props.node.type}][${props.path}] Processing node...`,
+				`Processing node type "${props.node.type}" for path "${props.path}"...`,
 				{
 					...props,
 					dependencies: dependenciesRegistry.getAll(),
