@@ -1,15 +1,40 @@
-import type { Logger } from "../../shared";
-import type { ResolverHook, ResolverResult } from "./types";
+import type { Logger } from "../../../shared";
+import type {
+	BlobsRegistry,
+	ExternalRegistry,
+	GraphRegistry,
+	ModulesRegistry,
+} from "../registries";
+import type { ResolverHook, ResolverResult } from "../types";
 
 type DefaultResolver = (path: string, parent: string) => ResolverResult;
 
 export class PolyfillResolver {
 	private readonly hooks: ResolverHook[] = [];
 	private readonly logger: Logger;
+	private readonly blobsRegistry: BlobsRegistry;
+	private readonly graphRegistry: GraphRegistry;
+	private readonly modulesRegistry: ModulesRegistry;
+	private readonly externalRegistry: ExternalRegistry;
 
-	constructor(logger: Logger, hooks: ResolverHook[] = []) {
+	constructor(
+		logger: Logger,
+		blobsRegistry: BlobsRegistry,
+		graphRegistry: GraphRegistry,
+		modulesRegistry: ModulesRegistry,
+		externalRegistry: ExternalRegistry,
+		hooks: ResolverHook[] = [],
+	) {
 		this.hooks = hooks;
 		this.logger = logger;
+		this.blobsRegistry = blobsRegistry;
+		this.graphRegistry = graphRegistry;
+		this.modulesRegistry = modulesRegistry;
+		this.externalRegistry = externalRegistry;
+
+		this.logger.debug(
+			`[PolyfillResolver] Initialized with ${hooks.length} hooks.`,
+		);
 	}
 
 	async resolve(
@@ -44,7 +69,20 @@ export class PolyfillResolver {
 			};
 
 			const result = await Promise.resolve(
-				hook.resolve(currentPath, currentParent, next),
+				hook.resolve(
+					{
+						path: currentPath,
+						parent: currentParent,
+						next,
+					},
+					{
+						logger: this.logger,
+						blobsRegistry: this.blobsRegistry,
+						graphRegistry: this.graphRegistry,
+						modulesRegistry: this.modulesRegistry,
+						externalRegistry: this.externalRegistry,
+					},
+				),
 			);
 
 			if (result !== undefined && typeof result === "string") {

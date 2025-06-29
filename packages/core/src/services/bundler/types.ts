@@ -1,9 +1,28 @@
+import type { Logger } from "../../shared";
+import type {
+	BlobsRegistry,
+	ExternalRegistry,
+	GraphRegistry,
+	ModulesRegistry,
+} from "./registries";
+
 // Resolver [Internal]
 export type ResolverResult = string | Promise<string>;
+interface ResolveMiddlewareProps {
+	path: string;
+	parent: string;
+	next: () => ResolverResult;
+}
+interface ResolveMiddlewareContext {
+	logger: Logger;
+	blobsRegistry: BlobsRegistry;
+	graphRegistry: GraphRegistry; // Replace with actual type
+	modulesRegistry: ModulesRegistry; // Replace with actual type
+	externalRegistry: ExternalRegistry; // Replace with actual type
+}
 type ResolverMiddleware = (
-	path: string,
-	parent: string,
-	next: () => ResolverResult,
+	props: ResolveMiddlewareProps,
+	context: ResolveMiddlewareContext,
 ) => ResolverResult;
 export type ResolverHook = {
 	resolve: ResolverMiddleware;

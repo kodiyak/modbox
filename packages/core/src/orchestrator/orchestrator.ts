@@ -25,5 +25,7 @@ export class Orchestrator {
 		await this.graph.build();
 		await this.bundler.build();
 		this.logger.info("[Orchestrator] Modules mounted successfully");
+		this.logger.debug(`[Orchestrator] Virtual Files`, this.fs.readdir());
+		this.logger.debug(`[Orchestrator] Graph`, this.graph.getModules());
 	}
 }

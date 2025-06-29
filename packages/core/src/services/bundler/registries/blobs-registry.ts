@@ -1,20 +1,11 @@
-export class BlobsRegistry {
-	private blobs: Map<string, string> = new Map();
+import { BundlerRegistry } from "./blundler-registry";
 
-	register(url: string, opts?: BlobPropertyBag) {
-		if (this.blobs.has(url)) {
-			throw new Error(`Blob with URL ${url} is already registered.`);
-		}
-
-		const blob = new Blob([url], {
+export class BlobsRegistry extends BundlerRegistry<BlobPropertyBag, string> {
+	protected buildRegistry(key: string, item: BlobPropertyBag): string {
+		const blob = new Blob([key], {
 			type: "text/javascript",
-			...opts,
+			...item,
 		});
-
-		this.blobs.set(url, URL.createObjectURL(blob));
-	}
-
-	getBlobUrl(url: string) {
-		return this.blobs.get(url);
+		return URL.createObjectURL(blob);
 	}
 }
