@@ -8,7 +8,6 @@ import {
 import { GraphBuilder } from "./graph-builder";
 import { GraphModule } from "./graph-module";
 import { ModulesExtractor } from "./modules-extractor";
-import { DependenciesRegistry, ExportsRegistry } from "./registries";
 import type { GraphBuilderOptions } from "./types";
 
 describe("GraphBuilder", () => {
@@ -23,14 +22,8 @@ describe("GraphBuilder", () => {
 		fs = new VirtualFiles();
 		options = {};
 		extractor = new ModulesExtractor(logger, [
-			createDefaultImportsExtractor(
-				new DependenciesRegistry(),
-				new ExportsRegistry(),
-			),
-			createDefaultExportsExtractor(
-				new DependenciesRegistry(),
-				new ExportsRegistry(),
-			),
+			createDefaultImportsExtractor(),
+			createDefaultExportsExtractor(),
 		]);
 		builder = new GraphBuilder(logger, fs, extractor, options);
 	});
