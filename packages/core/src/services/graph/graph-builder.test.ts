@@ -22,7 +22,7 @@ describe("GraphBuilder", () => {
 		logger = new Logger("debug");
 		fs = new VirtualFiles();
 		options = {};
-		extractor = new ModulesExtractor(logger, fs, [
+		extractor = new ModulesExtractor(logger, [
 			createDefaultImportsExtractor(
 				new DependenciesRegistry(),
 				new ExportsRegistry(),
@@ -122,7 +122,7 @@ describe("GraphBuilder", () => {
 		builder.build();
 		const modules = builder.getModules();
 		expect(modules.length).toBe(2);
-		expect(modules[0].path).toBe("@/foo");
-		expect(modules[1].path).toBe("@/bar");
+		expect(modules[0].path).toBe("./src/foo.ts");
+		expect(modules[1].path).toBe("./src/bar.ts");
 	});
 });

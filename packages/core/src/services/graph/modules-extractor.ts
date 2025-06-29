@@ -1,6 +1,5 @@
 import type { ModuleItem } from "@swc/wasm";
 import type { Logger } from "../../shared";
-import type { VirtualFiles } from "../virtual-files";
 import type {
 	ModuleExtractorHandler,
 	ModuleExtractorHandlerResult,
@@ -9,15 +8,9 @@ import { swcParser } from "./utils";
 
 export class ModulesExtractor {
 	private readonly handlers: ModuleExtractorHandler[] = [];
-	private readonly fs: VirtualFiles;
 	private readonly logger: Logger;
 
-	constructor(
-		logger: Logger,
-		fs: VirtualFiles,
-		handlers: ModuleExtractorHandler[] = [],
-	) {
-		this.fs = fs;
+	constructor(logger: Logger, handlers: ModuleExtractorHandler[] = []) {
 		this.handlers = handlers;
 		this.logger = logger;
 	}
