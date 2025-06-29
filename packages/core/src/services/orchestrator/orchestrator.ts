@@ -1,5 +1,5 @@
-import type { Bundler, GraphBuilder, VirtualFiles } from "../services";
-import type { Logger } from "../shared/logger";
+import type { Bundler, GraphBuilder, VirtualFiles } from "../../services";
+import type { Logger } from "../../shared/logger";
 import type { OrchestratorMountOptions, OrchestratorOptions } from "./types";
 
 export class Orchestrator {
