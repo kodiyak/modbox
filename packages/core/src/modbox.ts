@@ -6,6 +6,7 @@ import {
 	GraphBuilder,
 	ModulesExtractor,
 	PolyfillFetcher,
+	PolyfillModules,
 	PolyfillResolver,
 	VirtualFiles,
 } from "./services";
@@ -33,6 +34,7 @@ export class Modbox {
 		await extractor.preload();
 		const fetcher = new PolyfillFetcher(logger, fetchers);
 		const resolver = new PolyfillResolver(logger, resolvers);
+		const polyfill = new PolyfillModules(logger, fetcher, resolver);
 		const graphBuilder = new GraphBuilder(
 			logger,
 			fs,
@@ -40,6 +42,6 @@ export class Modbox {
 			graphOptions || {},
 		);
 
-		return new Orchestrator({ debug }, fetcher, resolver, graphBuilder, fs);
+		return new Orchestrator({ debug }, polyfill, graphBuilder, fs);
 	}
 }

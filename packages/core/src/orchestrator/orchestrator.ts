@@ -1,36 +1,29 @@
-import type {
-	GraphBuilder,
-	PolyfillFetcher,
-	PolyfillResolver,
-	VirtualFiles,
-} from "../services";
+import type { GraphBuilder, PolyfillModules, VirtualFiles } from "../services";
 import { Logger } from "../shared/logger";
 import type { OrchestratorOptions } from "./types";
 
 export class Orchestrator {
-	public readonly logger: Logger;
-	public readonly fetcher: PolyfillFetcher;
-	public readonly resolver: PolyfillResolver;
-	public readonly graph: GraphBuilder;
+	private readonly logger: Logger;
+	private readonly polyfill: PolyfillModules;
+	private readonly graph: GraphBuilder;
 	public readonly fs: VirtualFiles;
 
 	constructor(
 		options: OrchestratorOptions = {},
-		fetcher: PolyfillFetcher,
-		resolver: PolyfillResolver,
+		polyfill: PolyfillModules,
 		graph: GraphBuilder,
 		fs: VirtualFiles,
 	) {
 		this.logger = new Logger(options.debug ? "debug" : "none");
-		this.fetcher = fetcher;
-		this.resolver = resolver;
+		this.polyfill = polyfill;
 		this.graph = graph;
 		this.fs = fs;
 	}
 
 	async mount() {
 		this.logger.info("[Orchestrator] Mounting modules...");
-		this.graph.build();
+		await this.graph.build();
+		await this.polyfill.build();
 		this.logger.info("[Orchestrator] Modules mounted successfully");
 	}
 }

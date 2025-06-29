@@ -66,6 +66,7 @@ type EsmsSourceHook = (
 ) => EsmsSource | Promise<EsmsSource>;
 export interface EsmsInitOptions {
 	shimMode?: boolean;
+	version?: string;
 	hotReload?: boolean;
 	hotReloadInterval?: number;
 	polyfillEnable?: string[];

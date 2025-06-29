@@ -1,37 +1,39 @@
 import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
-import type {
-	EsmsInitOptions,
-	FetcherHook,
-	PolyfillInitOptions,
-	ResolverHook,
-} from "./types";
+import type { PolyfillFetcher } from "./polyfill-fetcher";
+import type { PolyfillResolver } from "./polyfill-resolver";
+import type { EsmsInitOptions, PolyfillInitOptions } from "./types";
 
 export class PolyfillModules {
 	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
-	private readonly fetcher: FetcherHook;
-	private readonly resolver: ResolverHook;
+	private readonly fetcher: PolyfillFetcher;
+	private readonly resolver: PolyfillResolver;
 	private readonly logger: Logger;
 
 	private get window() {
 		return globalThis.window || globalThis;
 	}
 
-	public isReady = false;
+	private isReady = false;
 
-	constructor(logger: Logger, fetcher: FetcherHook, resolver: ResolverHook) {
+	constructor(
+		logger: Logger,
+		fetcher: PolyfillFetcher,
+		resolver: PolyfillResolver,
+	) {
 		this.fetcher = fetcher;
 		this.resolver = resolver;
 		this.logger = logger;
 	}
 
-	public async init({ esmsInitOptions }: PolyfillInitOptions) {
+	private async init({ esmsInitOptions }: PolyfillInitOptions) {
 		return new Promise<void>((resolve, reject) => {
 			const script = this.window.document.createElement("script");
+			const version = esmsInitOptions?.version || "2.5.1";
 			Object.assign(script, {
-				src: "https://ga.jspm.io/npm:es-module-shims@2.6.1/dist/es-module-shims.js",
+				src: `https://ga.jspm.io/npm:es-module-shims@${version}/dist/es-module-shims.js`,
 				async: true,
 				onload: () => {
 					this.isReady = true;
@@ -54,6 +56,17 @@ export class PolyfillModules {
 			this.window.document.head.appendChild(script);
 			this.logger.info("[PolyfillModules] script tag created.");
 		});
+	}
+
+	public async build() {
+		if (!this.isReady) {
+			this.logger.warn("[PolyfillModules] Not ready, initializing...");
+			await this.init({ esmsInitOptions: this.getEsmsInitOptions() });
+		} else {
+			this.logger.info("[PolyfillModules] Already initialized.");
+		}
+
+		this.logger.info("[PolyfillModules] Build completed.");
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {
