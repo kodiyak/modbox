@@ -1,8 +1,7 @@
 import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
-import type { PolyfillFetcher } from "./polyfill-fetcher";
-import type { PolyfillResolver } from "./polyfill-resolver";
+import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
 import type { EsmsInitOptions, PolyfillInitOptions } from "./types";
 
 export class Bundler {

@@ -34,7 +34,7 @@ export class Modbox {
 		await extractor.preload();
 		const fetcher = new PolyfillFetcher(logger, fetchers);
 		const resolver = new PolyfillResolver(logger, resolvers);
-		const polyfill = new Bundler(logger, fetcher, resolver);
+		const bundler = new Bundler(logger, fetcher, resolver);
 		const graphBuilder = new GraphBuilder(
 			logger,
 			fs,
@@ -42,6 +42,6 @@ export class Modbox {
 			graphOptions || {},
 		);
 
-		return new Orchestrator({ debug }, polyfill, graphBuilder, fs);
+		return new Orchestrator({ debug }, bundler, graphBuilder, fs);
 	}
 }

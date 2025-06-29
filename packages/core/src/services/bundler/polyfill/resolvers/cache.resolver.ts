@@ -1,4 +1,4 @@
-import { defineResolver } from "../utils/define-resolver";
+import { defineResolver } from "../../utils/define-resolver";
 
 export const createCacheResolver = ({}: {}) => {
 	return defineResolver({

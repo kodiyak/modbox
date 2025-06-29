@@ -1,5 +1,4 @@
 export * from "./bundler";
-export * from "./polyfill-fetcher";
-export * from "./polyfill-resolver";
-export * from "./resolvers";
+export * from "./polyfill";
+export * from "./polyfill/resolvers";
 export * from "./types";

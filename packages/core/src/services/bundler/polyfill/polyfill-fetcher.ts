@@ -1,5 +1,5 @@
-import type { Logger } from "../../shared";
-import type { FetcherHook, FetcherResult } from "./types";
+import type { Logger } from "../../../shared";
+import type { FetcherHook, FetcherResult } from "../types";
 
 type DefaultFetcher = (
 	url: string,

@@ -4,18 +4,18 @@ import type { OrchestratorOptions } from "./types";
 
 export class Orchestrator {
 	private readonly logger: Logger;
-	private readonly polyfill: Bundler;
+	private readonly bundler: Bundler;
 	private readonly graph: GraphBuilder;
 	public readonly fs: VirtualFiles;
 
 	constructor(
 		options: OrchestratorOptions = {},
-		polyfill: Bundler,
+		bundler: Bundler,
 		graph: GraphBuilder,
 		fs: VirtualFiles,
 	) {
 		this.logger = new Logger(options.debug ? "debug" : "none");
-		this.polyfill = polyfill;
+		this.bundler = bundler;
 		this.graph = graph;
 		this.fs = fs;
 	}
@@ -23,7 +23,7 @@ export class Orchestrator {
 	async mount() {
 		this.logger.info("[Orchestrator] Mounting modules...");
 		await this.graph.build();
-		await this.polyfill.build();
+		await this.bundler.build();
 		this.logger.info("[Orchestrator] Modules mounted successfully");
 	}
 }
