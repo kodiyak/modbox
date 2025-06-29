@@ -5,7 +5,7 @@ import type { PolyfillFetcher } from "./polyfill-fetcher";
 import type { PolyfillResolver } from "./polyfill-resolver";
 import type { EsmsInitOptions, PolyfillInitOptions } from "./types";
 
-export class PolyfillModules {
+export class Bundler {
 	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
 	private readonly fetcher: PolyfillFetcher;

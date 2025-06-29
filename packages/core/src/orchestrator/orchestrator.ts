@@ -1,16 +1,16 @@
-import type { GraphBuilder, PolyfillModules, VirtualFiles } from "../services";
+import type { Bundler, GraphBuilder, VirtualFiles } from "../services";
 import { Logger } from "../shared/logger";
 import type { OrchestratorOptions } from "./types";
 
 export class Orchestrator {
 	private readonly logger: Logger;
-	private readonly polyfill: PolyfillModules;
+	private readonly polyfill: Bundler;
 	private readonly graph: GraphBuilder;
 	public readonly fs: VirtualFiles;
 
 	constructor(
 		options: OrchestratorOptions = {},
-		polyfill: PolyfillModules,
+		polyfill: Bundler,
 		graph: GraphBuilder,
 		fs: VirtualFiles,
 	) {
