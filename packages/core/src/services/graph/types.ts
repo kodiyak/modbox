@@ -1,4 +1,5 @@
 import type { Module, ModuleItem, Script } from "@swc/wasm-web";
+import type { DependenciesRegistry, ExportsRegistry } from "./registries";
 
 export interface GraphModuleProps {
 	path: string;
@@ -34,6 +35,8 @@ export interface ModuleExtractorTools {
 		node: any,
 		type: T,
 	) => node is Extract<ModuleItem, { type: T }>;
+	exportsRegistry: ExportsRegistry;
+	dependenciesRegistry: DependenciesRegistry;
 }
 export interface ModuleExtractorHandlerResult {
 	dependencies: GraphDependency[];

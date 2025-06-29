@@ -2,8 +2,6 @@ import { Orchestrator } from "./orchestrator";
 import {
 	createDefaultExportsExtractor,
 	createDefaultImportsExtractor,
-	DependenciesRegistry,
-	ExportsRegistry,
 	GraphBuilder,
 	ModulesExtractor,
 	PolyfillFetcher,
@@ -27,14 +25,8 @@ export class Modbox {
 
 		const fs = new VirtualFiles();
 		const extractor = new ModulesExtractor(logger, [
-			createDefaultExportsExtractor(
-				DependenciesRegistry.create(),
-				ExportsRegistry.create(),
-			),
-			createDefaultImportsExtractor(
-				DependenciesRegistry.create(),
-				ExportsRegistry.create(),
-			),
+			createDefaultExportsExtractor(),
+			createDefaultImportsExtractor(),
 		]);
 		await extractor.preload();
 		const fetcher = new PolyfillFetcher(logger, fetchers);

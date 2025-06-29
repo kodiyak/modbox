@@ -1,5 +1,6 @@
 import type { ModuleItem } from "@swc/wasm-web";
 import type { Logger } from "../../shared";
+import { DependenciesRegistry, ExportsRegistry } from "./registries";
 import type {
 	ModuleExtractorHandler,
 	ModuleExtractorHandlerResult,
@@ -29,23 +30,31 @@ export class ModulesExtractor {
 	}
 
 	processFile(path: string, content: string) {
+		const parsedContent = swcParser(content);
+		if (!parsedContent) {
+			this.logger.warn(`[ModulesExtractor] Failed to parse file: ${path}`);
+			return;
+		}
+
+		const { body: nodes } = parsedContent;
+		const exportsRegistry = ExportsRegistry.create();
+		const dependenciesRegistry = DependenciesRegistry.create();
 		const dir = path.split("/").slice(0, -1).join("/");
 		const output: ModuleExtractorHandlerResult = {
 			dependencies: [],
 			exported: [],
 			warnings: [],
 		};
-		for (const handler of this.handlers) {
-			const node = swcParser(content);
-			if (!node) {
-				this.logger.warn(`[ModulesExtractor] Failed to parse file: ${path}`);
-				continue;
-			}
 
-			for (const item of node.body) {
+		for (const handler of this.handlers) {
+			for (const item of nodes) {
 				const result = handler(
 					{ node: item, dir, path },
-					{ isType: this.isType.bind(this) },
+					{
+						isType: this.isType.bind(this),
+						exportsRegistry,
+						dependenciesRegistry,
+					},
 				);
 				if (result) {
 					output.dependencies.push(...result.dependencies);

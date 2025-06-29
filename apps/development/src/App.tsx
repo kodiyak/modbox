@@ -3,6 +3,7 @@ import { Modbox } from "@modbox/core";
 export default function App() {
 	const load = async () => {
 		const modbox = await Modbox.boot({});
+		const start = Date.now();
 		modbox.fs.writeFile(
 			"/index.js",
 			'import { hello } from "./hello.js";\nconsole.log(hello());',
@@ -14,7 +15,12 @@ export default function App() {
 
 		await modbox.mount();
 
-		console.log("Modbox initialized successfully", { modbox });
+		console.log("Modbox initialized successfully", {
+			modbox,
+			modules: modbox.graph.getModules(),
+		});
+		const end = Date.now();
+		console.log(`Initialization took ${end - start}ms`);
 	};
 
 	return (
