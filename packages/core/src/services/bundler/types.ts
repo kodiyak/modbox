@@ -1,6 +1,6 @@
 import type { Logger } from "../../shared";
+import type { VirtualFiles } from "../../shared/virtual-files";
 import type { GraphBuilderOptions } from "../graph";
-import type { VirtualFiles } from "../virtual-files";
 import type {
 	BlobsRegistry,
 	ExternalRegistry,

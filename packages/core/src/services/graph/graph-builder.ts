@@ -1,5 +1,5 @@
 import type { Logger } from "../../shared";
-import type { VirtualFiles } from "../virtual-files";
+import type { VirtualFiles } from "../../shared/virtual-files";
 import { GraphModule } from "./graph-module";
 import type { ModulesExtractor } from "./modules-extractor";
 import type { GraphBuilderOptions } from "./types";

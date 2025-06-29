@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { Logger } from "../../shared";
-import { VirtualFiles } from "../virtual-files";
+import { VirtualFiles } from "../../shared/virtual-files";
 import {
 	createDefaultExportsExtractor,
 	createDefaultImportsExtractor,
