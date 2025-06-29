@@ -1,4 +1,3 @@
-import { Orchestrator } from "./orchestrator";
 import {
 	BlobsRegistry,
 	Bundler,
@@ -13,6 +12,7 @@ import {
 	GraphRegistry,
 	ModulesExtractor,
 	ModulesRegistry,
+	Orchestrator,
 	PolyfillFetcher,
 	PolyfillResolver,
 	TranspileHandlers,
