@@ -123,7 +123,7 @@ export class GraphBuilder {
 		allDependencies.add(startModuleId);
 		path.push(startModuleId);
 
-		for (const [depId, dep] of module.dependencies) {
+		for (const [depId] of module.dependencies) {
 			if (visited.has(depId)) {
 				allDependencies.add(depId);
 				continue;
