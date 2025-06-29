@@ -14,3 +14,14 @@ export type TranspilerFunction = (
 ) => Promise<{ code: string; map?: string }>;
 
 export type TranspilerMap = Record<ModuleKind, TranspilerFunction | undefined>;
+
+export interface TranspileCodeResult {
+	code: string;
+	kind: ModuleKind;
+	map?: any;
+}
+
+export interface TranspileResult {
+	codes: Record<string, TranspileCodeResult>;
+	warnings: string[];
+}

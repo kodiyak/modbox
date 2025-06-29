@@ -102,15 +102,17 @@ export class GraphBuilder {
 		const module = this.getModule(startModuleId);
 
 		if (!module) {
-			console.warn(
-				`Módulo inicial '${startModuleId}' não encontrado para busca de dependências.`,
+			this.logger.warn(
+				`Module with ID "${startModuleId}" not found in the graph.`,
 			);
 			return allDependencies;
 		}
 
 		if (path.includes(startModuleId)) {
-			console.error(
-				`Ciclo de dependência detectado: ${[...path, startModuleId].join(" -> ")}`,
+			this.logger.warn(
+				`Circular dependency detected for module "${startModuleId}". Path: ${path.join(
+					" -> ",
+				)}`,
 			);
 			return allDependencies;
 		}

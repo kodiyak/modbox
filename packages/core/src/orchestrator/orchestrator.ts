@@ -22,11 +22,10 @@ export class Orchestrator {
 	}
 
 	async mount(entrypoint: string, options: OrchestratorMountOptions) {
-		this.logger.info("Mounting modules...");
+		this.logger.info("Mounting modules...", this.fs.readdir());
 		await this.graph.build();
 		await this.bundler.build(entrypoint, options);
 		this.logger.info("Modules mounted successfully");
-		this.logger.debug(`Virtual Files`, this.fs.readdir());
 		this.logger.debug(`Graph`, this.graph.getModules());
 	}
 }

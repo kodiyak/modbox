@@ -1,21 +1,21 @@
 import { Orchestrator } from "./orchestrator";
 import {
+	BlobsRegistry,
 	Bundler,
 	createDefaultExportsExtractor,
 	createDefaultImportsExtractor,
 	createLoggerExtractor,
+	ExternalRegistry,
 	GraphBuilder,
+	GraphRegistry,
 	ModulesExtractor,
+	ModulesRegistry,
 	PolyfillFetcher,
 	PolyfillResolver,
+	TranspileHandlers,
+	Transpiler,
 	VirtualFiles,
 } from "./services";
-import {
-	BlobsRegistry,
-	ExternalRegistry,
-	GraphRegistry,
-	ModulesRegistry,
-} from "./services/bundler/registries";
 import { Logger } from "./shared";
 import type { ModboxBootOptions } from "./types";
 
@@ -42,7 +42,17 @@ export class Modbox {
 			new ExternalRegistry(Logger.create("external-registry")),
 			resolvers,
 		);
-		const bundler = new Bundler(Logger.create("bundler"), fetcher, resolver);
+		const transpiler = new Transpiler(
+			Logger.create("transpiler"),
+			new TranspileHandlers(Logger.create("transpile-handlers")),
+			fs,
+		);
+		const bundler = new Bundler(
+			Logger.create("bundler"),
+			fetcher,
+			resolver,
+			transpiler,
+		);
 		// todo: refactor options
 		const graphBuilder = new GraphBuilder(
 			Logger.create("graph-builder"),

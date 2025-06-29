@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
+import type { Transpiler } from "../transpiler";
 import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
 import type {
 	BundlerBuildOptions,
@@ -14,6 +15,7 @@ export class Bundler {
 	private readonly fetcher: PolyfillFetcher;
 	private readonly resolver: PolyfillResolver;
 	private readonly logger: Logger;
+	private readonly transpiler: Transpiler;
 
 	private get window() {
 		return globalThis.window || globalThis;
@@ -25,10 +27,12 @@ export class Bundler {
 		logger: Logger,
 		fetcher: PolyfillFetcher,
 		resolver: PolyfillResolver,
+		transpiler: Transpiler,
 	) {
 		this.fetcher = fetcher;
 		this.resolver = resolver;
 		this.logger = logger;
+		this.transpiler = transpiler;
 	}
 
 	private async init(options: PolyfillInitOptions) {
@@ -74,10 +78,12 @@ export class Bundler {
 		}
 
 		this.logger.info("Starting build process...");
-		this.logger.debug(`Entry point: ${entrypoint}`);
+		this.logger.debug(`Entry point: "${entrypoint}"`);
 		this.logger.debug(`Options:`, options);
 
-		this.logger.info("Build completed.");
+		const transpiledResult = await this.transpiler.transpile();
+
+		this.logger.info("Build completed.", transpiledResult);
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {

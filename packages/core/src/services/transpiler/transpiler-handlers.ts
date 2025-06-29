@@ -1,24 +1,31 @@
+import type { Logger } from "../../shared";
 import { swcTsxTranspiler, swcTypeScriptTranspiler } from "./swc-transpiler";
 import type { ModuleKind, TranspilerFunction } from "./types";
 
-export class TranspilerRegistry {
+export class TranspileHandlers {
 	private readonly transpilers = new Map<ModuleKind, TranspilerFunction>();
 	private readonly fileExtensionToKind = new Map<string, ModuleKind>();
+	private readonly logger: Logger;
 
-	constructor() {
+	constructor(logger: Logger) {
+		this.logger = logger;
+
 		this.registerDefaults();
 	}
 
 	registerTranspiler(kind: ModuleKind, transpiler: TranspilerFunction): void {
 		if (this.transpilers.has(kind)) {
-			console.warn(
-				`[TranspilerRegistry] Transpiler for kind "${kind}" already registered. Overwriting.`,
+			this.logger.warn(
+				`Transpiler for kind "${kind}" already registered. Overwriting.`,
 			);
 		}
 		this.transpilers.set(kind, transpiler);
 	}
 
 	registerFileExtension(extension: string, kind: ModuleKind): void {
+		this.logger.debug(
+			`Registering file extension "${extension}" for kind "${kind}"`,
+		);
 		this.fileExtensionToKind.set(extension, kind);
 	}
 
