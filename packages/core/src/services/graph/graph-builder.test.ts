@@ -1,8 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { Logger } from "../../shared";
 import { VirtualFiles } from "../virtual-files";
+import {
+	createDefaultExportsExtractor,
+	createDefaultImportsExtractor,
+} from "./extractors";
 import { GraphBuilder } from "./graph-builder";
 import { GraphModule } from "./graph-module";
+import { ModulesExtractor } from "./modules-extractor";
+import { DependenciesRegistry, ExportsRegistry } from "./registries";
 import type { GraphBuilderOptions } from "./types";
 
 describe("GraphBuilder", () => {
@@ -10,12 +16,23 @@ describe("GraphBuilder", () => {
 	let fs: VirtualFiles;
 	let options: GraphBuilderOptions;
 	let builder: GraphBuilder;
+	let extractor: ModulesExtractor;
 
 	beforeEach(() => {
 		logger = new Logger("debug");
 		fs = new VirtualFiles();
-		options = {} as GraphBuilderOptions;
-		builder = new GraphBuilder(logger, fs, options);
+		options = {};
+		extractor = new ModulesExtractor(logger, fs, [
+			createDefaultImportsExtractor(
+				new DependenciesRegistry(),
+				new ExportsRegistry(),
+			),
+			createDefaultExportsExtractor(
+				new DependenciesRegistry(),
+				new ExportsRegistry(),
+			),
+		]);
+		builder = new GraphBuilder(logger, fs, extractor, options);
 	});
 
 	it("adds and retrieves a module", () => {
@@ -96,5 +113,16 @@ describe("GraphBuilder", () => {
 
 	it("returns undefined for non-existent module", () => {
 		expect(builder.getModule("@/does-not-exist")).toBeUndefined();
+	});
+
+	it("extracts modules from the virtual file system", async () => {
+		fs.writeFile("./src/foo.ts", 'import { bar } from "./bar";');
+		fs.writeFile("./src/bar.ts", "export const bar = 1;");
+
+		builder.build();
+		const modules = builder.getModules();
+		expect(modules.length).toBe(2);
+		expect(modules[0].path).toBe("@/foo");
+		expect(modules[1].path).toBe("@/bar");
 	});
 });

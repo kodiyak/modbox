@@ -1,13 +1,11 @@
-import type { ModuleItem } from "@swc/wasm";
+import type { Module, ModuleItem, Script } from "@swc/wasm";
 
 export interface GraphModuleProps {
 	path: string;
 	originalPath: string;
 	runtime?: string;
-	dependencies: Record<string, string[]>;
+	dependencies: ExtractedGraphModule[];
 	exported: string[];
-	usedBy: string[];
-	uses: string[];
 }
 
 export interface GraphBuilderOptions {
@@ -37,16 +35,23 @@ export interface ModuleExtractorTools {
 		type: T,
 	) => node is Extract<ModuleItem, { type: T }>;
 }
+export interface ModuleExtractorHandlerResult {
+	dependencies: GraphDependency[];
+	exported: GraphExported[];
+	warnings?: string[];
+}
 export type ModuleExtractorHandler = (
 	data: { node: ModuleItem; dir: string; path: string },
 	tools: ModuleExtractorTools,
-) => void | Promise<void>;
+) => ModuleExtractorHandlerResult;
 
 export interface ModuleAnalysisResult {
 	dependencies: Record<string, string[]>;
 	exported: string[];
 	warnings?: string[];
 }
+
+export type SWCModule = Script | Module;
 
 // export interface ExtractedDependency {
 // 	path: string;

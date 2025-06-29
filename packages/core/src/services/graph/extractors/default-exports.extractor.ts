@@ -1,10 +1,11 @@
-import type { ExportsRegistry } from "../registries";
+import type { DependenciesRegistry, ExportsRegistry } from "../registries";
 import { defineModuleExtractor } from "../utils";
 
 export function createDefaultExportsExtractor(
+	dependenciesRegistry: DependenciesRegistry,
 	exportsRegistry: ExportsRegistry,
 ) {
-	return defineModuleExtractor(async ({ node, dir, path }, { isType }) => {
+	return defineModuleExtractor(({ node }, { isType }) => {
 		if (isType(node, "ExpressionStatement")) {
 			if (node.expression.type === "AssignmentExpression") {
 				if (
@@ -47,5 +48,10 @@ export function createDefaultExportsExtractor(
 				});
 			}
 		}
+
+		return {
+			dependencies: dependenciesRegistry.getAll(),
+			exported: exportsRegistry.getAll(),
+		};
 	});
 }

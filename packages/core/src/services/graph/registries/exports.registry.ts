@@ -12,4 +12,8 @@ export class ExportsRegistry {
 			...exported,
 		});
 	}
+
+	getAll(): GraphExported[] {
+		return Array.from(this.exports.values());
+	}
 }

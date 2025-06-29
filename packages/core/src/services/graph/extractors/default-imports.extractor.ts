@@ -1,10 +1,11 @@
-import type { DependenciesRegistry } from "../registries";
+import type { DependenciesRegistry, ExportsRegistry } from "../registries";
 import { defineModuleExtractor } from "../utils";
 
 export function createDefaultImportsExtractor(
 	dependenciesRegistry: DependenciesRegistry,
+	exportsRegistry: ExportsRegistry,
 ) {
-	return defineModuleExtractor(async ({ node, dir, path }, { isType }) => {
+	return defineModuleExtractor(({ node, dir }, { isType }) => {
 		if (isType(node, "ImportDeclaration")) {
 			const updatedPath = node.source.value.startsWith("./")
 				? node.source.value.replace(/^\.\//, `${dir}/`)
@@ -26,5 +27,10 @@ export function createDefaultImportsExtractor(
 				}),
 			});
 		}
+
+		return {
+			dependencies: dependenciesRegistry.getAll(),
+			exported: exportsRegistry.getAll(),
+		};
 	});
 }

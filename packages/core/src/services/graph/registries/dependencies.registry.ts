@@ -9,4 +9,8 @@ export class DependenciesRegistry {
 			...dependency,
 		});
 	}
+
+	getAll(): GraphDependency[] {
+		return Array.from(this.dependencies.values());
+	}
 }

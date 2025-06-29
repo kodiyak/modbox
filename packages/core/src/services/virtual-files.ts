@@ -1,39 +1,37 @@
-export type VirtualFile =
-	| {
-			type: "directory";
-			directory: {
-				[key: string]: VirtualFile;
-			};
-	  }
-	| {
-			type: "file";
-			content: string;
-	  };
+interface VirtualDir {
+	type: "directory";
+	directory: Record<string, VirtualItem>;
+}
+type VirtualFile = {
+	type: "file";
+	content: string;
+};
+export type VirtualItem = VirtualDir | VirtualFile;
 
 export class VirtualFiles {
-	private files = new Map<string, VirtualFile>();
+	private files = new Map<string, VirtualItem>();
 
-	private getFile(path: string): VirtualFile | undefined {
+	private getFile(path: string): VirtualItem | undefined {
 		return this.files.get(path);
 	}
 
-	public async readFile(path: string) {
+	public readFile(path: string) {
 		const file = this.getFile(path);
 		return file && file.type === "file" ? file.content : undefined;
 	}
 
-	public async writeFile(path: string, content: string): Promise<void> {
+	public writeFile(path: string, content: string): void {
 		this.files.set(path, {
 			type: "file",
 			content,
 		});
 	}
 
-	public async rm(path: string) {
+	public rm(path: string) {
 		this.files.delete(path);
 	}
 
-	public async mkdir(path: string): Promise<void> {
+	public mkdir(path: string): void {
 		this.files.set(path, {
 			type: "directory",
 			directory: {},

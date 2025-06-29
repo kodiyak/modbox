@@ -1,7 +1,7 @@
-import { type Module, parseSync, type Script } from "@swc/wasm";
+import { parseSync } from "@swc/wasm";
+import type { SWCModule } from "../types";
 
-export type ParsedModule = Script | Module;
-export function swcParser(content: string): ParsedModule | null {
+export function swcParser(content: string): SWCModule | null {
 	try {
 		const parsed = parseSync(content, {
 			syntax: "typescript",

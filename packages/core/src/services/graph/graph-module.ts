@@ -1,18 +1,16 @@
-import type { GraphModuleProps } from "./types";
+import type { GraphDependency, GraphExported, GraphModuleProps } from "./types";
 
 type GraphModuleInstanceProps = Omit<
 	GraphModuleProps,
-	"usedBy" | "uses" | "dependencies" | "exported"
+	"dependencies" | "exported"
 >;
 
 export class GraphModule {
 	public path: string;
 	private originalPath: string;
 	private runtime?: string;
-	private dependencies = new Map<string, string[]>();
-	private exported: string[] = [];
-	private usedBy: GraphModule[] = [];
-	private uses: GraphModule[] = [];
+	public dependencies = new Map<string, Omit<GraphDependency, "type">>();
+	public exported: string[] = [];
 
 	constructor(props: GraphModuleInstanceProps) {
 		this.path = props.path;
@@ -24,32 +22,22 @@ export class GraphModule {
 		return new GraphModule(props);
 	}
 
-	addUsedBy(module: GraphModule) {
-		if (!this.usedBy.includes(module)) {
-			this.usedBy.push(module);
+	addExports(exported: GraphExported[]) {
+		for (const exp of exported) {
+			if (!this.exported.includes(exp.name)) {
+				this.exported.push(exp.name);
+			}
 		}
-
-		if (!module.isUsing(this)) {
-			module.addUses(this);
-		}
+		return this;
 	}
 
-	isUsedBy(module: GraphModule): boolean {
-		return this.usedBy.includes(module);
-	}
-
-	addUses(module: GraphModule) {
-		if (!this.uses.includes(module)) {
-			this.uses.push(module);
+	addDependencies(dependencies: Omit<GraphDependency, "type">[]) {
+		for (const dep of dependencies) {
+			if (!this.dependencies.has(dep.path)) {
+				this.dependencies.set(dep.path, dep);
+			}
 		}
-
-		if (!module.isUsedBy(this)) {
-			module.addUsedBy(this);
-		}
-	}
-
-	isUsing(module: GraphModule): boolean {
-		return this.uses.includes(module);
+		return this;
 	}
 
 	toJSON() {
@@ -57,10 +45,8 @@ export class GraphModule {
 			path: this.path,
 			originalPath: this.originalPath,
 			runtime: this.runtime,
-			dependencies: Object.fromEntries(this.dependencies),
+			dependencies: Object.fromEntries(this.dependencies.entries()),
 			exported: this.exported,
-			usedBy: this.usedBy,
-			uses: this.uses,
 		};
 	}
 }
