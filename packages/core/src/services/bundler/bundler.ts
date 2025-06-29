@@ -2,7 +2,11 @@ import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
 import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
-import type { EsmsInitOptions, PolyfillInitOptions } from "./types";
+import type {
+	BundlerBuildOptions,
+	EsmsInitOptions,
+	PolyfillInitOptions,
+} from "./types";
 
 export class Bundler {
 	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
@@ -57,7 +61,7 @@ export class Bundler {
 		});
 	}
 
-	public async build() {
+	public async build(entrypoint: string, options: BundlerBuildOptions) {
 		if (!this.isReady) {
 			this.logger.warn("[PolyfillModules] Not ready, initializing...");
 			await this.init({ esmsInitOptions: this.getEsmsInitOptions() });

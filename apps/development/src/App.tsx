@@ -1,9 +1,15 @@
 import { Modbox } from "@modbox/core";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 
 export default function App() {
+	const { useRef } = React;
 	const MULTIPLIER = 1;
+	const containerRef = useRef<HTMLDivElement>(null);
 	const load = async () => {
-		const modbox = await Modbox.boot({ debug: false });
+		const modbox = await Modbox.boot({
+			debug: true,
+		});
 		modbox.fs.writeFile(
 			"/index.js",
 			'import { hello } from "./hello.js";\nconsole.log(hello());',
@@ -13,12 +19,14 @@ export default function App() {
 			'export function hello() { return "Hello, Modbox!"; }',
 		);
 
-		await modbox.mount();
-
-		console.log("Modbox initialized successfully", {
-			modbox,
-			modules: modbox.graph.getModules().map((m) => m.toJSON()),
+		const m = await modbox.mount("/index.js", {
+			inject: {
+				react: React,
+				"react-dom": ReactDOM,
+			},
 		});
+
+		console.log(`Module loaded`, m);
 	};
 
 	return (
@@ -44,6 +52,7 @@ export default function App() {
 			>
 				Carregar Módulos
 			</button>
+			<div ref={containerRef}></div>
 		</div>
 	);
 }

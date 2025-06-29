@@ -47,10 +47,6 @@ export class ModulesExtractor {
 		};
 
 		for (const handler of this.handlers) {
-			this.logger.debug(
-				`[ModulesExtractor] Processing handler: ${handler.name}`,
-				{ path, dir },
-			);
 			for (const item of nodes) {
 				const result = handler(
 					{ node: item, dir, path },

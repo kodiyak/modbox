@@ -24,7 +24,7 @@ export class GraphBuilder {
 		this.extractor = extractor;
 	}
 
-	public build() {
+	public async build() {
 		this.cleanup();
 		const { files } = this.fs.readdir();
 		this.logger.info(

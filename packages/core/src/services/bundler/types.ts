@@ -1,4 +1,5 @@
 import type { Logger } from "../../shared";
+import type { GraphBuilderOptions } from "../graph";
 import type {
 	BlobsRegistry,
 	ExternalRegistry,
@@ -28,6 +29,11 @@ export type ResolverHook = {
 	resolve: ResolverMiddleware;
 	cleanup?: (path: string) => void;
 };
+
+// Bundler [Internal]
+export interface BundlerBuildOptions extends GraphBuilderOptions {
+	inject?: Record<string, any>;
+}
 
 // Fetcher [Internal]
 export type FetcherResult = Promise<Response | undefined>;
