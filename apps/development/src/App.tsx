@@ -1,9 +1,9 @@
 import { Modbox } from "@modbox/core";
 
 export default function App() {
+	const MULTIPLIER = 1;
 	const load = async () => {
-		const modbox = await Modbox.boot({ debug: true });
-		const start = Date.now();
+		const modbox = await Modbox.boot({ debug: false });
 		modbox.fs.writeFile(
 			"/index.js",
 			'import { hello } from "./hello.js";\nconsole.log(hello());',
@@ -19,8 +19,6 @@ export default function App() {
 			modbox,
 			modules: modbox.graph.getModules().map((m) => m.toJSON()),
 		});
-		const end = Date.now();
-		console.log(`Initialization took ${end - start}ms`);
 	};
 
 	return (
@@ -31,7 +29,19 @@ export default function App() {
 				background: "#000",
 			}}
 		>
-			<button type={"button"} onClick={load}>
+			<button
+				type={"button"}
+				onClick={async () => {
+					const start = Date.now();
+					for (const i of Array.from({ length: MULTIPLIER })) {
+						await load();
+					}
+					const end = Date.now();
+					console.log(
+						[`Loaded ${MULTIPLIER} modules in ${end - start}ms`].join("\n"),
+					);
+				}}
+			>
 				Carregar Módulos
 			</button>
 		</div>
