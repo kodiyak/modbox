@@ -4,15 +4,28 @@ import type {
 	ModuleExtractorHandler,
 	ModuleExtractorHandlerResult,
 } from "./types";
-import { swcParser } from "./utils";
+import { initSwc, swcParser } from "./utils";
 
 export class ModulesExtractor {
 	private readonly handlers: ModuleExtractorHandler[] = [];
 	private readonly logger: Logger;
 
+	private isInitialized = false;
+
 	constructor(logger: Logger, handlers: ModuleExtractorHandler[] = []) {
 		this.handlers = handlers;
 		this.logger = logger;
+	}
+
+	async preload() {
+		if (this.isInitialized) {
+			this.logger.warn(
+				"[ModulesExtractor] Already initialized, skipping preload.",
+			);
+			return;
+		}
+		this.isInitialized = true;
+		await initSwc();
 	}
 
 	processFile(path: string, content: string) {

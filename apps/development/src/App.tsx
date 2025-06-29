@@ -1,12 +1,20 @@
-import init, { transform } from "@swc/wasm-web";
+import { Modbox } from "@modbox/core";
 
 export default function App() {
 	const load = async () => {
-		console.log("Modbox initialized:", {
-			init,
-			transform,
-		});
-		await init();
+		const modbox = await Modbox.boot({});
+		modbox.fs.writeFile(
+			"/index.js",
+			'import { hello } from "./hello.js";\nconsole.log(hello());',
+		);
+		modbox.fs.writeFile(
+			"/hello.js",
+			'export function hello() { return "Hello, Modbox!"; }',
+		);
+
+		await modbox.mount();
+
+		console.log("Modbox initialized successfully", { modbox });
 	};
 
 	return (

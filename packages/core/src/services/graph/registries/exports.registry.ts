@@ -3,6 +3,10 @@ import type { GraphExported } from "../types";
 export class ExportsRegistry {
 	private readonly exports = new Map<string, GraphExported>();
 
+	static create() {
+		return new ExportsRegistry();
+	}
+
 	addExported(exported: Omit<GraphExported, "type">) {
 		if (this.exports.has(exported.name)) {
 			return;

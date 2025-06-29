@@ -14,7 +14,7 @@ import { Logger } from "./shared";
 import type { ModboxBootOptions } from "./types";
 
 export class Modbox {
-	static boot({
+	static async boot({
 		debug,
 		fetchers,
 		logger,
@@ -26,18 +26,26 @@ export class Modbox {
 		}
 
 		const fs = new VirtualFiles();
-		const exportsRegistry = new ExportsRegistry();
-		const dependenciesRegistry = new DependenciesRegistry();
 		const extractor = new ModulesExtractor(logger, [
-			createDefaultExportsExtractor(dependenciesRegistry, exportsRegistry),
-			createDefaultImportsExtractor(dependenciesRegistry, exportsRegistry),
+			createDefaultExportsExtractor(
+				DependenciesRegistry.create(),
+				ExportsRegistry.create(),
+			),
+			createDefaultImportsExtractor(
+				DependenciesRegistry.create(),
+				ExportsRegistry.create(),
+			),
 		]);
-
-		return new Orchestrator(
-			{ debug },
-			new PolyfillFetcher(logger, fetchers),
-			new PolyfillResolver(logger, resolvers),
-			new GraphBuilder(logger, fs, extractor, graphOptions || {}),
+		await extractor.preload();
+		const fetcher = new PolyfillFetcher(logger, fetchers);
+		const resolver = new PolyfillResolver(logger, resolvers);
+		const graphBuilder = new GraphBuilder(
+			logger,
+			fs,
+			extractor,
+			graphOptions || {},
 		);
+
+		return new Orchestrator({ debug }, fetcher, resolver, graphBuilder, fs);
 	}
 }
