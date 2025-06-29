@@ -31,7 +31,8 @@ export class Bundler {
 		this.logger = logger;
 	}
 
-	private async init({ esmsInitOptions }: PolyfillInitOptions) {
+	private async init(options: PolyfillInitOptions) {
+		const { esmsInitOptions } = options;
 		return new Promise<void>((resolve, reject) => {
 			const script = this.window.document.createElement("script");
 			const version = esmsInitOptions?.version || "2.5.1";
@@ -40,11 +41,14 @@ export class Bundler {
 				async: true,
 				onload: () => {
 					this.isReady = true;
-					this.logger.info("[PolyfillModules] initialized successfully.");
+					this.logger.info(
+						"[Bundler][es-module-shims] Initialized successfully.",
+						options,
+					);
 					resolve();
 				},
 				onerror: (error: Event) => {
-					this.logger.error("Failed to load es-module-shims:", error);
+					this.logger.error("[Bundler] Failed to load es-module-shims:", error);
 					reject(new Error("Failed to load es-module-shims"));
 				},
 			});
@@ -57,19 +61,23 @@ export class Bundler {
 				},
 			});
 			this.window.document.head.appendChild(script);
-			this.logger.info("[PolyfillModules] script tag created.");
+			this.logger.info("[Bundler] script tag created.");
 		});
 	}
 
 	public async build(entrypoint: string, options: BundlerBuildOptions) {
 		if (!this.isReady) {
-			this.logger.warn("[PolyfillModules] Not ready, initializing...");
+			this.logger.warn("[Bundler] Not ready, initializing...");
 			await this.init({ esmsInitOptions: this.getEsmsInitOptions() });
 		} else {
-			this.logger.info("[PolyfillModules] Already initialized.");
+			this.logger.info("[Bundler] Already initialized.");
 		}
 
-		this.logger.info("[PolyfillModules] Build completed.");
+		this.logger.info("[Bundler] Starting build process...");
+		this.logger.debug(`[Bundler] Entry point: ${entrypoint}`);
+		this.logger.debug(`[Bundler] Options:`, options);
+
+		this.logger.info("[Bundler] Build completed.");
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {
