@@ -30,8 +30,9 @@ import type { ModboxBootOptions } from "./types";
 export class Modbox {
 	static async boot({
 		debug,
-		fetchers = [],
-		resolvers = [],
+		// fetchers = [],
+		// resolvers = [],
+		plugins = [],
 	}: ModboxBootOptions) {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles();
@@ -52,24 +53,13 @@ export class Modbox {
 			Logger.create("modules-fetcher"),
 			registry,
 			fs,
-			[
-				createCacheFetcher(),
-				createDefaultFetcher(),
-				createVirtualFetcher(),
-				createExternalFetcher(),
-				...fetchers,
-			],
+			plugins.map((plugin) => plugin.fetcher!).filter(Boolean),
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
 			registry,
 			fs,
-			[
-				createVirtualResolver(),
-				createExternalResolver(),
-				createModulesResolver(),
-				...resolvers,
-			],
+			plugins.map((plugin) => plugin.resolver!).filter(Boolean),
 		);
 		const transpiler = new Transpiler(
 			Logger.create("transpiler"),

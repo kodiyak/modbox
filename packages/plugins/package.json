@@ -1,0 +1,18 @@
+{
+  "name": "@modbox/plugins",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "lint": "biome lint"
+  },
+  "dependencies": {
+    "@modbox/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@modbox/typescript-config": "workspace:*"
+  }
+}

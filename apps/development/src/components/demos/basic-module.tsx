@@ -1,9 +1,11 @@
 import { Modbox } from "@modbox/core";
+import { cache, external, logger, virtual } from "@modbox/plugins";
 
 export default function BasicModule() {
 	const load = async () => {
 		const modbox = await Modbox.boot({
 			debug: false,
+			plugins: [cache(), external(), virtual()],
 		});
 		modbox.fs.writeFile(
 			"/hello.js",
@@ -13,7 +15,7 @@ export default function BasicModule() {
 		);
 		modbox.fs.writeFile(
 			"/index.js",
-			`import { hello } from "./hello.js";
+			`import { hello } from "/hello.js";
 			export function print(name) {
 				console.log(hello(name));
 			}
