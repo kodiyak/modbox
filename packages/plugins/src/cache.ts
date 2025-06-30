@@ -1,7 +1,7 @@
 import { definePlugin } from "@modbox/utils";
 
-const registry = new Map<string, any>();
 export function cache() {
+	const registry = new Map<string, any>();
 	return definePlugin({
 		pipeline: {
 			fetcher: {
