@@ -3,7 +3,7 @@ import { definePlugin } from "@modbox/utils";
 export function graphBuilder() {
 	return definePlugin({
 		analyze: {
-			process: ({ node, dir }, { isType, dependencies, exports }) => {
+			process: ({ node, dir, isType, dependencies, exports }) => {
 				if (isType(node, "ImportDeclaration")) {
 					const updatedPath = node.source.value.startsWith("./")
 						? node.source.value.replace(/^\.\//, `${dir}/`)

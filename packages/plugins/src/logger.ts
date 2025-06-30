@@ -27,19 +27,11 @@ export function logger() {
 			},
 		},
 		analyze: {
-			process: (
-				props,
-				{
-					logger,
-					dependencies: dependenciesRegistry,
-					exports: exportsRegistry,
-				},
-			) => {
-				logger.debug(`[Logger][ANALYZE] Processing module: ${props.path}`, {
-					...props,
-					dependencies: dependenciesRegistry.getAll(),
-					exported: exportsRegistry.getAll(),
-				});
+			process: ({ logger, ...props }) => {
+				logger.debug(
+					`[Logger][ANALYZE] Processing module: ${props.path}`,
+					props,
+				);
 			},
 		},
 	});

@@ -35,22 +35,22 @@ export class ModulesExtractor {
 
 		const { body: nodes } = parsedContent;
 		const exports = ExportsRegistry.create();
-		const dependenciesRegistry = DependenciesRegistry.create();
+		const dependencies = DependenciesRegistry.create();
 		const dir = path.split("/").slice(0, -1).join("/");
 		const warnings: string[] = [];
 
 		for (const handler of this.handlers) {
 			for (const item of nodes) {
 				try {
-					handler(
-						{ node: item, dir, path },
-						{
-							isType: this.isType.bind(this),
-							logger: this.logger,
-							exports: exports,
-							dependencies: dependenciesRegistry,
-						},
-					);
+					handler({
+						node: item,
+						dir,
+						path,
+						isType: this.isType.bind(this),
+						logger: this.logger,
+						exports,
+						dependencies,
+					});
 				} catch (error) {
 					warnings.push(
 						`[ModulesExtractor] Error processing node of type "${item.type}" in file "${path}": ${error}`,
@@ -61,7 +61,7 @@ export class ModulesExtractor {
 
 		return {
 			exported: exports.getAll(),
-			dependencies: dependenciesRegistry.getAll(),
+			dependencies: dependencies.getAll(),
 			warnings,
 		};
 	}

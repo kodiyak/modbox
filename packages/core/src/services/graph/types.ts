@@ -44,9 +44,12 @@ export interface ModuleExtractorHandlerResult {
 	warnings?: string[];
 }
 export type ModuleExtractorHandler = (
-	data: { node: ModuleItem; dir: string; path: string },
-	tools: ModuleExtractorTools,
-) => ModuleExtractorHandlerResult | void;
+	data: {
+		node: ModuleItem;
+		dir: string;
+		path: string;
+	} & ModuleExtractorTools,
+) => void;
 
 export interface ModuleAnalysisResult {
 	dependencies: Record<string, string[]>;
