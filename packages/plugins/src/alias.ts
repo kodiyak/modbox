@@ -12,7 +12,7 @@ export function alias(options: AliasOptions) {
 	return definePlugin({
 		pipeline: {
 			resolver: {
-				resolve: ({ next, path }, { logger }) => {
+				resolve: ({ next, path, logger }) => {
 					logger.debug(`[alias]: Resolving alias for: ${path}`);
 
 					for (const alias of sortedAliases) {

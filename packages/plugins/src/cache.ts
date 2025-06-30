@@ -5,7 +5,7 @@ export function cache() {
 	return definePlugin({
 		pipeline: {
 			fetcher: {
-				fetch: async ({ url, next }, { logger }) => {
+				fetch: async ({ url, next, logger }) => {
 					if (registry.has(url)) {
 						const cachedResponse = registry.get(url);
 						logger.debug(`[Cache][HIT] ${url}`, { response: cachedResponse });

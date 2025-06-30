@@ -4,7 +4,7 @@ export function virtual() {
 	return definePlugin({
 		pipeline: {
 			fetcher: {
-				fetch: async ({ url, next }, { fs }) => {
+				fetch: async ({ url, next, fs }) => {
 					if (url.startsWith("virtual-file://")) {
 						const path = url.replace("virtual-file://", "");
 						const content = fs.readFile(path);
@@ -25,7 +25,7 @@ export function virtual() {
 				},
 			},
 			resolver: {
-				resolve: ({ path, next }, { fs }) => {
+				resolve: ({ path, next, fs }) => {
 					const content = fs.readFile(path);
 					if (content) {
 						return `virtual-file://${path}`;

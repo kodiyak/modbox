@@ -54,18 +54,14 @@ export class PolyfillResolver {
 				return executeHook(index + 1, currentPath, currentParent);
 			};
 
-			const result = hook.resolve(
-				{
-					path: currentPath,
-					parent: currentParent,
-					next,
-				},
-				{
-					logger: this.logger.namespace(`HOOK_${index}`),
-					registry: this.registry,
-					fs: this.fs,
-				},
-			);
+			const result = hook.resolve({
+				path: currentPath,
+				parent: currentParent,
+				next,
+				logger: this.logger.namespace(`HOOK_${index}`),
+				registry: this.registry,
+				fs: this.fs,
+			});
 
 			if (result !== undefined && typeof result === "string") {
 				this.logger.debug(

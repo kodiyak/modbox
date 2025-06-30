@@ -54,18 +54,14 @@ export class PolyfillFetcher {
 			};
 
 			const result = await Promise.resolve(
-				hook.fetch(
-					{
-						url: currentUrl,
-						options: currentOpts,
-						next,
-					},
-					{
-						logger: this.logger,
-						registry: this.registry,
-						fs: this.fs,
-					},
-				),
+				hook.fetch({
+					url: currentUrl,
+					options: currentOpts,
+					next,
+					logger: this.logger,
+					registry: this.registry,
+					fs: this.fs,
+				}),
 			);
 
 			if (result !== undefined && result instanceof Response) {

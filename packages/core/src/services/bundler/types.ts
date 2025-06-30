@@ -16,8 +16,7 @@ interface ResolveMiddlewareContext {
 	fs: VirtualFiles;
 }
 type ResolverMiddleware = (
-	props: ResolveMiddlewareProps,
-	context: ResolveMiddlewareContext,
+	props: ResolveMiddlewareProps & ResolveMiddlewareContext,
 ) => ResolverResult;
 export type ResolverHook = {
 	resolve: ResolverMiddleware;
@@ -42,8 +41,7 @@ interface FetchMiddlewareProps {
 	next: () => FetcherResult;
 }
 type FetcherMiddleware = (
-	props: FetchMiddlewareProps,
-	context: FetcherMiddlewareContext,
+	props: FetchMiddlewareProps & FetcherMiddlewareContext,
 ) => FetcherResult;
 export type FetcherHook = {
 	fetch: FetcherMiddleware;
