@@ -36,8 +36,8 @@ export interface ModuleExtractorTools {
 		node: any,
 		type: T,
 	) => node is Extract<ModuleItem, { type: T }>;
-	exportsRegistry: ExportsRegistry;
-	dependenciesRegistry: DependenciesRegistry;
+	exports: ExportsRegistry;
+	dependencies: DependenciesRegistry;
 	logger: Logger;
 }
 export interface ModuleExtractorHandlerResult {

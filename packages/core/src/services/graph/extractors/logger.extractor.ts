@@ -2,7 +2,10 @@ import { defineModuleExtractor } from "../utils";
 
 export function createLoggerExtractor() {
 	return defineModuleExtractor(
-		(props, { logger, dependenciesRegistry, exportsRegistry }) => {
+		(
+			props,
+			{ logger, dependencies: dependenciesRegistry, exports: exportsRegistry },
+		) => {
 			logger.debug(
 				`Processing node type "${props.node.type}" for path "${props.path}"...`,
 				{

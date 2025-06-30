@@ -3,16 +3,13 @@ import { definePlugin } from "@modbox/utils";
 export function graphBuilder() {
 	return definePlugin({
 		analyze: {
-			process: (
-				{ node, dir },
-				{ isType, dependenciesRegistry, exportsRegistry },
-			) => {
+			process: ({ node, dir }, { isType, dependencies, exports }) => {
 				if (isType(node, "ImportDeclaration")) {
 					const updatedPath = node.source.value.startsWith("./")
 						? node.source.value.replace(/^\.\//, `${dir}/`)
 						: node.source.value;
 
-					dependenciesRegistry.addDependency({
+					dependencies.addDependency({
 						path: updatedPath,
 						names: node.specifiers.map((specifier) => {
 							switch (specifier.type) {
@@ -39,7 +36,7 @@ export function graphBuilder() {
 							node.expression.left.property.type === "Identifier" &&
 							node.expression.left.property.value === "exports"
 						) {
-							exportsRegistry.addExported({
+							exports.addExported({
 								name: "default",
 							});
 						}
@@ -49,11 +46,11 @@ export function graphBuilder() {
 				if (isType(node, "ExportNamedDeclaration")) {
 					for (const specifier of node.specifiers) {
 						if (specifier.type === "ExportSpecifier") {
-							exportsRegistry.addExported({
+							exports.addExported({
 								name: specifier.orig.value,
 							});
 						} else if (specifier.type === "ExportDefaultSpecifier") {
-							exportsRegistry.addExported({
+							exports.addExported({
 								name: specifier.exported.value,
 							});
 						}
@@ -62,11 +59,11 @@ export function graphBuilder() {
 
 				if (isType(node, "ExportAllDeclaration")) {
 					if (node.source.value) {
-						exportsRegistry.addExported({
+						exports.addExported({
 							name: node.source.value,
 						});
 					} else {
-						exportsRegistry.addExported({
+						exports.addExported({
 							name: "default",
 						});
 					}
@@ -77,7 +74,7 @@ export function graphBuilder() {
 						node.declaration.type === "FunctionDeclaration" ||
 						node.declaration.type === "ClassDeclaration"
 					) {
-						exportsRegistry.addExported({
+						exports.addExported({
 							name: node.declaration.identifier.value,
 						});
 					}

@@ -34,7 +34,7 @@ export class ModulesExtractor {
 		}
 
 		const { body: nodes } = parsedContent;
-		const exportsRegistry = ExportsRegistry.create();
+		const exports = ExportsRegistry.create();
 		const dependenciesRegistry = DependenciesRegistry.create();
 		const dir = path.split("/").slice(0, -1).join("/");
 		const warnings: string[] = [];
@@ -47,8 +47,8 @@ export class ModulesExtractor {
 						{
 							isType: this.isType.bind(this),
 							logger: this.logger,
-							exportsRegistry,
-							dependenciesRegistry,
+							exports: exports,
+							dependencies: dependenciesRegistry,
 						},
 					);
 				} catch (error) {
@@ -60,7 +60,7 @@ export class ModulesExtractor {
 		}
 
 		return {
-			exported: exportsRegistry.getAll(),
+			exported: exports.getAll(),
 			dependencies: dependenciesRegistry.getAll(),
 			warnings,
 		};
