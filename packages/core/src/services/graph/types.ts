@@ -55,10 +55,3 @@ export interface ModuleAnalysisResult {
 }
 
 export type SWCModule = Script | Module;
-
-// export interface ExtractedDependency {
-// 	path: string;
-// 	names: string[];
-// 	type: "dependencies" | "exported";
-// 	name?: string;
-// }

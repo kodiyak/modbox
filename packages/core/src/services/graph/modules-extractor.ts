@@ -1,10 +1,7 @@
 import type { ModuleItem } from "@swc/wasm-web";
 import type { Logger } from "../../shared";
 import { DependenciesRegistry, ExportsRegistry } from "./registries";
-import type {
-	ModuleExtractorHandler,
-	ModuleExtractorHandlerResult,
-} from "./types";
+import type { ModuleExtractorHandler } from "./types";
 import { initSwc, swcParser } from "./utils";
 
 export class ModulesExtractor {
