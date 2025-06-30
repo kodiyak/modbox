@@ -82,11 +82,6 @@ export function graphBuilder() {
 						});
 					}
 				}
-
-				return {
-					dependencies: [],
-					exported: [],
-				};
 			},
 		},
 	});

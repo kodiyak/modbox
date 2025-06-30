@@ -41,14 +41,12 @@ export interface ModuleExtractorTools {
 	logger: Logger;
 }
 export interface ModuleExtractorHandlerResult {
-	dependencies: GraphDependency[];
-	exported: GraphExported[];
 	warnings?: string[];
 }
 export type ModuleExtractorHandler = (
 	data: { node: ModuleItem; dir: string; path: string },
 	tools: ModuleExtractorTools,
-) => ModuleExtractorHandlerResult;
+) => ModuleExtractorHandlerResult | void;
 
 export interface ModuleAnalysisResult {
 	dependencies: Record<string, string[]>;

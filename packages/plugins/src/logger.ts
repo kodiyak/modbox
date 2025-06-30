@@ -11,7 +11,29 @@ export function logger() {
 					return response;
 				},
 			},
-			resolver: { resolve: ({ next }) => next() },
+			resolver: {
+				resolve: ({ next, path, parent }, { logger }) => {
+					logger.debug(`[Logger][RESOLVER] Resolving module: ${path}`, {
+						parent,
+					});
+					const response = next();
+					logger.debug(
+						`[Logger][RESOLVER] Resolved module: [${path} => ${response}]`,
+						{ parent },
+					);
+
+					return response;
+				},
+			},
+		},
+		analyze: {
+			process: (props, { logger, dependenciesRegistry, exportsRegistry }) => {
+				logger.debug(`[Logger][ANALYZE] Processing module: ${props.path}`, {
+					...props,
+					dependencies: dependenciesRegistry.getAll(),
+					exported: exportsRegistry.getAll(),
+				});
+			},
 		},
 	});
 }
