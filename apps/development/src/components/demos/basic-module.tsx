@@ -4,6 +4,7 @@ import {
 	external,
 	graphBuilder,
 	logger,
+	resolver,
 	virtual,
 } from "@modbox/plugins";
 
@@ -11,7 +12,17 @@ export default function BasicModule() {
 	const load = async () => {
 		const modbox = await Modbox.boot({
 			debug: false,
-			plugins: [graphBuilder(), cache(), logger(), external(), virtual()],
+			plugins: [
+				graphBuilder(),
+				cache(),
+				resolver({
+					extensions: [".js", ".ts", ".tsx", ".jsx"],
+					index: true,
+				}),
+				external(),
+				virtual(),
+				logger(),
+			],
 		});
 		modbox.fs.writeFile(
 			"/hello.js",
@@ -21,7 +32,7 @@ export default function BasicModule() {
 		);
 		modbox.fs.writeFile(
 			"/index.js",
-			`import { hello } from "/hello.js";
+			`import { hello } from "/hello";
 			export function print(name) {
 				console.log(hello(name));
 			}

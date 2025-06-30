@@ -19,7 +19,7 @@ export function alias(options: AliasOptions) {
 						if (path.startsWith(alias)) {
 							const realPath = path.replace(alias, options[alias]);
 							logger.debug(`[alias][${path} => ${realPath}]`);
-							return `virtual-file://${realPath}`;
+							return next({ path: `virtual-file://${realPath}` });
 						}
 					}
 

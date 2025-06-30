@@ -1,7 +1,11 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
-import type { ResolverHook, ResolverResult } from "../types";
+import type {
+	ResolveMiddlewareProps,
+	ResolverHook,
+	ResolverResult,
+} from "../types";
 
 type DefaultResolver = (path: string, parent: string) => ResolverResult;
 
@@ -50,8 +54,12 @@ export class PolyfillResolver {
 				return defaultResolve(currentPath, currentParent);
 			}
 
-			const next = () => {
-				return executeHook(index + 1, currentPath, currentParent);
+			const next: ResolveMiddlewareProps["next"] = (props) => {
+				return executeHook(
+					index + 1,
+					props?.path ?? currentPath,
+					props?.parent ?? currentParent,
+				);
 			};
 
 			const result = hook.resolve({

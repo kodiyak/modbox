@@ -5,10 +5,12 @@ import type { BundlerRegistry } from "./bundler-registry";
 
 // Resolver [Internal]
 export type ResolverResult = string;
-interface ResolveMiddlewareProps {
+export interface ResolveMiddlewareProps {
 	path: string;
 	parent: string;
-	next: () => ResolverResult;
+	next: (
+		props?: Partial<Omit<ResolveMiddlewareProps, "next">>,
+	) => ResolverResult;
 }
 interface ResolveMiddlewareContext {
 	logger: Logger;

@@ -25,10 +25,10 @@ export function virtual() {
 				},
 			},
 			resolver: {
-				resolve: ({ path, next, fs }) => {
+				resolve: ({ path, next, fs, logger }) => {
 					const content = fs.readFile(path);
 					if (content) {
-						return `virtual-file://${path}`;
+						return next({ path: `virtual-file://${path}` });
 					}
 					return next();
 				},
