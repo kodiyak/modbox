@@ -5,7 +5,7 @@ export default function BasicModule() {
 	const load = async () => {
 		const modbox = await Modbox.boot({
 			debug: false,
-			plugins: [cache(), external(), virtual()],
+			plugins: [cache(), logger(), external(), virtual()],
 		});
 		modbox.fs.writeFile(
 			"/hello.js",
