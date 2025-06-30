@@ -3,13 +3,15 @@ import type {
 	ExternalRegistry,
 	GraphRegistry,
 	ModulesRegistry,
+	ResponseRegistry,
 } from "./registries";
 
 interface _Registries {
-	blobs: BlobsRegistry;
-	graph: GraphRegistry;
-	modules: ModulesRegistry;
-	external: ExternalRegistry;
+	// blobs: BlobsRegistry;
+	// graph: GraphRegistry;
+	// modules: ModulesRegistry;
+	external: ExternalRegistry; // todo: use to registry external graph modules
+	responses: ResponseRegistry;
 }
 
 export class BundlerRegistry {

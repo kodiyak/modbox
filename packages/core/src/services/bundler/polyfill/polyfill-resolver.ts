@@ -21,8 +21,6 @@ export class PolyfillResolver {
 		this.logger = logger;
 		this.registry = registry;
 		this.fs = fs;
-
-		this.logger.debug(`Initialized with ${hooks.length} hooks.`);
 	}
 
 	resolve(
@@ -30,7 +28,6 @@ export class PolyfillResolver {
 		parent: string,
 		defaultResolve: DefaultResolver,
 	): string {
-		this.logger.debug(`Resolving path: ${path} with parent: ${parent}.`);
 		return this.runHooks(path, parent, defaultResolve);
 	}
 
@@ -50,13 +47,6 @@ export class PolyfillResolver {
 		): string => {
 			const hook = this.hooks[index];
 			if (!hook) {
-				this.logger.debug(
-					[
-						`No more hooks to execute at index ${index}`,
-						`Using default resolver for path: ${currentPath}`,
-						`Parent: ${currentParent}`,
-					].join("\n"),
-				);
 				return defaultResolve(currentPath, currentParent);
 			}
 
@@ -64,10 +54,6 @@ export class PolyfillResolver {
 				return executeHook(index + 1, currentPath, currentParent);
 			};
 
-			this.logger.debug(
-				`Executing hook "${index}" for path: ${currentPath}, parent: ${currentParent}`,
-				hook.constructor.name,
-			);
 			const result = hook.resolve(
 				{
 					path: currentPath,
@@ -82,13 +68,13 @@ export class PolyfillResolver {
 			);
 
 			if (result !== undefined && typeof result === "string") {
-				this.logger.debug(`Hook ${index} returned a result for ${currentPath}`);
+				this.logger.debug(
+					`[Hook][${index}][${currentPath}] Path received.`,
+					result ?? "[NO_RESULT]",
+				);
 				return result;
 			}
 
-			this.logger.debug(
-				`Hook ${index} did not return a result for ${currentPath}, continuing to next hook.`,
-			);
 			return next();
 		};
 

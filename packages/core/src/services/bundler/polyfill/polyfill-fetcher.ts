@@ -70,7 +70,8 @@ export class PolyfillFetcher {
 
 			if (result !== undefined && result instanceof Response) {
 				this.logger.debug(
-					`Hook ${index} returned a response for ${currentUrl}`,
+					`[Hook][${index}][${currentUrl}] Response received.`,
+					result,
 				);
 				return result;
 			}

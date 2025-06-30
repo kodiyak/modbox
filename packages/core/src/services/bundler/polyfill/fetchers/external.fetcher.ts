@@ -2,7 +2,7 @@ import { defineFetcher } from "../../utils";
 
 export function createExternalFetcher() {
 	return defineFetcher({
-		fetch: async ({ url, options, next }, { logger }) => {
+		fetch: async ({ url, options, next }) => {
 			if (url.startsWith("external://")) {
 				const path = url.replace("external://", "");
 				const externalURL = new URL(path, "https://esm.sh/");
@@ -12,6 +12,8 @@ export function createExternalFetcher() {
 				);
 				return fetch(externalURL.toString(), options);
 			}
+
+			return next();
 		},
 	});
 }
