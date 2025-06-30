@@ -113,9 +113,6 @@ importers:
         specifier: 5.0.1
         version: 5.0.1
     devDependencies:
-      '@modbox/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
       '@modbox/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -157,6 +154,16 @@ importers:
         version: 8.34.0(eslint@9.29.0)(typescript@5.8.3)
 
   packages/typescript-config: {}
+
+  packages/utils:
+    dependencies:
+      '@modbox/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@modbox/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
 packages:
 

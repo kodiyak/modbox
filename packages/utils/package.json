@@ -1,5 +1,5 @@
 {
-  "name": "@modbox/core",
+  "name": "@modbox/utils",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -10,12 +10,9 @@
     "lint": "biome lint"
   },
   "dependencies": {
-    "debug": "4.4.1",
-    "@swc/wasm-web": "1.12.7",
-    "eventemitter3": "5.0.1"
+    "@modbox/core": "workspace:*"
   },
   "devDependencies": {
-    "@types/debug": "4.1.12",
     "@modbox/typescript-config": "workspace:*"
   }
 }
