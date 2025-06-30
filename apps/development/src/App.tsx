@@ -4,7 +4,6 @@ import * as ReactDOM from "react-dom/client";
 
 export default function App() {
 	const { useRef } = React;
-	const MULTIPLIER = 1;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const load = async () => {
 		const modbox = await Modbox.boot({
@@ -16,17 +15,14 @@ export default function App() {
 		);
 		modbox.fs.writeFile(
 			"/hello.js",
-			'export function hello() { return "Hello, Modbox!"; }',
+			`import React from "react";
+			console.log({ React })
+			export function hello() { return "Hello, Modbox!"; }`,
 		);
 
-		const m = await modbox.mount("/index.js", {
-			inject: {
-				react: React,
-				"react-dom": ReactDOM,
-			},
+		const module = await modbox.mount("/index.js", {
+			inject: { react: React, "react-dom": ReactDOM },
 		});
-
-		console.log(`Module loaded`, m);
 	};
 
 	return (
@@ -40,14 +36,7 @@ export default function App() {
 			<button
 				type={"button"}
 				onClick={async () => {
-					const start = Date.now();
-					for (const i of Array.from({ length: MULTIPLIER })) {
-						await load();
-					}
-					const end = Date.now();
-					console.log(
-						[`Loaded ${MULTIPLIER} modules in ${end - start}ms`].join("\n"),
-					);
+					await load();
 				}}
 			>
 				Carregar Módulos

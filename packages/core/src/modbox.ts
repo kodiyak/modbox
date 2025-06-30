@@ -6,6 +6,7 @@ import {
 	createDefaultImportsExtractor,
 	createGraphResolver,
 	createLoggerExtractor,
+	createMemoryResolver,
 	createVirtualResolver,
 	ExternalRegistry,
 	GraphBuilder,
@@ -58,7 +59,12 @@ export class Modbox {
 			registries.modules,
 			registries.external,
 			fs,
-			[createVirtualResolver(), createGraphResolver(), ...resolvers],
+			[
+				createVirtualResolver(),
+				createGraphResolver(),
+				createMemoryResolver(),
+				...resolvers,
+			],
 		);
 		const transpiler = new Transpiler(
 			Logger.create("transpiler"),
