@@ -1,6 +1,9 @@
-import { BundlerRegistry } from "./blundler-registry";
+import { AbstractBundlerRegistry } from "./bundler-registry";
 
-export class BlobsRegistry extends BundlerRegistry<BlobPropertyBag, string> {
+export class BlobsRegistry extends AbstractBundlerRegistry<
+	BlobPropertyBag,
+	string
+> {
 	protected buildRegistry(key: string, item: BlobPropertyBag): string {
 		const blob = new Blob([key], {
 			type: "text/javascript",

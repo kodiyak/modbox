@@ -1,12 +1,7 @@
 import type { Logger } from "../../shared";
 import type { VirtualFiles } from "../../shared/virtual-files";
 import type { GraphBuilderOptions } from "../graph";
-import type {
-	BlobsRegistry,
-	ExternalRegistry,
-	GraphRegistry,
-	ModulesRegistry,
-} from "./registries";
+import type { BundlerRegistry } from "./bundler-registry";
 
 // Resolver [Internal]
 export type ResolverResult = string;
@@ -17,10 +12,7 @@ interface ResolveMiddlewareProps {
 }
 interface ResolveMiddlewareContext {
 	logger: Logger;
-	blobsRegistry: BlobsRegistry;
-	graphRegistry: GraphRegistry;
-	modulesRegistry: ModulesRegistry;
-	externalRegistry: ExternalRegistry;
+	registry: BundlerRegistry;
 	fs: VirtualFiles;
 }
 type ResolverMiddleware = (
@@ -41,10 +33,7 @@ export interface BundlerBuildOptions extends GraphBuilderOptions {
 export type FetcherResult = Promise<Response | undefined>;
 interface FetcherMiddlewareContext {
 	logger: Logger;
-	blobsRegistry: BlobsRegistry;
-	graphRegistry: GraphRegistry;
-	modulesRegistry: ModulesRegistry;
-	externalRegistry: ExternalRegistry;
+	registry: BundlerRegistry;
 	fs: VirtualFiles;
 }
 interface FetchMiddlewareProps {

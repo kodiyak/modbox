@@ -1,11 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import type {
-	BlobsRegistry,
-	ExternalRegistry,
-	GraphRegistry,
-	ModulesRegistry,
-} from "../registries";
+import type { BundlerRegistry } from "../bundler-registry";
 import type { ResolverHook, ResolverResult } from "../types";
 
 type DefaultResolver = (path: string, parent: string) => ResolverResult;
@@ -13,27 +8,18 @@ type DefaultResolver = (path: string, parent: string) => ResolverResult;
 export class PolyfillResolver {
 	private readonly hooks: ResolverHook[] = [];
 	private readonly logger: Logger;
-	private readonly blobsRegistry: BlobsRegistry;
-	private readonly graphRegistry: GraphRegistry;
-	private readonly modulesRegistry: ModulesRegistry;
-	private readonly externalRegistry: ExternalRegistry;
+	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
 
 	constructor(
 		logger: Logger,
-		blobsRegistry: BlobsRegistry,
-		graphRegistry: GraphRegistry,
-		modulesRegistry: ModulesRegistry,
-		externalRegistry: ExternalRegistry,
+		registry: BundlerRegistry,
 		fs: VirtualFiles,
 		hooks: ResolverHook[] = [],
 	) {
 		this.hooks = hooks;
 		this.logger = logger;
-		this.blobsRegistry = blobsRegistry;
-		this.graphRegistry = graphRegistry;
-		this.modulesRegistry = modulesRegistry;
-		this.externalRegistry = externalRegistry;
+		this.registry = registry;
 		this.fs = fs;
 
 		this.logger.debug(`Initialized with ${hooks.length} hooks.`);
@@ -90,10 +76,7 @@ export class PolyfillResolver {
 				},
 				{
 					logger: this.logger.namespace(`HOOK_${index}`),
-					blobsRegistry: this.blobsRegistry,
-					graphRegistry: this.graphRegistry,
-					modulesRegistry: this.modulesRegistry,
-					externalRegistry: this.externalRegistry,
+					registry: this.registry,
 					fs: this.fs,
 				},
 			);

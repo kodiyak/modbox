@@ -2,7 +2,8 @@ import { defineFetcher } from "../../utils";
 
 export function createDefaultFetcher() {
 	return defineFetcher({
-		fetch: async ({ url, options }, { logger, fs }) => {
+		fetch: async ({ url, options, next }, { logger, fs }) => {
+			logger.debug(`Fetching URL: ${url}`, { options });
 			if (url.startsWith("virtual-file://")) {
 				const path = url.replace("virtual-file://", "");
 				logger.debug(`Fetching virtual file: ${path}`);
@@ -16,7 +17,9 @@ export function createDefaultFetcher() {
 					return new Response(null, { status: 404 });
 				}
 			}
-			return fetch(url, options);
+
+			const response = await next();
+			return response || fetch(url, options);
 		},
 	});
 }

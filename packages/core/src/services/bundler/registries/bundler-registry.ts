@@ -1,6 +1,6 @@
 import type { Logger } from "../../../shared";
 
-export abstract class BundlerRegistry<TData, TRegistry> {
+export abstract class AbstractBundlerRegistry<TData, TRegistry> {
 	protected items: Map<string, TRegistry> = new Map();
 	protected logger: Logger;
 
@@ -11,7 +11,7 @@ export abstract class BundlerRegistry<TData, TRegistry> {
 	register(key: string, item: TData): void {
 		if (this.items.has(key)) {
 			this.logger.warn(
-				`[BundlerRegistry] Item with key "${key}" is already registered.`,
+				`[AbstractBundlerRegistry] Item with key "${key}" is already registered.`,
 			);
 			return;
 		}

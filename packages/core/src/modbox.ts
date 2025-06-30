@@ -1,6 +1,7 @@
 import {
 	BlobsRegistry,
 	Bundler,
+	createBlobResolver,
 	createDefaultExportsExtractor,
 	createDefaultFetcher,
 	createDefaultImportsExtractor,
@@ -20,6 +21,7 @@ import {
 	Transpiler,
 	VirtualFiles,
 } from "./services";
+import { BundlerRegistry } from "./services/bundler/bundler-registry";
 import { Logger } from "./shared";
 import type { ModboxBootOptions } from "./types";
 
@@ -37,32 +39,27 @@ export class Modbox {
 			createLoggerExtractor(),
 		]);
 		await extractor.preload();
-		const registries = {
+		const registry = BundlerRegistry.create({
 			blobs: new BlobsRegistry(Logger.create("blobs-registry")),
 			graph: new GraphRegistry(Logger.create("graph-registry")),
 			modules: new ModulesRegistry(Logger.create("modules-registry")),
 			external: new ExternalRegistry(Logger.create("external-registry")),
-		};
+		});
 		const fetcher = new PolyfillFetcher(
 			Logger.create("modules-fetcher"),
-			registries.blobs,
-			registries.graph,
-			registries.modules,
-			registries.external,
+			registry,
 			fs,
 			[createDefaultFetcher(), ...fetchers],
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
-			registries.blobs,
-			registries.graph,
-			registries.modules,
-			registries.external,
+			registry,
 			fs,
 			[
 				createVirtualResolver(),
 				createGraphResolver(),
 				createMemoryResolver(),
+				createBlobResolver(),
 				...resolvers,
 			],
 		);
@@ -76,6 +73,7 @@ export class Modbox {
 			fetcher,
 			resolver,
 			transpiler,
+			registry,
 		);
 		// todo: refactor options
 		const graphBuilder = new GraphBuilder(

@@ -1,11 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import type {
-	BlobsRegistry,
-	ExternalRegistry,
-	GraphRegistry,
-	ModulesRegistry,
-} from "../registries";
+import type { BundlerRegistry } from "../bundler-registry";
 import type { FetcherHook, FetcherResult } from "../types";
 
 type DefaultFetcher = (
@@ -16,34 +11,22 @@ type DefaultFetcher = (
 export class PolyfillFetcher {
 	private readonly hooks: FetcherHook[] = [];
 	private readonly logger: Logger;
-	private readonly blobsRegistry: BlobsRegistry;
-	private readonly graphRegistry: GraphRegistry;
-	private readonly modulesRegistry: ModulesRegistry;
-	private readonly externalRegistry: ExternalRegistry;
+	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
 
 	constructor(
 		logger: Logger,
-		blobsRegistry: BlobsRegistry,
-		graphRegistry: GraphRegistry,
-		modulesRegistry: ModulesRegistry,
-		externalRegistry: ExternalRegistry,
+		registry: BundlerRegistry,
 		fs: VirtualFiles,
 		hooks: FetcherHook[] = [],
 	) {
 		this.hooks = hooks;
 		this.logger = logger;
-		this.blobsRegistry = blobsRegistry;
-		this.graphRegistry = graphRegistry;
-		this.modulesRegistry = modulesRegistry;
-		this.externalRegistry = externalRegistry;
+		this.registry = registry;
 		this.fs = fs;
 	}
 
 	async fetch(url: string, opts: RequestInit, defaultFetch: DefaultFetcher) {
-		this.logger.debug(
-			`Fetching URL: ${url} with options: ${JSON.stringify(opts)}`,
-		);
 		return this.runHooks(url, opts, defaultFetch);
 	}
 
@@ -79,10 +62,7 @@ export class PolyfillFetcher {
 					},
 					{
 						logger: this.logger,
-						blobsRegistry: this.blobsRegistry,
-						graphRegistry: this.graphRegistry,
-						modulesRegistry: this.modulesRegistry,
-						externalRegistry: this.externalRegistry,
+						registry: this.registry,
 						fs: this.fs,
 					},
 				),
@@ -95,9 +75,6 @@ export class PolyfillFetcher {
 				return result;
 			}
 
-			this.logger.debug(
-				`Hook ${index} did not return a response for ${currentUrl}, continuing to next hook.`,
-			);
 			return next();
 		};
 

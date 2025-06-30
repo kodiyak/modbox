@@ -1,6 +1,6 @@
-import { BundlerRegistry } from "./blundler-registry";
+import { AbstractBundlerRegistry } from "./bundler-registry";
 
-export class ModulesRegistry extends BundlerRegistry<any, any> {
+export class ModulesRegistry extends AbstractBundlerRegistry<string, any> {
 	protected buildRegistry(key: string, item: any): any {
 		return item;
 	}

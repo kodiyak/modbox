@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
 import type { Transpiler } from "../transpiler";
+import type { BundlerRegistry } from "./bundler-registry";
 import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
 import type {
 	BundlerBuildOptions,
@@ -17,6 +18,7 @@ export class Bundler {
 	private readonly resolver: PolyfillResolver;
 	private readonly logger: Logger;
 	private readonly transpiler: Transpiler;
+	private readonly registry: BundlerRegistry;
 
 	private get window() {
 		return globalThis.window || globalThis;
@@ -33,11 +35,13 @@ export class Bundler {
 		fetcher: PolyfillFetcher,
 		resolver: PolyfillResolver,
 		transpiler: Transpiler,
+		registry: BundlerRegistry,
 	) {
 		this.fetcher = fetcher;
 		this.resolver = resolver;
 		this.logger = logger;
 		this.transpiler = transpiler;
+		this.registry = registry;
 	}
 
 	private async init(options: PolyfillInitOptions) {
@@ -86,9 +90,9 @@ export class Bundler {
 		this.logger.debug(`Entry point: "${entrypoint}"`);
 		this.logger.debug(`Options:`, options);
 
-		const transpiledResult = await this.transpiler.transpile();
-		const m = await this.import(entrypoint);
+		// await this.transpiler.transpile();
 
+		const m = await this.import(entrypoint);
 		this.logger.info("Build completed.", { m });
 	}
 
