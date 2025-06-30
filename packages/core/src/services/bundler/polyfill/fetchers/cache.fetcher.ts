@@ -1,17 +1,17 @@
 import { defineFetcher } from "../../utils";
 
-export function createDefaultFetcher() {
+export function createCacheFetcher() {
 	return defineFetcher({
 		fetch: async ({ url, next }, { logger, registry }) => {
 			if (registry.get("responses").has(url)) {
-				logger.debug(`Cache hit for URL: ${url}`);
+				const cachedResponse = registry.get("responses").get(url);
+				logger.debug(`[Cache][HIT] ${url}`, { response: cachedResponse });
 				return registry.get("responses").get(url);
 			}
 			const response = await next();
-			if (!response) return response;
+			if (response) registry.get("responses").register(url, response);
 
-			logger.debug(`Cache miss for URL: ${url}, storing response.`);
-			registry.get("responses").register(url, response);
+			logger.debug(`[Cache][MISS] ${url}`, { response });
 
 			return response;
 		},

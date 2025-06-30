@@ -90,6 +90,10 @@ export class Bundler {
 		this.logger.debug(`Entry point: "${entrypoint}"`);
 		this.logger.debug(`Options:`, options);
 
+		Object.entries(options.inject ?? {}).forEach(([key, value]) => {
+			this.registry.get("modules").register(key, value);
+		});
+
 		// await this.transpiler.transpile();
 
 		const m = await this.import(entrypoint);

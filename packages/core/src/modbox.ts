@@ -1,25 +1,24 @@
 import {
 	BlobsRegistry,
 	Bundler,
-	createBlobResolver,
+	createCacheFetcher,
 	createDefaultExportsExtractor,
 	createDefaultFetcher,
 	createDefaultImportsExtractor,
 	createExternalFetcher,
 	createExternalResolver,
-	createGraphResolver,
 	createLoggerExtractor,
-	createMemoryResolver,
+	createModulesResolver,
 	createVirtualFetcher,
 	createVirtualResolver,
 	ExternalRegistry,
 	GraphBuilder,
-	GraphRegistry,
 	ModulesExtractor,
 	ModulesRegistry,
 	Orchestrator,
 	PolyfillFetcher,
 	PolyfillResolver,
+	ResponseRegistry,
 	TranspileHandlers,
 	Transpiler,
 	VirtualFiles,
@@ -44,7 +43,8 @@ export class Modbox {
 		await extractor.preload();
 		const registry = BundlerRegistry.create({
 			blobs: new BlobsRegistry(Logger.create("blobs-registry")),
-			graph: new GraphRegistry(Logger.create("graph-registry")),
+			// graph: new GraphRegistry(Logger.create("graph-registry")),
+			responses: new ResponseRegistry(Logger.create("responses-registry")),
 			modules: new ModulesRegistry(Logger.create("modules-registry")),
 			external: new ExternalRegistry(Logger.create("external-registry")),
 		});
@@ -53,6 +53,7 @@ export class Modbox {
 			registry,
 			fs,
 			[
+				createCacheFetcher(),
 				createDefaultFetcher(),
 				createVirtualFetcher(),
 				createExternalFetcher(),
@@ -66,9 +67,7 @@ export class Modbox {
 			[
 				createVirtualResolver(),
 				createExternalResolver(),
-				createGraphResolver(),
-				createMemoryResolver(),
-				createBlobResolver(),
+				createModulesResolver(),
 				...resolvers,
 			],
 		);

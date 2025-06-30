@@ -7,9 +7,9 @@ import type {
 } from "./registries";
 
 interface _Registries {
-	// blobs: BlobsRegistry;
 	// graph: GraphRegistry;
-	// modules: ModulesRegistry;
+	blobs: BlobsRegistry;
+	modules: ModulesRegistry;
 	external: ExternalRegistry; // todo: use to registry external graph modules
 	responses: ResponseRegistry;
 }
