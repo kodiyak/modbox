@@ -1,7 +1,6 @@
 import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
-import type { Transpiler } from "../transpiler";
 import type { BundlerRegistry } from "./bundler-registry";
 import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
 import type {
@@ -17,7 +16,6 @@ export class Bundler {
 	private readonly fetcher: PolyfillFetcher;
 	private readonly resolver: PolyfillResolver;
 	private readonly logger: Logger;
-	private readonly transpiler: Transpiler;
 	private readonly registry: BundlerRegistry;
 
 	private get window() {
@@ -34,13 +32,11 @@ export class Bundler {
 		logger: Logger,
 		fetcher: PolyfillFetcher,
 		resolver: PolyfillResolver,
-		transpiler: Transpiler,
 		registry: BundlerRegistry,
 	) {
 		this.fetcher = fetcher;
 		this.resolver = resolver;
 		this.logger = logger;
-		this.transpiler = transpiler;
 		this.registry = registry;
 	}
 

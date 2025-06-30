@@ -40,34 +40,33 @@ export class ModulesExtractor {
 		const exportsRegistry = ExportsRegistry.create();
 		const dependenciesRegistry = DependenciesRegistry.create();
 		const dir = path.split("/").slice(0, -1).join("/");
-		const output: ModuleExtractorHandlerResult = {
-			dependencies: [],
-			exported: [],
-			warnings: [],
-		};
+		const warnings: string[] = [];
 
 		for (const handler of this.handlers) {
 			for (const item of nodes) {
-				const result = handler(
-					{ node: item, dir, path },
-					{
-						isType: this.isType.bind(this),
-						logger: this.logger,
-						exportsRegistry,
-						dependenciesRegistry,
-					},
-				);
-				if (result) {
-					output.dependencies.push(...result.dependencies);
-					output.exported.push(...result.exported);
-					if (result.warnings) {
-						output.warnings?.push(...result.warnings);
-					}
+				try {
+					handler(
+						{ node: item, dir, path },
+						{
+							isType: this.isType.bind(this),
+							logger: this.logger,
+							exportsRegistry,
+							dependenciesRegistry,
+						},
+					);
+				} catch (error) {
+					warnings.push(
+						`[ModulesExtractor] Error processing node of type "${item.type}" in file "${path}": ${error}`,
+					);
 				}
 			}
 		}
 
-		return output;
+		return {
+			exported: exportsRegistry.getAll(),
+			dependencies: dependenciesRegistry.getAll(),
+			warnings,
+		};
 	}
 
 	private isType<T extends ModuleItem["type"]>(

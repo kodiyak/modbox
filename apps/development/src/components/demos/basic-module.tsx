@@ -1,11 +1,17 @@
 import { Modbox } from "@modbox/core";
-import { cache, external, logger, virtual } from "@modbox/plugins";
+import {
+	cache,
+	external,
+	graphBuilder,
+	logger,
+	virtual,
+} from "@modbox/plugins";
 
 export default function BasicModule() {
 	const load = async () => {
 		const modbox = await Modbox.boot({
 			debug: false,
-			plugins: [cache(), logger(), external(), virtual()],
+			plugins: [graphBuilder(), cache(), logger(), external(), virtual()],
 		});
 		modbox.fs.writeFile(
 			"/hello.js",
