@@ -53,13 +53,13 @@ export class Modbox {
 			Logger.create("modules-fetcher"),
 			registry,
 			fs,
-			plugins.map((plugin) => plugin.fetcher!).filter(Boolean),
+			plugins.map((plugin) => plugin.pipeline?.fetcher!).filter(Boolean),
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
 			registry,
 			fs,
-			plugins.map((plugin) => plugin.resolver!).filter(Boolean),
+			plugins.map((plugin) => plugin.pipeline?.resolver!).filter(Boolean),
 		);
 		const transpiler = new Transpiler(
 			Logger.create("transpiler"),

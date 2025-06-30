@@ -6,6 +6,8 @@ export interface ModboxBootOptions {
 }
 
 export interface ModboxPlugin {
-	resolver?: ResolverHook;
-	fetcher?: FetcherHook;
+	pipeline?: {
+		resolver?: ResolverHook;
+		fetcher?: FetcherHook;
+	};
 }
