@@ -5,6 +5,8 @@ import {
 	createDefaultExportsExtractor,
 	createDefaultFetcher,
 	createDefaultImportsExtractor,
+	createExternalFetcher,
+	createExternalResolver,
 	createGraphResolver,
 	createLoggerExtractor,
 	createMemoryResolver,
@@ -50,7 +52,12 @@ export class Modbox {
 			Logger.create("modules-fetcher"),
 			registry,
 			fs,
-			[createDefaultFetcher(), createVirtualFetcher(), ...fetchers],
+			[
+				createDefaultFetcher(),
+				createVirtualFetcher(),
+				createExternalFetcher(),
+				...fetchers,
+			],
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
@@ -58,6 +65,7 @@ export class Modbox {
 			fs,
 			[
 				createVirtualResolver(),
+				createExternalResolver(),
 				createGraphResolver(),
 				createMemoryResolver(),
 				createBlobResolver(),
@@ -76,7 +84,7 @@ export class Modbox {
 			transpiler,
 			registry,
 		);
-		// todo: refactor options
+		/** @todo: refactor options */
 		const graphBuilder = new GraphBuilder(
 			Logger.create("graph-builder"),
 			fs,

@@ -5,7 +5,6 @@ export function createVirtualFetcher() {
 		fetch: async ({ url, next }, { logger, fs }) => {
 			if (url.startsWith("virtual-file://")) {
 				const path = url.replace("virtual-file://", "");
-				logger.debug(`Fetching virtual file: ${path}`);
 				const content = fs.readFile(path);
 				if (content) {
 					return new Response(content, {
