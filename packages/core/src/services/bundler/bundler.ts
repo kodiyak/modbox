@@ -98,6 +98,7 @@ export class Bundler {
 
 		const m = await this.import(entrypoint);
 		this.logger.info("Build completed.", { m });
+		return m;
 	}
 
 	private import(path: string): Promise<any> {

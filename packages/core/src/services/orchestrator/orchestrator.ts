@@ -21,11 +21,13 @@ export class Orchestrator {
 		this.fs = fs;
 	}
 
-	async mount(entrypoint: string, options: OrchestratorMountOptions) {
+	async mount(entrypoint: string, options?: OrchestratorMountOptions) {
 		this.logger.info("Mounting modules...", this.fs.readdir());
 		await this.graph.build();
-		await this.bundler.build(entrypoint, options);
+		const result = await this.bundler.build(entrypoint, options ?? {});
 		this.logger.info("Modules mounted successfully");
 		this.logger.debug(`Graph`, this.graph.getModules());
+
+		return result;
 	}
 }

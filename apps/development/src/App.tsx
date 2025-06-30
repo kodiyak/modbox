@@ -1,29 +1,19 @@
-import { Modbox } from "@modbox/core";
-import * as React from "react";
-import * as ReactDOM from "react-dom/client";
+import { useState } from "react";
+import BasicModule from "./components/demos/basic-module";
+import BasicReact from "./components/demos/basic-react";
 
 export default function App() {
-	const { useRef } = React;
-	const containerRef = useRef<HTMLDivElement>(null);
-	const load = async () => {
-		const modbox = await Modbox.boot({
-			debug: true,
-		});
-		modbox.fs.writeFile(
-			"/index.js",
-			'import { hello } from "./hello.js";\nconsole.log(hello());',
-		);
-		modbox.fs.writeFile(
-			"/hello.js",
-			`import React from "react";
-			console.log({ React })
-			export function hello() { return "Hello, Modbox!"; }`,
-		);
-
-		const module = await modbox.mount("/index.js", {
-			inject: { react: React, "react-dom": ReactDOM },
-		});
-	};
+	const [demo, setDemo] = useState(0);
+	const demos = [
+		{
+			label: "Basic Module",
+			render: <BasicModule />,
+		},
+		{
+			label: "React",
+			render: <BasicReact />,
+		},
+	];
 
 	return (
 		<div
@@ -33,15 +23,21 @@ export default function App() {
 				background: "#000",
 			}}
 		>
-			<button
-				type={"button"}
-				onClick={async () => {
-					await load();
-				}}
-			>
-				Carregar Módulos
-			</button>
-			<div ref={containerRef}></div>
+			<div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+				<div style={{ display: "flex", flexDirection: "row" }}>
+					{demos.map((demo, index) => (
+						<button
+							key={demo.label}
+							type={"button"}
+							onClick={() => setDemo(index)}
+						>
+							{demo.label}
+						</button>
+					))}
+				</div>
+
+				{demos[demo].render}
+			</div>
 		</div>
 	);
 }
