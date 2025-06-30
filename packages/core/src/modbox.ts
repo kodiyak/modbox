@@ -8,6 +8,7 @@ import {
 	createGraphResolver,
 	createLoggerExtractor,
 	createMemoryResolver,
+	createVirtualFetcher,
 	createVirtualResolver,
 	ExternalRegistry,
 	GraphBuilder,
@@ -49,7 +50,7 @@ export class Modbox {
 			Logger.create("modules-fetcher"),
 			registry,
 			fs,
-			[createDefaultFetcher(), ...fetchers],
+			[createDefaultFetcher(), createVirtualFetcher(), ...fetchers],
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
