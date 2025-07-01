@@ -25,7 +25,7 @@ export function virtual() {
 				},
 			},
 			resolver: {
-				resolve: ({ path, next, fs, logger }) => {
+				resolve: ({ path, next, fs }) => {
 					const content = fs.readFile(path);
 					if (content) {
 						return next({ path: `virtual-file://${path}` });

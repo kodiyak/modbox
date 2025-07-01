@@ -1,4 +1,4 @@
-import type { BundlerBuildOptions } from "../services";
+import type { BundlerBuildOptions } from "../bundler";
 
 export interface OrchestratorOptions {
 	debug?: boolean;

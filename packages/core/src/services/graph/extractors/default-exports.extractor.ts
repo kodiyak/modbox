@@ -1,7 +1,7 @@
 import { defineModuleExtractor } from "../utils";
 
 export function createDefaultExportsExtractor() {
-	return defineModuleExtractor(({ node }, { isType, exports }) => {
+	return defineModuleExtractor(({ node, isType, exports }) => {
 		if (isType(node, "ExpressionStatement")) {
 			if (node.expression.type === "AssignmentExpression") {
 				if (

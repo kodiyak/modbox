@@ -7,6 +7,7 @@ import type { GraphBuilderOptions } from "./types";
 export class GraphBuilder {
 	private readonly modules: Map<string, GraphModule>;
 	private readonly fs: VirtualFiles;
+	// @ts-expect-error: This is a placeholder for the options type, which can be defined later.
 	private readonly options: GraphBuilderOptions;
 	private readonly logger: Logger;
 	private readonly extractor: ModulesExtractor;

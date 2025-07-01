@@ -9,6 +9,7 @@ export class Orchestrator {
 	public readonly fs: VirtualFiles;
 
 	constructor(
+		// @ts-expect-error: This is a placeholder for the options type, which can be defined later.
 		options: OrchestratorOptions = {},
 		logger: Logger,
 		bundler: Bundler,

@@ -1,7 +1,7 @@
 import { defineModuleExtractor } from "../utils";
 
 export function createDefaultImportsExtractor() {
-	return defineModuleExtractor(({ node, dir }, { isType, dependencies }) => {
+	return defineModuleExtractor(({ node, dir, isType, dependencies }) => {
 		if (isType(node, "ImportDeclaration")) {
 			const updatedPath = node.source.value.startsWith("./")
 				? node.source.value.replace(/^\.\//, `${dir}/`)

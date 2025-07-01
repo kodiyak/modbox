@@ -1,13 +1,11 @@
 import type {
 	BlobsRegistry,
 	ExternalRegistry,
-	GraphRegistry,
 	ModulesRegistry,
 	ResponseRegistry,
 } from "./registries";
 
 interface _Registries {
-	// graph: GraphRegistry;
 	blobs: BlobsRegistry;
 	modules: ModulesRegistry;
 	external: ExternalRegistry; // todo: use to registry external graph modules

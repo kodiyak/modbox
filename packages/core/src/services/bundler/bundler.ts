@@ -15,6 +15,7 @@ import type {
 } from "./types";
 
 export class Bundler {
+	// @ts-expect-error: This is a placeholder for the events type, which can be defined later.
 	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
 	private readonly fetcher: PolyfillFetcher;

@@ -4,6 +4,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "build:npm": "pnpm turbo build --filter @modpack/core --filter @modpack/plugins --filter @modpack/utils",
+    "publish": "pnpm turbo publish --filter @modpack/core --filter @modpack/plugins --filter @modpack/utils",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
