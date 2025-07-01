@@ -2,6 +2,7 @@ import { useState } from "react";
 import BasicModule from "./components/demos/basic-module";
 import BasicReact from "./components/demos/basic-react";
 import DemoAlias from "./components/demos/demo-alias";
+import DemoTransformer from "./components/demos/demo-transformer";
 
 export default function App() {
 	const [demo, setDemo] = useState(0);
@@ -13,6 +14,10 @@ export default function App() {
 		{
 			label: "Alias",
 			render: <DemoAlias />,
+		},
+		{
+			label: "Transformer",
+			render: <DemoTransformer />,
 		},
 		{
 			label: "React",

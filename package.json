@@ -21,6 +21,7 @@
     "@types/react-dom": "19.1.0",
     "eslint": "^9.29.0",
     "turbo": "^2.5.4",
+    "@swc/wasm-web": "1.12.7",
     "typescript": "5.8.2",
     "vitest": "3.2.4"
   },

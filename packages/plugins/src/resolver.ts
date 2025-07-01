@@ -87,8 +87,8 @@ export function resolver({ extensions, index, alias }: ResolveOptions) {
 
 					const resolvedPath = tryResolve(path);
 					if (resolvedPath) return resolvedPath;
+					// If no resolution was found, call the next resolver
 					const resolved = next({ path, parent });
-
 					const resolvedFromNext = tryResolve(resolved);
 					if (resolvedFromNext) return resolvedFromNext;
 

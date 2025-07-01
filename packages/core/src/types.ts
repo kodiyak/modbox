@@ -2,6 +2,7 @@ import type {
 	FetcherHook,
 	ModuleExtractorHandler,
 	ResolverHook,
+	TransformerHook,
 } from "./services";
 
 export interface ModboxBootOptions {
@@ -13,6 +14,7 @@ export interface ModboxPlugin {
 	pipeline?: {
 		resolver?: ResolverHook;
 		fetcher?: FetcherHook;
+		transformer?: TransformerHook;
 	};
 	analyze?: {
 		process?: ModuleExtractorHandler;

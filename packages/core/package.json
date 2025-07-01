@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "debug": "4.4.1",
-    "@swc/wasm-web": "1.12.7",
     "eventemitter3": "5.0.1"
   },
   "devDependencies": {

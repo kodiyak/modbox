@@ -8,6 +8,7 @@ import {
 	Orchestrator,
 	PolyfillFetcher,
 	PolyfillResolver,
+	PolyfillTransformer,
 	ResponseRegistry,
 	VirtualFiles,
 } from "./services";
@@ -36,6 +37,12 @@ export class Modbox {
 			fs,
 			plugins.map((plugin) => plugin.pipeline?.fetcher!).filter(Boolean),
 		);
+		const transformer = new PolyfillTransformer(
+			Logger.create("modules-transformer"),
+			registry,
+			fs,
+			plugins.map((plugin) => plugin.pipeline?.transformer!).filter(Boolean),
+		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
 			registry,
@@ -44,9 +51,10 @@ export class Modbox {
 		);
 		const bundler = new Bundler(
 			Logger.create("bundler"),
+			registry,
 			fetcher,
 			resolver,
-			registry,
+			transformer,
 		);
 		/** @todo: refactor options */
 		const graphBuilder = new GraphBuilder(

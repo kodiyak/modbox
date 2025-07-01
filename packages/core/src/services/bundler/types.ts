@@ -3,6 +3,13 @@ import type { VirtualFiles } from "../../shared/virtual-files";
 import type { GraphBuilderOptions } from "../graph";
 import type { BundlerRegistry } from "./bundler-registry";
 
+// Plugin [Internal]
+interface PluginMiddlewareContext {
+	logger: Logger;
+	registry: BundlerRegistry;
+	fs: VirtualFiles;
+}
+
 // Resolver [Internal]
 export type ResolverResult = string;
 export interface ResolveMiddlewareProps {
@@ -12,13 +19,8 @@ export interface ResolveMiddlewareProps {
 		props?: Partial<Omit<ResolveMiddlewareProps, "next">>,
 	) => ResolverResult;
 }
-interface ResolveMiddlewareContext {
-	logger: Logger;
-	registry: BundlerRegistry;
-	fs: VirtualFiles;
-}
 type ResolverMiddleware = (
-	props: ResolveMiddlewareProps & ResolveMiddlewareContext,
+	props: ResolveMiddlewareProps & PluginMiddlewareContext,
 ) => ResolverResult;
 export type ResolverHook = {
 	resolve: ResolverMiddleware;
@@ -32,21 +34,31 @@ export interface BundlerBuildOptions extends GraphBuilderOptions {
 
 // Fetcher [Internal]
 export type FetcherResult = Promise<Response | undefined>;
-interface FetcherMiddlewareContext {
-	logger: Logger;
-	registry: BundlerRegistry;
-	fs: VirtualFiles;
-}
 interface FetchMiddlewareProps {
 	url: string;
 	options: RequestInit | undefined;
 	next: () => FetcherResult;
 }
 type FetcherMiddleware = (
-	props: FetchMiddlewareProps & FetcherMiddlewareContext,
+	props: FetchMiddlewareProps & PluginMiddlewareContext,
 ) => FetcherResult;
 export type FetcherHook = {
 	fetch: FetcherMiddleware;
+	cleanup?: (url: string) => void;
+};
+
+export interface TransformMiddlewareProps {
+	source: string;
+	url: string;
+	next: (
+		props?: Partial<Omit<TransformMiddlewareProps, "next">>,
+	) => string | Promise<string>;
+}
+export type TransformMiddleware = (
+	props: TransformMiddlewareProps & PluginMiddlewareContext,
+) => string | Promise<string>;
+export type TransformerHook = {
+	transform: TransformMiddleware;
 	cleanup?: (url: string) => void;
 };
 

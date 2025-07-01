@@ -2,7 +2,11 @@ import { z } from "zod";
 import type { Logger } from "../../shared";
 import { EventEmitter } from "../../shared/event-emitter";
 import type { BundlerRegistry } from "./bundler-registry";
-import type { PolyfillFetcher, PolyfillResolver } from "./polyfill";
+import type {
+	PolyfillFetcher,
+	PolyfillResolver,
+	PolyfillTransformer,
+} from "./polyfill";
 import type {
 	BundlerBuildOptions,
 	EsmsInitOptions,
@@ -15,6 +19,7 @@ export class Bundler {
 
 	private readonly fetcher: PolyfillFetcher;
 	private readonly resolver: PolyfillResolver;
+	private readonly transformer: PolyfillTransformer;
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 
@@ -30,13 +35,15 @@ export class Bundler {
 
 	constructor(
 		logger: Logger,
+		registry: BundlerRegistry,
 		fetcher: PolyfillFetcher,
 		resolver: PolyfillResolver,
-		registry: BundlerRegistry,
+		transformer: PolyfillTransformer,
 	) {
 		this.fetcher = fetcher;
 		this.resolver = resolver;
 		this.logger = logger;
+		this.transformer = transformer;
 		this.registry = registry;
 	}
 
@@ -57,7 +64,10 @@ export class Bundler {
 					resolve();
 				},
 				onerror: (error: Event) => {
-					this.logger.error("Failed to load es-module-shims:", error);
+					this.logger.error(
+						"[es-module-shims] Failed to load es-module-shims:",
+						error,
+					);
 					reject(new Error("Failed to load es-module-shims"));
 				},
 			});
@@ -66,7 +76,38 @@ export class Bundler {
 					...this.getEsmsInitOptions(),
 					...esmsInitOptions,
 					resolve: this.resolver.resolve.bind(this.resolver),
-					fetch: this.fetcher.fetch.bind(this.fetcher),
+					fetch: async (url: string, opts: RequestInit) => {
+						const result = await this.fetcher.fetch(url, opts, () => {
+							this.logger.debug(
+								"[es-module-shims] Default fetch called for",
+								url,
+							);
+							return fetch(url, opts);
+						});
+
+						if (!result || !result.ok) return result;
+
+						this.logger.debug("[es-module-shims] Fetch successful for", url);
+
+						const transformedResult = await this.transformer.transform(
+							await result.text(),
+							url,
+							(source: string, url: string) => {
+								this.logger.debug(
+									"[es-module-shims] Default transform called for",
+									{ url, source },
+								);
+								return source;
+							},
+						);
+
+						return new Response(transformedResult, {
+							headers: {
+								"Content-Type": "application/javascript",
+								"Content-Length": transformedResult.length.toString(),
+							},
+						});
+					},
 				},
 			});
 			this.window.document.head.appendChild(script);
