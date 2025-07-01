@@ -131,8 +131,6 @@ export class Bundler {
 			this.registry.get("modules").register(key, value);
 		});
 
-		// await this.transpiler.transpile();
-
 		const m = await this.import(entrypoint);
 		this.logger.info("Build completed.", { m });
 		return m;
