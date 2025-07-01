@@ -18,7 +18,7 @@ In today's web development, rigid build tools often limit innovation. Modbox off
 
 ## Core Concepts
 
-<Cards className="grid-cols-3">
+<Cards className="grid-cols-2">
   <Card href="/docs/core-concepts/resolvers" title="Resolvers">
     Learn how intelligently finds and maps module paths, supporting aliases and
     custom strategies.
@@ -30,6 +30,14 @@ In today's web development, rigid build tools often limit innovation. Modbox off
   <Card href="/docs/core-concepts/transformers" title="Transformers">
     Explore how Modbox modifies code, from transpiling TypeScript/JSX to
     injecting Hot Module Reload logic.
+  </Card>
+  <Card href="/docs/core-concepts/analyzers" title="Analyzer">
+    Understand how Modbox analyzes code, providing insights into dependencies,
+    imports, and module structure.
+  </Card>
+  <Card href="/docs/core-concepts/runtimes" title="Runtimes">
+    Learn how Modbox executes code, managing the execution context and
+    environment.
   </Card>
 </Cards>
 
@@ -147,4 +155,3 @@ After calling `modbox.mount()`, Modbox will process `/main.jsx` through its conf
     them.
   </Card>
 </Cards>
-````
