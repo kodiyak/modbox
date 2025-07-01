@@ -1,10 +1,9 @@
 import { Modbox } from "@modbox/core";
 import {
-	alias,
 	cache,
-	external,
 	graphBuilder,
 	logger,
+	resolver,
 	virtual,
 } from "@modbox/plugins";
 
@@ -13,14 +12,15 @@ export default function DemoAlias() {
 		const modbox = await Modbox.boot({
 			debug: false,
 			plugins: [
-				alias({
-					"@/": "/src/",
-				}),
 				graphBuilder(),
+				resolver({
+					extensions: [".js", ".ts", ".tsx", ".jsx"],
+					alias: { "@/": "/src/" },
+					index: true,
+				}),
 				cache(),
-				logger(),
-				external(),
 				virtual(),
+				logger(),
 			],
 		});
 		modbox.fs.writeFile(
@@ -31,7 +31,7 @@ export default function DemoAlias() {
 		);
 		modbox.fs.writeFile(
 			"/src/index.js",
-			`import { hello } from "@/hello.js";
+			`import { hello } from "@/hello";
       export function print(name) {
         console.log(hello(name));
       }

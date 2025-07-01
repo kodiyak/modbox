@@ -18,3 +18,5 @@ export interface ModboxPlugin {
 		process?: ModuleExtractorHandler;
 	};
 }
+
+export * from "./services/types";

@@ -1,7 +1,6 @@
 import { Modbox } from "@modbox/core";
 import {
 	cache,
-	external,
 	graphBuilder,
 	logger,
 	resolver,
@@ -19,7 +18,6 @@ export default function BasicModule() {
 					extensions: [".js", ".ts", ".tsx", ".jsx"],
 					index: true,
 				}),
-				external(),
 				virtual(),
 				logger(),
 			],
