@@ -13,14 +13,15 @@ export function swc(options: SwcOptions = {}) {
 					const { extensions = [".ts", ".tsx", ".js", ".jsx"], ...swcOptions } =
 						options;
 
-					logger.debug(
-						`[swc] Transforming source with options: ${JSON.stringify(swcOptions)}`,
-						{
-							source,
-							extensions,
-						},
-					);
+					if (!extensions.some((ext) => url.endsWith(ext))) {
+						return next({ source, url });
+					}
 
+					logger.debug(`[swc] Transforming ${url}...`, {
+						source,
+						extensions,
+						swcOptions,
+					});
 					try {
 						return next({
 							source: transformSync(source, swcOptions).code,
@@ -32,7 +33,7 @@ export function swc(options: SwcOptions = {}) {
 							extensions,
 							error,
 						});
-						return source; // Fallback to original source on error
+						return next({ source, url }); // Fallback to original source on error
 					}
 				},
 			},

@@ -67,10 +67,7 @@ export class PolyfillTransformer {
 			);
 
 			if (typeof result === "string") {
-				this.logger.debug(
-					`[TranspileHook][${index}][${currentUrl}] Transformed source received.`,
-					result,
-				);
+				// Transform the source code using the hook
 				return result;
 			}
 

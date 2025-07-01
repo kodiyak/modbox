@@ -1,6 +1,7 @@
 import { Modbox } from "@modbox/core";
 import {
 	cache,
+	external,
 	graphBuilder,
 	logger,
 	resolver,
@@ -20,6 +21,7 @@ export default function DemoTransformer() {
 				}),
 				cache(),
 				virtual(),
+				external(),
 				swc({
 					extensions: [".js", ".ts", ".tsx", ".jsx"],
 					jsc: {
@@ -58,8 +60,21 @@ export default function DemoTransformer() {
 		modbox.fs.writeFile(
 			"/main.jsx",
 			`import { createRoot } from 'react-dom/client'
+			import { useState } from 'react';
+
+			const Application = () => {
+				const [count, setCount] = useState(0);
+				return (
+					<div>
+						<h1>Count: {count}</h1>
+						<button onClick={() => setCount(count + 1)}>Increment</button>
+						<button onClick={() => setCount(count - 1)}>Decrement</button>
+					</div>
+				)
+			}
+
       createRoot(document.getElementById('modboxRoot')).render(
-        <div>React ELEMENT</div>,
+        <Application />,
       )`,
 		);
 
@@ -74,6 +89,7 @@ export default function DemoTransformer() {
 				background: "#000",
 			}}
 		>
+			<div id={"modboxRoot"}></div>
 			<button
 				type={"button"}
 				onClick={async () => {
