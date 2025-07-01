@@ -1,13 +1,150 @@
 ---
-title: Hello World
-description: Your first document
+title: Getting Started
+description: "Modbox: Modular and Flexible JavaScript Runtime"
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+## Introduction
 
-## What is Next?
+**Modbox** is a modular JavaScript runtime that allows you to run JavaScript and TypeScript code in a flexible and isolated environment, built on top of `es-module-shims`. It supports various plugins for module resolution, caching, and code transformation, redefining how modules are processed at runtime.
+
+### Why Modbox?
+
+In today's web development, rigid build tools often limit innovation. Modbox offers a powerful alternative for scenarios demanding **unprecedented control** over module handling. It helps you:
+
+- **Gain Granular Control:** Fine-tune every step of module processing, moving beyond monolithic bundlers.
+- **Embrace Extreme Modularity:** Build custom pipelines by adding, removing, or reordering plugins.
+- **Power Dynamic Environments:** Perfect for code playgrounds, online editors, and any app needing real-time code manipulation.
+- **Leverage Modern Tech:** We stand on the shoulders of giants, orchestrating `es-module-shims` for robust module loading and `SWC-Wasm` for blazing-fast code transformations directly in the browser.
+
+## Core Concepts
+
+<Cards className="grid-cols-3">
+  <Card href="/docs/core-concepts/resolvers" title="Resolvers">
+    Learn how intelligently finds and maps module paths, supporting aliases and
+    custom strategies.
+  </Card>
+  <Card href="/docs/core-concepts/fetchers" title="Fetchers">
+    Discover how to retrieves module content from virtual files, external URLs,
+    and other sources.
+  </Card>
+  <Card href="/docs/core-concepts/transformers" title="Transformers">
+    Explore how Modbox modifies code, from transpiling TypeScript/JSX to
+    injecting Hot Module Reload logic.
+  </Card>
+</Cards>
+
+## Basic Usage
+
+Let's walk through a simple example to get Modbox up and running. This demo will show you how to set up Modbox with essential plugins to load, transform, and execute a simple React component from our virtual file system.
+
+```package-install
+@modbox/core @modbox/plugins
+```
+
+### Import Modbox
+
+```ts
+import { Modbox } from "@modbox/core";
+import {
+  cache,
+  external,
+  logger,
+  resolver,
+  swc,
+  virtual,
+} from "@modbox/plugins";
+```
+
+### Create a Modbox Instance
+
+```ts
+const modbox = await Modbox.boot({
+  debug: false, // Set to true for debugging
+  plugins: [
+    // **resolver**: Handles how module paths are found, supporting aliases (`@/`) and file extensions.
+    resolver({
+      extensions: [".js", ".ts", ".tsx", ".jsx"],
+      alias: { "@/": "/src/" },
+      index: true,
+    }),
+    // **cache**: Optimizes fetching by storing and serving previously loaded modules.
+    cache(),
+    // **virtual**: Enables Modbox to read modules directly from its in-memory file system (`modbox.fs`).
+    virtual(),
+    // **external**: Resolves and fetches modules from external URLs, like CDNs (e.g., from `https://esm.sh/*`).
+    external(),
+    // **swc**: Transforms your TypeScript and JSX code into standard JavaScript, essential for React.
+    swc({
+      extensions: [".js", ".ts", ".tsx", ".jsx"],
+      jsc: {
+        target: "es2022",
+        parser: {
+          syntax: "typescript",
+          tsx: true,
+        },
+      },
+      sourceMaps: true,
+      module: {
+        type: "es6",
+        strict: false,
+        ignoreDynamic: true,
+        importInterop: "swc",
+      },
+    }),
+    // **logger**: Provides detailed logs of Modbox's operations, very useful for debugging your pipeline.
+    logger(),
+  ],
+});
+```
+
+### Write a Module
+
+```ts
+modbox.fs.writeFile(
+  "/main.jsx",
+  `import { createRoot } from 'react-dom/client'
+  import { useState } from 'react';
+
+  const Application = () => {
+    const [count, setCount] = useState(0);
+    return (
+      <div>
+        <h1>Count: {count}</h1>
+        <button onClick={() => setCount(count + 1)}>Increment</button>
+        <button onClick={() => setCount(count - 1)}>Decrement</button>
+      </div>
+    )
+  }
+
+  createRoot(document.getElementById('modboxRoot')).render(
+    <Application />,
+  )`
+);
+```
+
+### Run the Module
+
+Finally, tell Modbox which module to load and execute.
+
+```ts
+await modbox.mount("/main.jsx");
+```
+
+After calling `modbox.mount()`, Modbox will process `/main.jsx` through its configured pipeline:
+
+1. The virtual plugin's resolver identifies `/main.jsx` in the virtual file system.
+2. The virtual plugin's fetcher retrieves the content of `/main.jsx` from `modbox.fs`.
+3. The `swc` transformer transpiles the JSX/TypeScript code into standard JavaScript.
+4. The JavaScript code is then executed in your environment, rendering the React Application component into the `<div id="modboxRoot"></div>` element you prepared.
+5. You should now see the React counter application running in your browser!
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card href="/docs/core-concepts" title="Understand Core Concepts">
+    Dive deeper into Modbox's pipeline, plugins, and virtual file system.
+  </Card>
+  <Card href="/docs/plugins" title="Explore Official Plugins">
+    Learn about all the powerful plugins Modbox offers and how to configure
+    them.
+  </Card>
 </Cards>
+````
