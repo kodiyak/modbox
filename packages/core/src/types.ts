@@ -5,12 +5,12 @@ import type {
 	TransformerHook,
 } from "./services";
 
-export interface ModboxBootOptions {
+export interface ModpackBootOptions {
 	debug?: boolean;
-	plugins?: ModboxPlugin[];
+	plugins?: ModpackPlugin[];
 }
 
-export interface ModboxPlugin {
+export interface ModpackPlugin {
 	pipeline?: {
 		resolver?: ResolverHook;
 		fetcher?: FetcherHook;

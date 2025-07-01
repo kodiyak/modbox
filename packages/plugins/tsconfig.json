@@ -1,5 +1,5 @@
 {
-  "extends": "@modbox/typescript-config/lib.json",
+  "extends": "@modpack/typescript-config/lib.json",
   "include": [
     "**/*.ts",
     "**/*.tsx",

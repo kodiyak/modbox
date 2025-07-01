@@ -1,4 +1,4 @@
-import { definePlugin } from "@modbox/utils";
+import { definePlugin } from "@modpack/utils";
 
 export function logger() {
 	return definePlugin({

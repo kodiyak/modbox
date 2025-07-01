@@ -1,4 +1,4 @@
-import { definePlugin } from "@modbox/utils";
+import { definePlugin } from "@modpack/utils";
 
 export function external(options?: { [key: string]: string }) {
 	return definePlugin({

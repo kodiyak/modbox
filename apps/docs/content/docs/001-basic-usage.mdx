@@ -1,20 +1,20 @@
 ---
 title: Basic Usage
-description: "Create a simple React application with Modbox"
+description: "Create a simple React application with Modpack"
 ---
 
 ## Installation
 
-Let's walk through a simple example to get Modbox up and running. This demo will show you how to set up Modbox with essential plugins to load, transform, and execute a simple React component from our virtual file system.
+Let's walk through a simple example to get Modpack up and running. This demo will show you how to set up Modpack with essential plugins to load, transform, and execute a simple React component from our virtual file system.
 
 ```package-install
-@modbox/core @modbox/plugins
+@modpack/core @modpack/plugins
 ```
 
-## Import Modbox
+## Import Modpack
 
 ```ts
-import { Modbox } from "@modbox/core";
+import { Modpack } from "@modpack/core";
 import {
   cache,
   external,
@@ -22,13 +22,13 @@ import {
   resolver,
   swc,
   virtual,
-} from "@modbox/plugins";
+} from "@modpack/plugins";
 ```
 
-## Create a Modbox Instance
+## Create a Modpack Instance
 
 ```ts
-const modbox = await Modbox.boot({
+const modpack = await Modpack.boot({
   debug: false, // Set to true for debugging
   plugins: [
     // **resolver**: Handles how module paths are found, supporting aliases (`@/`) and file extensions.
@@ -39,7 +39,7 @@ const modbox = await Modbox.boot({
     }),
     // **cache**: Optimizes fetching by storing and serving previously loaded modules.
     cache(),
-    // **virtual**: Enables Modbox to read modules directly from its in-memory file system (`modbox.fs`).
+    // **virtual**: Enables Modpack to read modules directly from its in-memory file system (`modpack.fs`).
     virtual(),
     // **external**: Resolves and fetches modules from external URLs, like CDNs (e.g., from `https://esm.sh/*`).
     external(),
@@ -61,7 +61,7 @@ const modbox = await Modbox.boot({
         importInterop: "swc",
       },
     }),
-    // **logger**: Provides detailed logs of Modbox's operations, very useful for debugging your pipeline.
+    // **logger**: Provides detailed logs of Modpack's operations, very useful for debugging your pipeline.
     logger(),
   ],
 });
@@ -70,7 +70,7 @@ const modbox = await Modbox.boot({
 ### Minimal React Application
 
 ```ts
-modbox.fs.writeFile(
+modpack.fs.writeFile(
   "/main.jsx",
   `import { createRoot } from 'react-dom/client'
   import { useState } from 'react';
@@ -86,7 +86,7 @@ modbox.fs.writeFile(
     )
   }
 
-  createRoot(document.getElementById('modboxRoot')).render(
+  createRoot(document.getElementById('modpackRoot')).render(
     <Application />,
   )`
 );
@@ -94,26 +94,26 @@ modbox.fs.writeFile(
 
 ### Run the Module
 
-Finally, tell Modbox which module to load and execute.
+Finally, tell Modpack which module to load and execute.
 
 ```ts
-await modbox.mount("/main.jsx");
+await modpack.mount("/main.jsx");
 ```
 
-After calling `modbox.mount()`, Modbox will process `/main.jsx` through its configured pipeline:
+After calling `modpack.mount()`, Modpack will process `/main.jsx` through its configured pipeline:
 
 1. The virtual plugin's resolver identifies `/main.jsx` in the virtual file system.
-2. The virtual plugin's fetcher retrieves the content of `/main.jsx` from `modbox.fs`.
+2. The virtual plugin's fetcher retrieves the content of `/main.jsx` from `modpack.fs`.
 3. The `swc` transformer transpiles the JSX/TypeScript code into standard JavaScript.
-4. The JavaScript code is then executed in your environment, rendering the React Application component into the `<div id="modboxRoot"></div>` element you prepared.
+4. The JavaScript code is then executed in your environment, rendering the React Application component into the `<div id="modpackRoot"></div>` element you prepared.
 5. You should now see the React counter application running in your browser!
 
 <Cards>
   <Card href="/docs/core-concepts" title="Understand Core Concepts">
-    Dive deeper into Modbox's pipeline, plugins, and virtual file system.
+    Dive deeper into Modpack's pipeline, plugins, and virtual file system.
   </Card>
   <Card href="/docs/plugins" title="Explore Official Plugins">
-    Learn about all the powerful plugins Modbox offers and how to configure
+    Learn about all the powerful plugins Modpack offers and how to configure
     them.
   </Card>
 </Cards>

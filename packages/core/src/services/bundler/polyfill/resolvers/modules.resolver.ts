@@ -14,7 +14,7 @@ export function createModulesResolver() {
 				if (blobURL) return blobURL;
 
 				const source = `
-					const mod = window.__modboxModules['${path}'];
+					const mod = window.__modpackModules['${path}'];
 					export { mod as default };
 					${getKeys(module)
 						.map((key) => `export const ${key} = mod.${key};`)

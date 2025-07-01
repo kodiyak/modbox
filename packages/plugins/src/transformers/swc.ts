@@ -1,4 +1,4 @@
-import { definePlugin } from "@modbox/utils";
+import { definePlugin } from "@modpack/utils";
 import { type Options, transformSync } from "@swc/wasm-web";
 
 interface SwcOptions extends Options {

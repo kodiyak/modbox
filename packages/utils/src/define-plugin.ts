@@ -1,5 +1,5 @@
-import type { ModboxPlugin } from "@modbox/core/types";
+import type { ModpackPlugin } from "@modpack/core/types";
 
-export function definePlugin(plugin: ModboxPlugin): ModboxPlugin {
+export function definePlugin(plugin: ModpackPlugin): ModpackPlugin {
 	return plugin;
 }

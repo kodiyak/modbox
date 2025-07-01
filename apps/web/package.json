@@ -12,7 +12,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@modbox/eslint-config": "workspace:*",
-    "@modbox/typescript-config": "workspace:*"
+    "@modpack/eslint-config": "workspace:*",
+    "@modpack/typescript-config": "workspace:*"
   }
 }

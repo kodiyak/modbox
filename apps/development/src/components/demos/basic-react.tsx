@@ -1,19 +1,19 @@
-import { Modbox } from "@modbox/core";
+import { Modpack } from "@modpack/core";
 
 export default function BasicReact() {
 	const load = async () => {
-		const modbox = await Modbox.boot({
+		const modpack = await Modpack.boot({
 			debug: true,
 		});
-		modbox.fs.writeFile(
+		modpack.fs.writeFile(
 			"/main.jsx",
 			`import { createRoot } from 'react-dom/client'
-      createRoot(document.getElementById('modboxRoot')).render(
+      createRoot(document.getElementById('modpackRoot')).render(
         <div>React ELEMENT</div>,
       )`,
 		);
 
-		await modbox.mount("/main.jsx");
+		await modpack.mount("/main.jsx");
 	};
 
 	return (
@@ -24,7 +24,7 @@ export default function BasicReact() {
 				background: "#000",
 			}}
 		>
-			<div id={"modboxRoot"}>Waiting Component...</div>
+			<div id={"modpackRoot"}>Waiting Component...</div>
 			<button
 				type={"button"}
 				onClick={async () => {

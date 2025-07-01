@@ -1,5 +1,5 @@
 {
-  "name": "modbox",
+  "name": "modpack",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -12,6 +12,7 @@
     "next": "^15.3.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "tsup": "8.5.0",
     "zod": "3.25.67"
   },
   "devDependencies": {
@@ -21,7 +22,6 @@
     "@types/react-dom": "19.1.0",
     "eslint": "^9.29.0",
     "turbo": "^2.5.4",
-    "@swc/wasm-web": "1.12.7",
     "typescript": "5.8.2",
     "vitest": "3.2.4"
   },

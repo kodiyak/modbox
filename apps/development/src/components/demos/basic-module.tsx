@@ -1,15 +1,15 @@
-import { Modbox } from "@modbox/core";
+import { Modpack } from "@modpack/core";
 import {
 	cache,
 	graphBuilder,
 	logger,
 	resolver,
 	virtual,
-} from "@modbox/plugins";
+} from "@modpack/plugins";
 
 export default function BasicModule() {
 	const load = async () => {
-		const modbox = await Modbox.boot({
+		const modpack = await Modpack.boot({
 			debug: false,
 			plugins: [
 				graphBuilder(),
@@ -22,13 +22,13 @@ export default function BasicModule() {
 				logger(),
 			],
 		});
-		modbox.fs.writeFile(
+		modpack.fs.writeFile(
 			"/hello.js",
 			`export function hello(name) {
 				return "Hello, " + name + "!"; 
 			}`,
 		);
-		modbox.fs.writeFile(
+		modpack.fs.writeFile(
 			"/index.js",
 			`import { hello } from "/hello";
 			export function print(name) {
@@ -37,8 +37,8 @@ export default function BasicModule() {
 			`,
 		);
 
-		const { print } = await modbox.mount("/index.js");
-		print("Modbox");
+		const { print } = await modpack.mount("/index.js");
+		print("Modpack");
 	};
 
 	return (

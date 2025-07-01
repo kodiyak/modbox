@@ -1,5 +1,5 @@
 {
-  "name": "@modbox/core",
+  "name": "@modpack/core",
   "version": "0.1.0",
   "type": "module",
   "private": false,
@@ -19,10 +19,11 @@
   },
   "dependencies": {
     "debug": "4.4.1",
+    "@swc/wasm-web": "1.12.9",
     "eventemitter3": "5.0.1"
   },
   "devDependencies": {
     "@types/debug": "4.1.12",
-    "@modbox/typescript-config": "workspace:*"
+    "@modpack/typescript-config": "workspace:*"
   }
 }

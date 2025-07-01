@@ -1,15 +1,15 @@
-import { Modbox } from "@modbox/core";
+import { Modpack } from "@modpack/core";
 import {
 	cache,
 	graphBuilder,
 	logger,
 	resolver,
 	virtual,
-} from "@modbox/plugins";
+} from "@modpack/plugins";
 
 export default function DemoAlias() {
 	const load = async () => {
-		const modbox = await Modbox.boot({
+		const modpack = await Modpack.boot({
 			debug: false,
 			plugins: [
 				graphBuilder(),
@@ -23,13 +23,13 @@ export default function DemoAlias() {
 				logger(),
 			],
 		});
-		modbox.fs.writeFile(
+		modpack.fs.writeFile(
 			"/src/hello.js",
 			`export function hello(name) {
         return "Hello, " + name + "!"; 
       }`,
 		);
-		modbox.fs.writeFile(
+		modpack.fs.writeFile(
 			"/src/index.js",
 			`import { hello } from "@/hello";
       export function print(name) {
@@ -38,8 +38,8 @@ export default function DemoAlias() {
       `,
 		);
 
-		const { print } = await modbox.mount("/src/index.js");
-		print("Modbox");
+		const { print } = await modpack.mount("/src/index.js");
+		print("Modpack");
 	};
 
 	return (

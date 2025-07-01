@@ -1,12 +1,12 @@
-# Modbox - Modular and Flexible TypeScript/JavaScript Runtime
+# Modpack - Modular and Flexible TypeScript/JavaScript Runtime
 
 ## Introduction
 
-**Modbox** is a modular JavaScript runtime that allows you to run JavaScript and TypeScript code in a flexible and isolated environment, built on top of `es-module-shims`. It supports various plugins for module resolution, caching, and code transformation, redefining how modules are processed at runtime.
+**Modpack** is a modular JavaScript runtime that allows you to run JavaScript and TypeScript code in a flexible and isolated environment, built on top of `es-module-shims`. It supports various plugins for module resolution, caching, and code transformation, redefining how modules are processed at runtime.
 
-### Why Modbox?
+### Why Modpack?
 
-In today's web development, rigid build tools often limit innovation. Modbox offers a powerful alternative for scenarios demanding **unprecedented control** over module handling. It helps you:
+In today's web development, rigid build tools often limit innovation. Modpack offers a powerful alternative for scenarios demanding **unprecedented control** over module handling. It helps you:
 
 - **Gain Granular Control:** Fine-tune every step of module processing, moving beyond monolithic bundlers.
 - **Embrace Extreme Modularity:** Build custom pipelines by adding, removing, or reordering plugins.
@@ -15,16 +15,16 @@ In today's web development, rigid build tools often limit innovation. Modbox off
 
 ### Installation
 
-Let's walk through a simple example to get Modbox up and running. This demo will show you how to set up Modbox with essential plugins to load, transform, and execute a simple React component from our virtual file system.
+Let's walk through a simple example to get Modpack up and running. This demo will show you how to set up Modpack with essential plugins to load, transform, and execute a simple React component from our virtual file system.
 
 ```package-install
-@modbox/core @modbox/plugins
+@modpack/core @modpack/plugins
 ```
 
-### Import Modbox
+### Import Modpack
 
 ```ts
-import { Modbox } from "@modbox/core";
+import { Modpack } from "@modpack/core";
 import {
   cache,
   external,
@@ -32,13 +32,13 @@ import {
   resolver,
   swc,
   virtual,
-} from "@modbox/plugins";
+} from "@modpack/plugins";
 ```
 
-### Create a Modbox Instance
+### Create a Modpack Instance
 
 ```ts
-const modbox = await Modbox.boot({
+const modpack = await Modpack.boot({
   debug: false, // Set to true for debugging
   plugins: [
     // **resolver**: Handles how module paths are found, supporting aliases (`@/`) and file extensions.
@@ -49,7 +49,7 @@ const modbox = await Modbox.boot({
     }),
     // **cache**: Optimizes fetching by storing and serving previously loaded modules.
     cache(),
-    // **virtual**: Enables Modbox to read modules directly from its in-memory file system (`modbox.fs`).
+    // **virtual**: Enables Modpack to read modules directly from its in-memory file system (`modpack.fs`).
     virtual(),
     // **external**: Resolves and fetches modules from external URLs, like CDNs (e.g., from `https://esm.sh/*`).
     external(),
@@ -71,7 +71,7 @@ const modbox = await Modbox.boot({
         importInterop: "swc",
       },
     }),
-    // **logger**: Provides detailed logs of Modbox's operations, very useful for debugging your pipeline.
+    // **logger**: Provides detailed logs of Modpack's operations, very useful for debugging your pipeline.
     logger(),
   ],
 });
@@ -80,7 +80,7 @@ const modbox = await Modbox.boot({
 ### Minimal React Application
 
 ```ts
-modbox.fs.writeFile(
+modpack.fs.writeFile(
   "/main.jsx",
   `import { createRoot } from 'react-dom/client'
   import { useState } from 'react';
@@ -96,7 +96,7 @@ modbox.fs.writeFile(
     )
   }
 
-  createRoot(document.getElementById('modboxRoot')).render(
+  createRoot(document.getElementById('modpackRoot')).render(
     <Application />,
   )`
 );
@@ -104,16 +104,16 @@ modbox.fs.writeFile(
 
 ### Run the Module
 
-Finally, tell Modbox which module to load and execute.
+Finally, tell Modpack which module to load and execute.
 
 ```ts
-await modbox.mount("/main.jsx");
+await modpack.mount("/main.jsx");
 ```
 
-After calling `modbox.mount()`, Modbox will process `/main.jsx` through its configured pipeline:
+After calling `modpack.mount()`, Modpack will process `/main.jsx` through its configured pipeline:
 
 1. The virtual plugin's resolver identifies `/main.jsx` in the virtual file system.
-2. The virtual plugin's fetcher retrieves the content of `/main.jsx` from `modbox.fs`.
+2. The virtual plugin's fetcher retrieves the content of `/main.jsx` from `modpack.fs`.
 3. The `swc` transformer transpiles the JSX/TypeScript code into standard JavaScript.
-4. The JavaScript code is then executed in your environment, rendering the React Application component into the `<div id="modboxRoot"></div>` element you prepared.
+4. The JavaScript code is then executed in your environment, rendering the React Application component into the `<div id="modpackRoot"></div>` element you prepared.
 5. You should now see the React counter application running in your browser!

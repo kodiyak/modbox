@@ -20,7 +20,7 @@ export const baseOptions: BaseLayoutProps = {
 					width={32}
 					height={32}
 				/>
-				<span>Modbox</span>
+				<span>Modpack</span>
 			</>
 		),
 	},

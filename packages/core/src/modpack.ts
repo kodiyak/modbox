@@ -14,10 +14,10 @@ import {
 } from "./services";
 import { BundlerRegistry } from "./services/bundler/bundler-registry";
 import { Logger } from "./shared";
-import type { ModboxBootOptions } from "./types";
+import type { ModpackBootOptions } from "./types";
 
-export class Modbox {
-	static async boot({ debug, plugins = [] }: ModboxBootOptions) {
+export class Modpack {
+	static async boot({ debug, plugins = [] }: ModpackBootOptions) {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles();
 		const extractor = new ModulesExtractor(

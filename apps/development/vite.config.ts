@@ -10,7 +10,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			"@modbox/core": path.resolve(
+			"@modpack/core": path.resolve(
 				__dirname,
 				"../../packages/core/src/index.ts",
 			),

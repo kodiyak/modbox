@@ -12,7 +12,7 @@ export class Logger {
 	private readonly prefix: string;
 
 	constructor(scope = "default") {
-		this.prefix = `modbox:${scope}`;
+		this.prefix = `modpack:${scope}`;
 		const logger = debug(this.prefix);
 		this.log = {
 			error: logger.extend("error"),
@@ -24,7 +24,7 @@ export class Logger {
 	}
 
 	static enable(scope: string) {
-		return debug.enable(`modbox:${scope}`);
+		return debug.enable(`modpack:${scope}`);
 	}
 
 	static create(scope: string = "default"): Logger {

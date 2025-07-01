@@ -1,11 +1,11 @@
 /**
- * This is an AI provided code snippet for a Modbox plugin that renders React components.
- * It is designed to be used within the Modbox framework, allowing you to render React components
+ * This is an AI provided code snippet for a Modpack plugin that renders React components.
+ * It is designed to be used within the Modpack framework, allowing you to render React components
  */
-// @modbox/plugin-react-renderer.ts
+// @modpack/plugin-react-renderer.ts
 
-import type { RuntimePluginContext } from "@modbox/core/types"; // Ajuste conforme seus tipos
-import { definePlugin } from "@modbox/utils";
+import type { RuntimePluginContext } from "@modpack/core/types"; // Ajuste conforme seus tipos
+import { definePlugin } from "@modpack/utils";
 import type React from "react"; // Importa apenas os tipos de React
 import type ReactDOM from "react-dom/client"; // Importa apenas os tipos de ReactDOM
 
@@ -73,7 +73,7 @@ export function reactRendererPlugin(options: ReactRendererPluginOptions) {
 				}
 			},
 			// Um hook de inicialização do plugin para injetar React e ReactDOM
-			// Supondo que o Modbox.core tenha um serviço ou método para "injetáveis"
+			// Supondo que o Modpack.core tenha um serviço ou método para "injetáveis"
 			onSetup: ({
 				logger,
 				inject,
@@ -84,13 +84,13 @@ export function reactRendererPlugin(options: ReactRendererPluginOptions) {
 				logger.debug(
 					"[ReactRenderer]: Setting up React and ReactDOM injectables.",
 				);
-				// Injeta as instâncias de React e ReactDOM para que os módulos do Modbox possam importá-las
+				// Injeta as instâncias de React e ReactDOM para que os módulos do Modpack possam importá-las
 				inject("react", react);
 				inject("react-dom/client", reactDOM); // Ou apenas 'react-dom' se for o caso
 				// Se precisar de APIs específicas como 'ReactDOM.createRoot', injete separadamente
 				inject("react-dom/createRoot", reactDOM.createRoot);
 			},
-			// Hook para lidar com o unmount, se necessário (ex: ao trocar de módulo ou desligar Modbox)
+			// Hook para lidar com o unmount, se necessário (ex: ao trocar de módulo ou desligar Modpack)
 			onTeardown: ({ logger }: RuntimePluginContext) => {
 				if (reactRoot) {
 					logger.debug("[ReactRenderer]: Unmounting React root.");

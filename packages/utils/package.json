@@ -1,5 +1,5 @@
 {
-  "name": "@modbox/utils",
+  "name": "@modpack/utils",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -10,9 +10,9 @@
     "lint": "biome lint"
   },
   "dependencies": {
-    "@modbox/core": "workspace:*"
+    "@modpack/core": "workspace:*"
   },
   "devDependencies": {
-    "@modbox/typescript-config": "workspace:*"
+    "@modpack/typescript-config": "workspace:*"
   }
 }
