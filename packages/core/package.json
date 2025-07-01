@@ -2,7 +2,7 @@
   "name": "@modbox/core",
   "version": "0.1.0",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "test": "vitest",
     "lint": "biome lint"
