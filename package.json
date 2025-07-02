@@ -6,6 +6,7 @@
     "dev": "turbo run dev",
     "build:npm": "pnpm turbo build --filter @modpack/core --filter @modpack/plugins --filter @modpack/utils",
     "publish": "pnpm turbo publish --filter @modpack/core --filter @modpack/plugins --filter @modpack/utils",
+    "ci:release": "turbo build && changeset publish",
     "ci:version": "changeset version && pnpm install --no-frozen-lockfile",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
