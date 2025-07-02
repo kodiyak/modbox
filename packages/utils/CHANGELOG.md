@@ -1,5 +1,13 @@
 # @modpack/utils
 
+## 0.1.4-canary.0
+
+### Patch Changes
+
+- a5c1925: Publish canary changes
+- Updated dependencies [a5c1925]
+  - @modpack/core@0.1.4-canary.0
+
 ## 0.1.3
 
 ### Patch Changes
