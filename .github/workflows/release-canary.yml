@@ -3,10 +3,10 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - canary
     paths:
       - ".changeset/**"
-      - ".github/workflows/release.yml"
+      - ".github/workflows/release-canary.yml"
   workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
@@ -39,8 +39,8 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm release:version
-          publish: pnpm release:publish
+          version: pnpm canary:version
+          publish: pnpm canary:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

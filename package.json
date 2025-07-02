@@ -4,10 +4,10 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "build:npm": "pnpm turbo build --filter @modpack/core --filter @modpack/plugins --filter @modpack/utils",
-    "publish": "pnpm turbo publish --filter @modpack/core --filter @modpack/plugins --filter @modpack/utils",
-    "ci:release": "turbo build --filter @modpack/* && changeset publish",
-    "ci:version": "changeset version && pnpm install --no-frozen-lockfile",
+    "canary:publish": "turbo build --filter @modpack/* && changeset publish --tag canary",
+    "canary:version": "changeset pre enter canary && changeset version && pnpm install --no-frozen-lockfile",
+    "release:publish": "turbo build --filter @modpack/* && changeset publish",
+    "release:version": "changeset version && pnpm install --no-frozen-lockfile",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
