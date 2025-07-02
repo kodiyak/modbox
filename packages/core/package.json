@@ -1,12 +1,11 @@
 {
   "name": "@modpack/core",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "type": "module",
   "private": false,
   "scripts": {
     "test": "vitest",
     "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
-    "publish": "npm publish --access public",
     "lint": "biome lint"
   },
   "exports": {
