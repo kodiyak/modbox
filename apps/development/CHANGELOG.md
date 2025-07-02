@@ -1,5 +1,13 @@
 # development
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [a5c1925]
+  - @modpack/core@0.1.4
+  - @modpack/plugins@0.1.4
+
 ## 0.0.3-canary.0
 
 ### Patch Changes
