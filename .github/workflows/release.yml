@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - canary
     paths:
       - ".changeset/**"
       - ".github/workflows/release.yml"
@@ -36,6 +37,14 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm i
+
+      - name: Enter Pre-release Mode (Canary)
+        if: github.ref == 'refs/heads/canary'
+        run: pnpm changeset pre enter canary
+
+      - name: Exit Pre-release Mode (Main)
+        if: github.ref == 'refs/heads/main'
+        run: pnpm changeset pre exit || true
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
