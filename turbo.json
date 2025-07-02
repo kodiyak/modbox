@@ -32,6 +32,11 @@
     },
     "publish": {
       "cache": false
+    },
+    "pub:canary": {
+      "dependsOn": [
+        "^build"
+      ]
     }
   }
 }

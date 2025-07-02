@@ -13,6 +13,7 @@
   "scripts": {
     "test": "vitest",
     "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
+    "pub:canary": "pnpm build && pnpm publish --no-git-checks --access public --tag canary",
     "lint": "biome lint"
   },
   "dependencies": {
