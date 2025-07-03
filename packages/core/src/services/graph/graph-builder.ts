@@ -28,8 +28,6 @@ export class GraphBuilder {
 	public async build() {
 		this.cleanup();
 		const { files } = this.fs.readdir();
-		this.logger.info(`Building graph from ${files.length} files...`);
-
 		for (const filePath of files) {
 			try {
 				this.processFile(filePath);
