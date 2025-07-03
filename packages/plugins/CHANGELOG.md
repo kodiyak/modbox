@@ -1,5 +1,16 @@
 # @modpack/plugins
 
+## 0.1.5-canary.2
+
+### Patch Changes
+
+- cd5cc26: Remove unused plugins
+- 7adc34f: Remove unused alias export
+- 6e01664: HMR Fast Refresh Implemented
+- Updated dependencies [cd5cc26]
+- Updated dependencies [cd5cc26]
+  - @modpack/utils@0.1.5-canary.2
+
 ## 0.1.5-canary.1
 
 ### Patch Changes
