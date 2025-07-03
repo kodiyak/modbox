@@ -1,13 +1,5 @@
 import { Modpack } from "@modpack/core";
-import {
-	cache,
-	external,
-	graphBuilder,
-	logger,
-	resolver,
-	swc,
-	virtual,
-} from "@modpack/plugins";
+import { esmSh, resolver, swc, virtual } from "@modpack/plugins";
 import { useRef } from "react";
 
 export default function BasicReact() {
@@ -18,14 +10,6 @@ export default function BasicReact() {
 		const modpack = await Modpack.boot({
 			debug: true,
 			plugins: [
-				// cache(),
-				resolver({
-					extensions: [".js", ".ts", ".tsx", ".jsx"],
-					alias: { "@/": "/src/" },
-					index: true,
-				}),
-				virtual(),
-				external(),
 				swc({
 					extensions: [".js", ".ts", ".tsx", ".jsx"],
 					jsc: {
@@ -57,12 +41,17 @@ export default function BasicReact() {
 						importInterop: "swc",
 					},
 				}),
-				// graphBuilder(),
-				// logger(),
+				resolver({
+					extensions: [".js", ".ts", ".tsx", ".jsx"],
+					alias: { "@/": "/src/" },
+					index: true,
+				}),
+				virtual(),
+				esmSh({ registry: "jsr" }),
 			],
 		});
 		modpack.fs.writeFile(
-			"/main.jsx",
+			"/main.js",
 			`import { createRoot } from 'react-dom/client'
 			import { useState } from 'react';
 
@@ -83,13 +72,13 @@ export default function BasicReact() {
       )`,
 		);
 
-		await modpack.mount("/main.jsx");
+		await modpack.mount("/main.js");
 		modpackRef.current = modpack;
 		console.log("Modpack loaded successfully");
 	};
 
 	const updateFile = async () => {
-		const path = "/main.jsx";
+		const path = "/main.js";
 		const content = `import { createRoot } from 'react-dom/client'
 			import { useState } from 'react';
 
