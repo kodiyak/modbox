@@ -1,4 +1,3 @@
-export * from "./alias";
 export * from "./cache";
 export * from "./external";
 export * from "./graphBuilder";
