@@ -1,26 +1,17 @@
 import { Modpack } from "@modpack/core";
-import {
-	cache,
-	graphBuilder,
-	logger,
-	resolver,
-	virtual,
-} from "@modpack/plugins";
+import { resolver, virtual } from "@modpack/plugins";
 
 export default function DemoAlias() {
 	const load = async () => {
 		const modpack = await Modpack.boot({
 			debug: false,
 			plugins: [
-				graphBuilder(),
 				resolver({
 					extensions: [".js", ".ts", ".tsx", ".jsx"],
 					alias: { "@/": "/src/" },
 					index: true,
 				}),
-				cache(),
 				virtual(),
-				logger(),
 			],
 		});
 		modpack.fs.writeFile(

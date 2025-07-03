@@ -1,13 +1,5 @@
 import { Modpack } from "@modpack/core";
-import {
-	cache,
-	external,
-	graphBuilder,
-	logger,
-	resolver,
-	swc,
-	virtual,
-} from "@modpack/plugins";
+import { resolver, swc, virtual } from "@modpack/plugins";
 
 export default function DemoTransformer() {
 	const load = async () => {
@@ -19,9 +11,7 @@ export default function DemoTransformer() {
 					alias: { "@/": "/src/" },
 					index: true,
 				}),
-				cache(),
 				virtual(),
-				external(),
 				swc({
 					extensions: [".js", ".ts", ".tsx", ".jsx"],
 					jsc: {
@@ -53,8 +43,6 @@ export default function DemoTransformer() {
 						importInterop: "swc",
 					},
 				}),
-				graphBuilder(),
-				logger(),
 			],
 		});
 		modpack.fs.writeFile(

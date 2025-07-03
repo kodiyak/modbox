@@ -38,7 +38,6 @@ export default function BasicReact() {
 						type: "es6",
 						strict: false,
 						ignoreDynamic: true,
-						importInterop: "swc",
 					},
 				}),
 				resolver({
@@ -47,7 +46,7 @@ export default function BasicReact() {
 					index: true,
 				}),
 				virtual(),
-				esmSh({ registry: "jsr" }),
+				esmSh({ registry: "npm" }),
 			],
 		});
 		modpack.fs.writeFile(
