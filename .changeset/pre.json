@@ -12,6 +12,7 @@
     "@modpack/utils": "0.1.4"
   },
   "changesets": [
+    "early-sites-work",
     "lazy-guests-tap",
     "modern-corners-clap",
     "salty-snails-call"
