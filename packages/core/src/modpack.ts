@@ -8,6 +8,7 @@ import {
 	Orchestrator,
 	PolyfillFetcher,
 	PolyfillResolver,
+	PolyfillSourcer,
 	PolyfillTransformer,
 	ResponseRegistry,
 	VirtualFiles,
@@ -43,6 +44,17 @@ export class Modpack {
 					...plugin.pipeline?.fetcher!,
 				})),
 		);
+		const sourcer = new PolyfillSourcer(
+			Logger.create("modules-sourcer"),
+			registry,
+			fs,
+			plugins
+				.filter((plugin) => plugin.pipeline?.sourcer)
+				.map((plugin) => ({
+					name: plugin.name,
+					...plugin.pipeline?.sourcer!,
+				})),
+		);
 		const transformer = new PolyfillTransformer(
 			Logger.create("modules-transformer"),
 			registry,
@@ -71,6 +83,7 @@ export class Modpack {
 			fetcher,
 			resolver,
 			transformer,
+			sourcer,
 		);
 		/** @todo: refactor options */
 		const graphBuilder = new GraphBuilder(

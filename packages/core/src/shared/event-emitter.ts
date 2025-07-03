@@ -38,7 +38,6 @@ export class EventEmitter<
 			);
 			return;
 		}
-		console.log(`[${this.name}][${event.toString()}]`, data);
 		this.emitter.emit(event as any, data);
 	}
 

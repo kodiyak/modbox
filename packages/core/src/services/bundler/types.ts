@@ -27,6 +27,27 @@ export type ResolverHook = {
 	cleanup?: (path: string) => void;
 };
 
+// Sourcer [Internal]
+export interface SourceResult {
+	type: string;
+	source: string;
+}
+export interface SourceMiddlewareProps {
+	url: string;
+	parent: string;
+	options: RequestInit | undefined;
+	next: (
+		props?: Partial<Omit<SourceMiddlewareProps, "next">>,
+	) => SourceResult | Promise<SourceResult>;
+}
+export type SourceMiddleware = (
+	props: SourceMiddlewareProps & PluginMiddlewareContext,
+) => SourceResult | Promise<SourceResult>;
+export type SourcerHook = {
+	source: SourceMiddleware;
+	cleanup?: (url: string) => void;
+};
+
 // Bundler [Internal]
 export interface BundlerBuildOptions extends GraphBuilderOptions {
 	inject?: Record<string, any>;
@@ -37,7 +58,7 @@ export type FetcherResult = Promise<Response | undefined>;
 interface FetchMiddlewareProps {
 	url: string;
 	options: RequestInit | undefined;
-	next: () => FetcherResult;
+	next: (props: Partial<Omit<FetchMiddlewareProps, "next">>) => FetcherResult;
 }
 type FetcherMiddleware = (
 	props: FetchMiddlewareProps & PluginMiddlewareContext,

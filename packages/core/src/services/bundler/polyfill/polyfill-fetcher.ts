@@ -51,22 +51,21 @@ export class PolyfillFetcher {
 				return executeHook(index + 1, currentUrl, currentOpts);
 			};
 
-			const result = await Promise.resolve(
-				hook.fetch({
-					url: currentUrl,
-					options: currentOpts,
-					next,
-					logger: this.logger.namespace(hook.name),
-					registry: this.registry,
-					fs: this.fs,
-				}),
-			);
-
+			const props: Parameters<FetcherHook["fetch"]>[0] = {
+				url: currentUrl,
+				options: currentOpts,
+				next,
+				logger: this.logger.namespace(hook.name),
+				registry: this.registry,
+				fs: this.fs,
+			};
+			this.logger.info(`Fetching "${hook.name}"...`, props);
+			const result = await Promise.resolve(hook.fetch(props));
+			this.logger.info(`Fetching "${hook.name}" completed.`, {
+				...props,
+				result,
+			});
 			if (result !== undefined && result instanceof Response) {
-				this.logger.debug(
-					`[Hook][${index}][${currentUrl}] Response received.`,
-					result,
-				);
 				return result;
 			}
 

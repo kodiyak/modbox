@@ -2,6 +2,7 @@ import type {
 	FetcherHook,
 	ModuleExtractorHandler,
 	ResolverHook,
+	SourcerHook,
 	TransformerHook,
 } from "./services";
 
@@ -16,6 +17,7 @@ export interface ModpackPlugin {
 		resolver?: ResolverHook;
 		fetcher?: FetcherHook;
 		transformer?: TransformerHook;
+		sourcer?: SourcerHook;
 	};
 	analyze?: {
 		process?: ModuleExtractorHandler;

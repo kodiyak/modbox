@@ -5,6 +5,7 @@ import type { BundlerRegistry } from "./bundler-registry";
 import type {
 	PolyfillFetcher,
 	PolyfillResolver,
+	PolyfillSourcer,
 	PolyfillTransformer,
 } from "./polyfill";
 import type {
@@ -18,11 +19,13 @@ export class Bundler {
 	// @ts-expect-error: This is a placeholder for the events type, which can be defined later.
 	private readonly events = new EventEmitter(z.object({}), "PolyfillModules");
 
+	private readonly logger: Logger;
+	private readonly registry: BundlerRegistry;
+
 	private readonly fetcher: PolyfillFetcher;
 	private readonly resolver: PolyfillResolver;
 	private readonly transformer: PolyfillTransformer;
-	private readonly logger: Logger;
-	private readonly registry: BundlerRegistry;
+	private readonly sourcer: PolyfillSourcer;
 
 	private get window() {
 		return globalThis.window || globalThis;
@@ -40,28 +43,26 @@ export class Bundler {
 		fetcher: PolyfillFetcher,
 		resolver: PolyfillResolver,
 		transformer: PolyfillTransformer,
+		sourcer: PolyfillSourcer,
 	) {
+		this.logger = logger;
+		this.registry = registry;
 		this.fetcher = fetcher;
 		this.resolver = resolver;
-		this.logger = logger;
 		this.transformer = transformer;
-		this.registry = registry;
+		this.sourcer = sourcer;
 	}
 
 	private async init(options: PolyfillInitOptions) {
 		const { esmsInitOptions } = options;
 		return new Promise<void>((resolve, reject) => {
 			const script = this.window.document.createElement("script");
-			const version = esmsInitOptions?.version || "2.5.1";
+			const version = esmsInitOptions?.version || "2.6.1";
 			Object.assign(script, {
 				src: `https://ga.jspm.io/npm:es-module-shims@${version}/dist/es-module-shims.js`,
 				async: true,
 				onload: () => {
 					this.isReady = true;
-					this.logger.info(
-						"[es-module-shims] Initialized successfully.",
-						options,
-					);
 					resolve();
 				},
 				onerror: (error: Event) => {
@@ -76,30 +77,19 @@ export class Bundler {
 				esmsInitOptions: {
 					...this.getEsmsInitOptions(),
 					...esmsInitOptions,
+					source: this.sourcer.source.bind(this.sourcer),
 					resolve: this.resolver.resolve.bind(this.resolver),
 					fetch: async (url: string, opts: RequestInit) => {
 						const result = await this.fetcher.fetch(url, opts, () => {
-							this.logger.debug(
-								"[es-module-shims] Default fetch called for",
-								url,
-							);
 							return fetch(url, opts);
 						});
 
 						if (!result || !result.ok) return result;
 
-						this.logger.debug("[es-module-shims] Fetch successful for", url);
-
 						const transformedResult = await this.transformer.transform(
 							await result.text(),
 							url,
-							(source: string, url: string) => {
-								this.logger.debug(
-									"[es-module-shims] Default transform called for",
-									{ url, source },
-								);
-								return source;
-							},
+							(source: string) => source,
 						);
 
 						return new Response(transformedResult, {
@@ -112,21 +102,13 @@ export class Bundler {
 				},
 			});
 			this.window.document.head.appendChild(script);
-			this.logger.info("script tag created.");
 		});
 	}
 
 	public async build(entrypoint: string, options: BundlerBuildOptions) {
 		if (!this.isReady) {
-			this.logger.warn("Not ready, initializing...");
 			await this.init({ esmsInitOptions: this.getEsmsInitOptions() });
-		} else {
-			this.logger.info("Already initialized.");
 		}
-
-		this.logger.info("Starting build process...");
-		this.logger.debug(`Entry point: "${entrypoint}"`);
-		this.logger.debug(`Options:`, options);
 
 		Object.entries(options.inject ?? {}).forEach(([key, value]) => {
 			this.registry.get("modules").register(key, value);

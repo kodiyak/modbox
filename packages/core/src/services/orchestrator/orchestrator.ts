@@ -25,7 +25,7 @@ export class Orchestrator {
 
 		this.fs.events.on("file:updated", async (data) => {
 			this.logger.debug(`File updated: ${data.path}`);
-			await this.bundler.import(data.path);
+			await this.bundler.import(`${data.path}?t=${Date.now()}`);
 		});
 	}
 

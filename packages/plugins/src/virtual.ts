@@ -5,9 +5,9 @@ export function virtual() {
 		name: "@modpack/plugin-virtual",
 		pipeline: {
 			fetcher: {
-				fetch: async ({ url, next, fs }) => {
-					if (url.startsWith("virtual-file://")) {
-						const path = url.replace("virtual-file://", "");
+				fetch: async ({ url, options, next, fs }) => {
+					if (url.startsWith("file://")) {
+						const path = url.replace("file://", "");
 						const content = fs.readFile(path);
 						if (content) {
 							const virtualFile = new Response(content, {
@@ -22,16 +22,16 @@ export function virtual() {
 						}
 					}
 
-					return next();
+					return next({ url, options });
 				},
 			},
 			resolver: {
-				resolve: ({ path, next, fs }) => {
+				resolve: ({ path, parent, next, fs }) => {
 					const content = fs.readFile(path);
 					if (content) {
-						return next({ path: `virtual-file://${path}` });
+						return `file://${path}`;
 					}
-					return next();
+					return next({ path, parent });
 				},
 			},
 		},

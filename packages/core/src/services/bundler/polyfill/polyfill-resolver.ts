@@ -59,20 +59,19 @@ export class PolyfillResolver {
 				);
 			};
 
-			const result = hook.resolve({
+			const props: Parameters<ResolverHook["resolve"]>[0] = {
 				path: currentPath,
 				parent: currentParent,
 				next,
 				logger: this.logger.namespace(hook.name),
 				registry: this.registry,
 				fs: this.fs,
-			});
+			};
+			this.logger.info(`Resolving "${hook.name}"...`, props);
+			const result = hook.resolve(props);
+			this.logger.debug(`Result from "${hook.name}":`, { ...props, result });
 
 			if (result !== undefined && typeof result === "string") {
-				this.logger.debug(
-					`[Hook][${index}][${currentPath}] Path received.`,
-					result ?? "[NO_RESULT]",
-				);
 				return result;
 			}
 

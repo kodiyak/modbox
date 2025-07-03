@@ -35,6 +35,7 @@ export class VirtualFiles {
 
 	constructor(logger: Logger) {
 		this.events = new EventEmitter(VirtualFilesEvents, "VirtualFiles");
+		logger.info("Virtual Files initialized");
 		this.events.on("file:created", (data) =>
 			logger.info(`File created: ${data.path}`),
 		);
