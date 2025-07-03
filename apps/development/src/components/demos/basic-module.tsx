@@ -1,26 +1,11 @@
 import { Modpack } from "@modpack/core";
-import {
-	cache,
-	graphBuilder,
-	logger,
-	resolver,
-	virtual,
-} from "@modpack/plugins";
+import { virtual } from "@modpack/plugins";
 
 export default function BasicModule() {
 	const load = async () => {
 		const modpack = await Modpack.boot({
 			debug: false,
-			plugins: [
-				graphBuilder(),
-				cache(),
-				resolver({
-					extensions: [".js", ".ts", ".tsx", ".jsx"],
-					index: true,
-				}),
-				virtual(),
-				logger(),
-			],
+			plugins: [virtual()],
 		});
 		modpack.fs.writeFile(
 			"/hello.js",
