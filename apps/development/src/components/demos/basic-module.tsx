@@ -30,7 +30,7 @@ export default function BasicModule() {
 		);
 		modpack.fs.writeFile(
 			"/index.js",
-			`import { hello } from "/hello";
+			`import { hello } from "/hello.js";
 			export function print(name) {
 				console.log(hello(name));
 			}

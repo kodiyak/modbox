@@ -116,8 +116,6 @@ export default function BasicReact() {
 			)`;
 
 		modpackRef.current?.fs.writeFile(path, content);
-
-		console.log(`File ${path} updated successfully`, content);
 	};
 
 	return (
