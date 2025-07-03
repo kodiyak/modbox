@@ -1,11 +1,11 @@
 import { Modpack } from "@modpack/core";
-import { virtual } from "@modpack/plugins";
+import { resolver, virtual } from "@modpack/plugins";
 
 export default function BasicModule() {
 	const load = async () => {
 		const modpack = await Modpack.boot({
 			debug: false,
-			plugins: [virtual()],
+			plugins: [virtual(), resolver()],
 		});
 		modpack.fs.writeFile(
 			"/hello.js",

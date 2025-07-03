@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BasicModule from "./components/demos/basic-module";
 import BasicReact from "./components/demos/basic-react";
+import BasicResolver from "./components/demos/basic-resolver";
 import DemoAlias from "./components/demos/demo-alias";
 import DemoTransformer from "./components/demos/demo-transformer";
 
@@ -10,6 +11,10 @@ export default function App() {
 		{
 			label: "Basic Module",
 			render: <BasicModule />,
+		},
+		{
+			label: "Resolver",
+			render: <BasicResolver />,
 		},
 		{
 			label: "Alias",

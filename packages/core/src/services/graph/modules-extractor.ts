@@ -17,9 +17,6 @@ export class ModulesExtractor {
 
 	async preload() {
 		if (this.isInitialized) {
-			this.logger.warn(
-				"[ModulesExtractor] Already initialized, skipping preload.",
-			);
 			return;
 		}
 		this.isInitialized = true;
@@ -29,7 +26,7 @@ export class ModulesExtractor {
 	processFile(path: string, content: string) {
 		const parsedContent = swcParser(content);
 		if (!parsedContent) {
-			this.logger.warn(`[ModulesExtractor] Failed to parse file: ${path}`);
+			// this.logger.warn(`[ModulesExtractor] Failed to parse file: ${path}`);
 			return;
 		}
 

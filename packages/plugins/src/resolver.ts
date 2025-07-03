@@ -1,4 +1,4 @@
-import { definePlugin } from "@modpack/utils";
+import { definePlugin, isUrl } from "@modpack/utils";
 
 interface ResolveOptions {
 	extensions: string[];
@@ -6,93 +6,60 @@ interface ResolveOptions {
 	alias?: Record<string, string>;
 }
 
-export function resolver({ extensions, index, alias }: ResolveOptions) {
+export function resolver(props?: ResolveOptions) {
+	const { extensions, index, alias } = {
+		extensions: [".js", ".json", ".mjs", ".cjs", ".ts", ".jsx", ".tsx"],
+		index: true,
+		alias: {},
+		...props,
+	};
 	const resolveIndex = index !== false;
 	return definePlugin({
 		name: "@modpack/plugin-resolver",
 		pipeline: {
 			resolver: {
 				resolve: ({ next, path, parent, logger, fs }) => {
-					// let retries = 0;
-					// const tryPath = (p: string, prefix = `virtual-file://`) => {
-					// 	const exists = fs.readFile(p);
+					if (isUrl(path)) {
+						return next({ path, parent });
+					}
 
-					// 	if (exists) {
-					// 		logger.debug(`[${path} => ${p}] found after ${retries} attempts`);
-					// 	} else {
-					// 		logger.debug(
-					// 			`[${path} => ${p}] not found after ${retries} attempts`,
-					// 		);
-					// 	}
+					// Resolve aliases
+					for (const [aliasKey, aliasValue] of Object.entries(alias)) {
+						if (path.startsWith(aliasKey)) {
+							path = path.replace(aliasKey, aliasValue);
+							break;
+						}
+					}
 
-					// 	retries++;
-					// 	return exists ? `${prefix}${p}` : null;
-					// };
-					// const tryResolve = (pathToResolve: string) => {
-					// 	/**
-					// 	 * @todo Implement a more robust path resolution strategy
-					// 	 * This is a basic implementation that tries to resolve the path
-					// 	 */
-					// 	let resolvedPath: string | null = null;
-					// 	// Try without extensions first
-					// 	resolvedPath = tryPath(pathToResolve);
-					// 	if (resolvedPath) return resolvedPath;
+					const potentialPaths: string[] = [path];
+					if (!path.startsWith("/")) {
+						// If the path is not absolute, prepend the parent directory
+						const parentDir = parent ? parent.replace(/\/[^/]+$/, "") : "";
+						path = `${parentDir}/${path}`;
+					}
+					const hasExtension = extensions.some((ext) => path.endsWith(ext));
+					if (!hasExtension) {
+						// If no extension, try all extensions
+						for (const ext of extensions) {
+							potentialPaths.push(`${path}${ext}`);
+						}
+					}
 
-					// 	// Try with extensions
-					// 	if (pathToResolve.indexOf(".") === -1) {
-					// 		for (const ext of extensions) {
-					// 			resolvedPath = tryPath(`${pathToResolve}${ext}`);
-					// 			if (resolvedPath) return resolvedPath;
-					// 		}
-					// 	}
+					if (resolveIndex) {
+						// If index is enabled, try appending "/index" to the path
+						potentialPaths.push(`${path}/index`);
+						for (const ext of extensions) {
+							potentialPaths.push(`${path}/index${ext}`);
+						}
+					}
 
-					// 	// Try with index.js files
-					// 	if (resolveIndex && pathToResolve.indexOf(".") === -1) {
-					// 		for (const ext of extensions) {
-					// 			const indexPath = `${pathToResolve}/index${ext}`;
-					// 			resolvedPath = tryPath(indexPath);
-					// 			if (resolvedPath) return resolvedPath;
-					// 		}
-					// 	}
+					for (const p of potentialPaths) {
+						if (fs.readFile(p)) {
+							return next({ path: `file://${p}`, parent });
+						}
+					}
 
-					// 	// Try alias resolution
-					// 	if (alias) {
-					// 		for (const [aliasKey, aliasValue] of Object.entries(alias)) {
-					// 			if (pathToResolve.startsWith(aliasKey)) {
-					// 				const aliasedPath = pathToResolve.replace(
-					// 					aliasKey,
-					// 					aliasValue,
-					// 				);
-					// 				resolvedPath = tryPath(aliasedPath);
-					// 				if (resolvedPath) return resolvedPath;
-
-					// 				for (const ext of extensions) {
-					// 					const aliasedWithExt = `${aliasedPath}${ext}`;
-					// 					resolvedPath = tryPath(aliasedWithExt);
-					// 					if (resolvedPath) return resolvedPath;
-					// 				}
-
-					// 				if (resolveIndex && aliasedPath.indexOf(".") === -1) {
-					// 					for (const ext of extensions) {
-					// 						const indexPath = `${aliasedPath}/index${ext}`;
-					// 						resolvedPath = tryPath(indexPath);
-					// 						if (resolvedPath) return resolvedPath;
-					// 					}
-					// 				}
-					// 			}
-					// 		}
-					// 	}
-					// };
-
-					// const resolvedPath = tryResolve(path);
-					// if (resolvedPath) return resolvedPath;
-					// // If no resolution was found, call the next resolver
-					// const resolved = next({ path, parent });
-					// const resolvedFromNext = tryResolve(resolved);
-					// if (resolvedFromNext) return resolvedFromNext;
-
-					// return resolved;
-					return next();
+					return next({ path, parent });
 				},
 			},
 		},

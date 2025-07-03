@@ -53,7 +53,6 @@ export class PolyfillTransformer {
 					props?.url ?? currentUrl,
 				);
 
-			this.logger.info(`Running "${hook.name}" transformer hook`);
 			const result = await Promise.resolve(
 				hook.transform({
 					source: currentSource,
@@ -66,6 +65,9 @@ export class PolyfillTransformer {
 			);
 
 			if (typeof result === "string") {
+				this.logger.info(
+					`Transform "${hook.name}" [${currentUrl} => ${result}]`,
+				);
 				return result;
 			}
 

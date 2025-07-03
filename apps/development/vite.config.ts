@@ -18,6 +18,10 @@ export default defineConfig({
 				__dirname,
 				"../../packages/plugins/src/index.ts",
 			),
+			"@modpack/utils": path.resolve(
+				__dirname,
+				"../../packages/utils/src/index.ts",
+			),
 		},
 	},
 });

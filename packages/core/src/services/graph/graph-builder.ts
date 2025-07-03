@@ -42,21 +42,21 @@ export class GraphBuilder {
 	private processFile(filePath: string) {
 		const content = this.fs.readFile(filePath);
 		if (!content) {
-			this.logger.warn(`File "${filePath}" not found.`);
+			// this.logger.warn(`File "${filePath}" not found.`);
 			return;
 		}
 
 		const extractedDependencies = this.extractor.processFile(filePath, content);
 		if (!extractedDependencies) {
-			this.logger.warn(`No dependencies extracted from "${filePath}" file.`);
+			// this.logger.warn(`No dependencies extracted from "${filePath}" file.`);
 			return;
 		}
 
 		const { exported, dependencies } = extractedDependencies;
-		this.logger.debug(
-			`Extracted "${dependencies.length} dependencies" and "${exported.length} exports" from "${filePath}" file.`,
-			{ exported, dependencies },
-		);
+		// this.logger.debug(
+		// 	`Extracted "${dependencies.length} dependencies" and "${exported.length} exports" from "${filePath}" file.`,
+		// 	{ exported, dependencies },
+		// );
 
 		this.addOrUpdateModule(
 			GraphModule.create({
@@ -88,9 +88,9 @@ export class GraphBuilder {
 	public removeModule(path: string): void {
 		if (this.modules.has(path)) {
 			this.modules.delete(path);
-			this.logger.info(`Module removed: ${path}`);
+			// this.logger.info(`Module removed: ${path}`);
 		} else {
-			this.logger.warn(`Module not found for removal: ${path}`);
+			// this.logger.warn(`Module not found for removal: ${path}`);
 		}
 	}
 
@@ -103,9 +103,9 @@ export class GraphBuilder {
 		const module = this.getModule(startModuleId);
 
 		if (!module) {
-			this.logger.warn(
-				`Module with ID "${startModuleId}" not found in the graph.`,
-			);
+			// this.logger.warn(
+			// 	`Module with ID "${startModuleId}" not found in the graph.`,
+			// );
 			return allDependencies;
 		}
 

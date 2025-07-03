@@ -78,14 +78,12 @@ export class PolyfillSourcer {
 				fs: this.fs,
 				next,
 			};
-			this.logger.info(`Sourcing "${hook.name}"...`, props);
 			const result = await Promise.resolve(hook.source(props));
-			this.logger.debug(`Sourcing "${hook.name}"`, {
-				options: currentOptions,
-				parent: currentParent,
-			});
 
-			if (typeof result === "string") {
+			if (result !== undefined) {
+				this.logger.info(
+					`Sourcer "${hook.name}" [${currentUrl} => ${result.type}]`,
+				);
 				return result;
 			}
 
