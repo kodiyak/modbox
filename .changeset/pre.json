@@ -1,0 +1,19 @@
+{
+  "mode": "pre",
+  "tag": "canary",
+  "initialVersions": {
+    "development": "0.0.3",
+    "docs": "0.0.0",
+    "web": "0.1.0",
+    "@modpack/core": "0.1.4",
+    "@modpack/eslint-config": "0.0.0",
+    "@modpack/plugins": "0.1.4",
+    "@modpack/typescript-config": "0.0.0",
+    "@modpack/utils": "0.1.4"
+  },
+  "changesets": [
+    "lazy-guests-tap",
+    "modern-corners-clap",
+    "salty-snails-call"
+  ]
+}
