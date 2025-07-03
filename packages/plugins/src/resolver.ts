@@ -18,7 +18,8 @@ export function resolver(props?: ResolveOptions) {
 		name: "@modpack/plugin-resolver",
 		pipeline: {
 			resolver: {
-				resolve: ({ next, path, parent, logger, fs }) => {
+				resolve: ({ next, path: currentPath, parent, fs }) => {
+					let path = currentPath;
 					if (isUrl(path)) {
 						return next({ path, parent });
 					}
@@ -59,7 +60,8 @@ export function resolver(props?: ResolveOptions) {
 						}
 					}
 
-					return next({ path, parent });
+					// Fallback to next resolver
+					return next({ path: currentPath, parent });
 				},
 			},
 		},

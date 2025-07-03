@@ -21,7 +21,7 @@ export function virtual() {
 				},
 			},
 			fetcher: {
-				fetch: async ({ url, options, next, logger, fs }) => {
+				fetch: async ({ url, next, logger, fs }) => {
 					let path = url;
 					if (isUrl(url)) {
 						if (url.startsWith("file://")) {
@@ -49,7 +49,7 @@ export function virtual() {
 						});
 						return virtualFile;
 					} else {
-						return next({ url, options });
+						return next();
 					}
 				},
 			},

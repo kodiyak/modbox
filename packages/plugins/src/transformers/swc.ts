@@ -1,4 +1,4 @@
-import { definePlugin } from "@modpack/utils";
+import { definePlugin, isUrl } from "@modpack/utils";
 import { type Options, transformSync } from "@swc/wasm-web";
 
 interface SwcOptions extends Options {
@@ -6,35 +6,30 @@ interface SwcOptions extends Options {
 }
 
 export function swc(options: SwcOptions = {}) {
+	const { extensions = [".ts", ".tsx", ".js", ".jsx"], ...swcOptions } =
+		options;
 	return definePlugin({
+		name: "swc",
 		pipeline: {
-			transformer: {
-				transform: async ({ source, url, next, logger }) => {
-					const { extensions = [".ts", ".tsx", ".js", ".jsx"], ...swcOptions } =
-						options;
-
-					if (!extensions.some((ext) => url.endsWith(ext))) {
-						return next({ source, url });
+			sourcer: {
+				source: async ({ url, next, logger, fs }) => {
+					if (
+						isUrl(url) &&
+						url.startsWith("file://") &&
+						extensions.some((ext) => url.endsWith(ext))
+					) {
+						const filePath = url.replace("file://", "");
+						const content = fs.readFile(filePath);
+						if (content) {
+							logger.debug(`File found at: ${filePath}`);
+							return {
+								source: transformSync(content, swcOptions).code,
+								type: filePath.split(".").pop()!,
+							};
+						}
 					}
 
-					logger.debug(`[swc] Transforming ${url}...`, {
-						source,
-						extensions,
-						swcOptions,
-					});
-					try {
-						return next({
-							source: transformSync(source, swcOptions).code,
-							url,
-						});
-					} catch (error) {
-						logger.error(`[swc] Error transforming source`, {
-							source,
-							extensions,
-							error,
-						});
-						return next({ source, url }); // Fallback to original source on error
-					}
+					return next();
 				},
 			},
 		},
