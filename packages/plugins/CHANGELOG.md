@@ -1,5 +1,13 @@
 # @modpack/plugins
 
+## 0.1.5-canary.0
+
+### Patch Changes
+
+- 9fff0ca: Improva path handling for "virtual" and "resolve" plug-ins.
+- Updated dependencies [9fff0ca]
+  - @modpack/utils@0.1.5-canary.0
+
 ## 0.1.4
 
 ### Patch Changes
