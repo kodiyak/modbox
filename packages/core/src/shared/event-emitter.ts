@@ -1,7 +1,10 @@
 import { EventEmitter as BaseEmitter } from "eventemitter3";
 import type { ZodSchema, z } from "zod";
 
-export class EventEmitter<T extends ZodSchema, O extends z.infer<T>> {
+export class EventEmitter<
+	T extends ZodSchema,
+	O extends z.infer<T> = z.infer<T>,
+> {
 	private readonly emitter = new BaseEmitter();
 
 	private readonly name: string;
