@@ -89,7 +89,7 @@ export class Bundler {
 						const transformedResult = await this.transformer.transform(
 							await result.text(),
 							url,
-							(source: string) => source,
+							(source) => source,
 						);
 
 						return new Response(transformedResult, {
