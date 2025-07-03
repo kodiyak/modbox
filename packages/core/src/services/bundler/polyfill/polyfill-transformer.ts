@@ -64,10 +64,8 @@ export class PolyfillTransformer {
 				}),
 			);
 
+			this.logger.info(`Transform "${hook.name}" [${currentUrl} => ${result}]`);
 			if (typeof result === "string") {
-				this.logger.info(
-					`Transform "${hook.name}" [${currentUrl} => ${result}]`,
-				);
 				return result;
 			}
 

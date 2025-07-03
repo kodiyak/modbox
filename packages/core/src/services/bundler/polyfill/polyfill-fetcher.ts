@@ -60,10 +60,11 @@ export class PolyfillFetcher {
 				fs: this.fs,
 			};
 			const result = await Promise.resolve(hook.fetch(props));
+			this.logger.info(
+				`Fetching "${hook.name}" [${currentUrl} => ${result?.status}]`,
+			);
+
 			if (result !== undefined && result instanceof Response) {
-				this.logger.info(
-					`Fetching "${hook.name}" [${currentUrl} => ${result.status}]`,
-				);
 				return result;
 			}
 

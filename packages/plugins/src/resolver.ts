@@ -1,4 +1,5 @@
 import { definePlugin, isUrl } from "@modpack/utils";
+import { removeVersionQueryParam } from "./utils";
 
 interface ResolveOptions {
 	extensions: string[];
@@ -17,6 +18,24 @@ export function resolver(props?: ResolveOptions) {
 	return definePlugin({
 		name: "@modpack/plugin-resolver",
 		pipeline: {
+			sourcer: {
+				source: async ({ url, next, parent, options, logger, fs }) => {
+					if (isUrl(url) && url.startsWith("file://")) {
+						const path = removeVersionQueryParam(url.replace("file://", ""));
+						logger.debug(`Virtual FS: [${url} => ${path} from ${parent}]`);
+						if (fs.readFile(path)) {
+							logger.debug(`Resolved at: ${path}`);
+							return next({
+								url: `file://${path}`,
+								parent,
+								options,
+							});
+						}
+					}
+
+					return next();
+				},
+			},
 			resolver: {
 				resolve: ({ next, path: currentPath, parent, fs }) => {
 					let path = currentPath;
@@ -32,6 +51,7 @@ export function resolver(props?: ResolveOptions) {
 						}
 					}
 
+					path = removeVersionQueryParam(path);
 					const potentialPaths: string[] = [path];
 					if (!path.startsWith("/")) {
 						// If the path is not absolute, prepend the parent directory
@@ -56,12 +76,12 @@ export function resolver(props?: ResolveOptions) {
 
 					for (const p of potentialPaths) {
 						if (fs.readFile(p)) {
-							return next({ path: `file://${p}`, parent });
+							return next({ path: `file://${p}` });
 						}
 					}
 
 					// Fallback to next resolver
-					return next({ path: currentPath, parent });
+					return next();
 				},
 			},
 		},

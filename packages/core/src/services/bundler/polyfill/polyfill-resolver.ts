@@ -68,11 +68,11 @@ export class PolyfillResolver {
 				fs: this.fs,
 			};
 			const result = hook.resolve(props);
+			this.logger.debug(
+				`Resolver "${hook.name}" [${currentPath} => ${result}]`,
+			);
 
 			if (result !== undefined && typeof result === "string") {
-				this.logger.debug(
-					`Resolver "${hook.name}" [${currentPath} => ${result}]`,
-				);
 				return result;
 			}
 

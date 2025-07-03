@@ -25,7 +25,7 @@ export class Orchestrator {
 
 		this.fs.events.on("file:updated", async (data) => {
 			this.logger.debug(`File updated: ${data.path}`);
-			await this.bundler.import(`${data.path}?t=${Date.now()}`);
+			await this.bundler.refresh(`file://${data.path}`);
 		});
 	}
 
@@ -34,7 +34,6 @@ export class Orchestrator {
 		await this.graph.build();
 		const result = await this.bundler.build(entrypoint, options ?? {});
 		this.logger.info("Modules mounted successfully");
-		this.logger.debug(`Graph`, this.graph.getModules());
 
 		return result;
 	}

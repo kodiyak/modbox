@@ -119,13 +119,20 @@ export class Bundler {
 		return m;
 	}
 
-	public import(path: string): Promise<any> {
+	public async import(path: string): Promise<any> {
 		if (!this.isReady) {
 			return Promise.reject(new Error("Bundler is not initialized."));
 		}
 
-		this.logger.debug(`Importing module: ${path}`);
-		return (this.shims as any)(path);
+		const m = await (this.shims as any)(path);
+		this.logger.debug(`Importing module: ${path}`, { m });
+
+		return m;
+	}
+
+	public async refresh(path: string): Promise<any> {
+		await this.import(path);
+		await this.shims.hotReload(path);
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {

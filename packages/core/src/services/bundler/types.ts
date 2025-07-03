@@ -155,4 +155,5 @@ export interface EsmsInitOptions {
 export interface IImportShim {
 	addImportMap(map: ImportMap): void;
 	importShim(specifier: string): Promise<any>;
+	hotReload(url: string): Promise<any>;
 }

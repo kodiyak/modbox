@@ -20,15 +20,20 @@ export function esmSh(options: EsmShOptions = {}) {
 				},
 			},
 			resolver: {
-				resolve: ({ next, path, parent, logger, fs }) => {
+				resolve: ({ next, path: currentPath, parent, logger, fs }) => {
+					let path = currentPath;
+					const versionQueryParam = path.match(/\?v=\d+$/);
+					if (versionQueryParam) {
+						return next();
+					}
+
 					if (!isUrl(path)) {
-						let nextPath = path;
 						if (path.startsWith("/")) {
-							nextPath = nextPath.slice(1);
+							path = path.slice(1);
 						}
 						if (path.startsWith("./")) {
 							logger.warn(
-								`EsmSh resolver does not support relative paths: ${path}`,
+								`esm.sh resolver does not support relative paths: ${path}`,
 							);
 							return next();
 						}
@@ -41,7 +46,7 @@ export function esmSh(options: EsmShOptions = {}) {
 						}[registry];
 
 						return next({
-							path: [registryUrl, nextPath].join("/"),
+							path: [registryUrl, path].join("/"),
 							parent,
 						});
 					}
