@@ -1,5 +1,5 @@
+import path from "node:path";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
 import { defineConfig } from "vite";
 import wasm from "vite-plugin-wasm";
 
@@ -13,6 +13,10 @@ export default defineConfig({
 			"@modpack/core": path.resolve(
 				__dirname,
 				"../../packages/core/src/index.ts",
+			),
+			"@modpack/plugins": path.resolve(
+				__dirname,
+				"../../packages/plugins/src/index.ts",
 			),
 		},
 	},

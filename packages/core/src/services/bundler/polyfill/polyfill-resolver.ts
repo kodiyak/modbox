@@ -8,9 +8,10 @@ import type {
 } from "../types";
 
 type DefaultResolver = (path: string, parent: string) => ResolverResult;
+type PolyfillResolverHook = ResolverHook & { name: string };
 
 export class PolyfillResolver {
-	private readonly hooks: ResolverHook[] = [];
+	private readonly hooks: PolyfillResolverHook[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
@@ -19,7 +20,7 @@ export class PolyfillResolver {
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		hooks: ResolverHook[] = [],
+		hooks: PolyfillResolverHook[] = [],
 	) {
 		this.hooks = hooks;
 		this.logger = logger;
@@ -33,10 +34,6 @@ export class PolyfillResolver {
 		defaultResolve: DefaultResolver,
 	): string {
 		return this.runHooks(path, parent, defaultResolve);
-	}
-
-	registerHook(hook: ResolverHook) {
-		this.hooks.push(hook);
 	}
 
 	private runHooks(
@@ -66,7 +63,7 @@ export class PolyfillResolver {
 				path: currentPath,
 				parent: currentParent,
 				next,
-				logger: this.logger.namespace(`HOOK_${index}`),
+				logger: this.logger.namespace(hook.name),
 				registry: this.registry,
 				fs: this.fs,
 			});

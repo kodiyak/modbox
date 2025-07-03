@@ -2,6 +2,7 @@ import { definePlugin } from "@modpack/utils";
 
 export function graphBuilder() {
 	return definePlugin({
+		name: "@modpack/plugin-graphBuilder",
 		analyze: {
 			process: ({ node, dir, isType, dependencies, exports }) => {
 				if (isType(node, "ImportDeclaration")) {

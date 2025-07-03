@@ -8,8 +8,10 @@ type DefaultFetcher = (
 	opts: RequestInit | undefined,
 ) => Promise<Response>;
 
+type PolyfillFetcherHook = FetcherHook & { name: string };
+
 export class PolyfillFetcher {
-	private readonly hooks: FetcherHook[] = [];
+	private readonly hooks: PolyfillFetcherHook[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
@@ -18,7 +20,7 @@ export class PolyfillFetcher {
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		hooks: FetcherHook[] = [],
+		hooks: PolyfillFetcherHook[] = [],
 	) {
 		this.hooks = hooks;
 		this.logger = logger;
@@ -28,10 +30,6 @@ export class PolyfillFetcher {
 
 	async fetch(url: string, opts: RequestInit, defaultFetch: DefaultFetcher) {
 		return this.runHooks(url, opts, defaultFetch);
-	}
-
-	registerHook(hook: FetcherHook) {
-		this.hooks.push(hook);
 	}
 
 	private async runHooks(
@@ -58,7 +56,7 @@ export class PolyfillFetcher {
 					url: currentUrl,
 					options: currentOpts,
 					next,
-					logger: this.logger,
+					logger: this.logger.namespace(hook.name),
 					registry: this.registry,
 					fs: this.fs,
 				}),

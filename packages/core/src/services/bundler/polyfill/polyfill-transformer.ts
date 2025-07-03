@@ -3,8 +3,10 @@ import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
 import type { TransformerHook, TransformMiddlewareProps } from "../types";
 
+type PolyfillTransformerHook = TransformerHook & { name: string };
+
 export class PolyfillTransformer {
-	private readonly hooks: TransformerHook[] = [];
+	private readonly hooks: PolyfillTransformerHook[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
@@ -13,7 +15,7 @@ export class PolyfillTransformer {
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		hooks: TransformerHook[] = [],
+		hooks: PolyfillTransformerHook[] = [],
 	) {
 		this.hooks = hooks;
 		this.logger = logger;
@@ -27,10 +29,6 @@ export class PolyfillTransformer {
 		defaultTransform: (source: string, url: string) => Promise<string> | string,
 	) {
 		return this.runHooks(source, url, defaultTransform);
-	}
-
-	registerHook(hook: TransformerHook) {
-		this.hooks.push(hook);
 	}
 
 	private async runHooks(
@@ -59,7 +57,7 @@ export class PolyfillTransformer {
 				hook.transform({
 					source: currentSource,
 					url: currentUrl,
-					logger: this.logger,
+					logger: this.logger.namespace(hook.name),
 					registry: this.registry,
 					fs: this.fs,
 					next,

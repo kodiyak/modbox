@@ -31,7 +31,7 @@ const VirtualFilesEvents = z.object({
 
 export class VirtualFiles {
 	private files = new Map<string, VirtualItem>();
-	private events: EventEmitter<typeof VirtualFilesEvents>;
+	public readonly events: EventEmitter<typeof VirtualFilesEvents>;
 
 	constructor(logger: Logger) {
 		this.events = new EventEmitter(VirtualFilesEvents, "VirtualFiles");

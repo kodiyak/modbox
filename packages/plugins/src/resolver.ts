@@ -9,6 +9,7 @@ interface ResolveOptions {
 export function resolver({ extensions, index, alias }: ResolveOptions) {
 	const resolveIndex = index !== false;
 	return definePlugin({
+		name: "@modpack/plugin-resolver",
 		pipeline: {
 			resolver: {
 				resolve: ({ next, path, parent, logger, fs }) => {
@@ -17,12 +18,10 @@ export function resolver({ extensions, index, alias }: ResolveOptions) {
 						const exists = fs.readFile(p);
 
 						if (exists) {
-							logger.debug(
-								`[resolve] [${path} => ${p}] found after ${retries} attempts`,
-							);
+							logger.debug(`[${path} => ${p}] found after ${retries} attempts`);
 						} else {
 							logger.debug(
-								`[resolve] [${path} => ${p}] not found after ${retries} attempts`,
+								`[${path} => ${p}] not found after ${retries} attempts`,
 							);
 						}
 

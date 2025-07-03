@@ -137,7 +137,7 @@ export class Bundler {
 		return m;
 	}
 
-	private import(path: string): Promise<any> {
+	public import(path: string): Promise<any> {
 		if (!this.isReady) {
 			return Promise.reject(new Error("Bundler is not initialized."));
 		}

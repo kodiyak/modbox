@@ -2,25 +2,25 @@ import { definePlugin } from "@modpack/utils";
 
 export function logger() {
 	return definePlugin({
+		name: "@modpack/plugin-logger",
 		pipeline: {
 			fetcher: {
 				fetch: async ({ url, options, next, logger }) => {
-					logger.debug(`[Logger][FETCH] ${url}`, { options });
+					logger.debug(`[fetch][dispatch] [${url}]`, { options });
 					const response = await next();
-					logger.debug(`[Logger][RESPONSE] ${url}`, { response });
+					logger.debug(`[fetch][response] [${url}]`, { response });
 					return response;
 				},
 			},
 			resolver: {
 				resolve: ({ next, path, parent, logger }) => {
-					logger.debug(`[Logger][RESOLVER] Resolving module: ${path}`, {
+					logger.debug(`[resolve][dispatch] [${path}]`, {
 						parent,
 					});
 					const response = next();
-					logger.debug(
-						`[Logger][RESOLVER] Resolved module: [${path} => ${response}]`,
-						{ parent },
-					);
+					logger.debug(`[resolve][response] [${path} => ${response}]`, {
+						parent,
+					});
 
 					return response;
 				},
@@ -28,10 +28,7 @@ export function logger() {
 		},
 		analyze: {
 			process: ({ logger, ...props }) => {
-				logger.debug(
-					`[Logger][ANALYZE] Processing module: ${props.path}`,
-					props,
-				);
+				logger.debug(`[ANALYZE] Processing module: ${props.path}`, props);
 			},
 		},
 	});

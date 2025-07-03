@@ -2,6 +2,7 @@ import { definePlugin } from "@modpack/utils";
 
 export function virtual() {
 	return definePlugin({
+		name: "@modpack/plugin-virtual",
 		pipeline: {
 			fetcher: {
 				fetch: async ({ url, next, fs }) => {

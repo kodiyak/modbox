@@ -20,6 +20,13 @@ export class Orchestrator {
 		this.bundler = bundler;
 		this.graph = graph;
 		this.fs = fs;
+
+		this.logger.info("Orchestrator initialized");
+
+		this.fs.events.on("file:updated", async (data) => {
+			this.logger.debug(`File updated: ${data.path}`);
+			await this.bundler.import(data.path);
+		});
 	}
 
 	async mount(entrypoint: string, options?: OrchestratorMountOptions) {

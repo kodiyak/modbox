@@ -2,6 +2,7 @@ import { definePlugin } from "@modpack/utils";
 
 export function external(options?: { [key: string]: string }) {
 	return definePlugin({
+		name: "@modpack/plugin-external",
 		pipeline: {
 			fetcher: {
 				fetch: async ({ url, options: fetchOptions, next, logger }) => {
@@ -10,10 +11,10 @@ export function external(options?: { [key: string]: string }) {
 							url.replace("external://", ""),
 							"https://esm.sh",
 						);
-						logger.debug(
-							`[Logger][fetcher][external] [${url} => ${nextUrl.toString()}]`,
-							{ options, fetchOptions },
-						);
+						logger.debug(`[${url} => ${nextUrl.toString()}]`, {
+							options,
+							fetchOptions,
+						});
 						return fetch(nextUrl.toString(), fetchOptions);
 					}
 
@@ -38,7 +39,7 @@ export function external(options?: { [key: string]: string }) {
 							url = `external://${path}`;
 						}
 
-						logger.debug(`[Logger][resolver][external] [${path} => ${url}]`, {
+						logger.debug(`[${path} => ${url}]`, {
 							parent,
 							options,
 						});

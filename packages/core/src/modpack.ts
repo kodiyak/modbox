@@ -36,19 +36,34 @@ export class Modpack {
 			Logger.create("modules-fetcher"),
 			registry,
 			fs,
-			plugins.map((plugin) => plugin.pipeline?.fetcher!).filter(Boolean),
+			plugins
+				.filter((plugin) => plugin.pipeline?.fetcher)
+				.map((plugin) => ({
+					name: plugin.name,
+					...plugin.pipeline?.fetcher!,
+				})),
 		);
 		const transformer = new PolyfillTransformer(
 			Logger.create("modules-transformer"),
 			registry,
 			fs,
-			plugins.map((plugin) => plugin.pipeline?.transformer!).filter(Boolean),
+			plugins
+				.filter((plugin) => plugin.pipeline?.transformer)
+				.map((plugin) => ({
+					name: plugin.name,
+					...plugin.pipeline?.transformer!,
+				})),
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
 			registry,
 			fs,
-			plugins.map((plugin) => plugin.pipeline?.resolver!).filter(Boolean),
+			plugins
+				.filter((plugin) => plugin.pipeline?.resolver)
+				.map((plugin) => ({
+					name: plugin.name,
+					...plugin.pipeline?.resolver!,
+				})),
 		);
 		const bundler = new Bundler(
 			Logger.create("bundler"),

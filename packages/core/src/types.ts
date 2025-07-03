@@ -11,6 +11,7 @@ export interface ModpackBootOptions {
 }
 
 export interface ModpackPlugin {
+	name: string;
 	pipeline?: {
 		resolver?: ResolverHook;
 		fetcher?: FetcherHook;

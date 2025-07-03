@@ -10,15 +10,16 @@ export function alias(options: AliasOptions) {
 	);
 
 	return definePlugin({
+		name: "@modpack/plugin-alias",
 		pipeline: {
 			resolver: {
 				resolve: ({ next, path, logger }) => {
-					logger.debug(`[alias]: Resolving alias for: ${path}`);
+					logger.debug(`Resolving ${path}`);
 
 					for (const alias of sortedAliases) {
 						if (path.startsWith(alias)) {
 							const realPath = path.replace(alias, options[alias]);
-							logger.debug(`[alias][${path} => ${realPath}]`);
+							logger.debug(`Resolved [${path} => ${realPath}]`);
 							return next({ path: `virtual-file://${realPath}` });
 						}
 					}
