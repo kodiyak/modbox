@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "pub:canary": "turbo run build pub:canary --filter @modpack/*",
+    "release": "changeset add",
     "release:publish": "turbo build --filter @modpack/* && changeset publish",
     "release:version": "changeset version && pnpm install --no-frozen-lockfile",
     "lint": "turbo run lint",
