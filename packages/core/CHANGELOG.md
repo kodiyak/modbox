@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.1.5-canary.1
+
+### Patch Changes
+
+- 1920130: Hotfix
+
 ## 0.1.5-canary.0
 
 ### Patch Changes

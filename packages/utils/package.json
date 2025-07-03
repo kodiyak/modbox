@@ -1,6 +1,6 @@
 {
   "name": "@modpack/utils",
-  "version": "0.1.5-canary.0",
+  "version": "0.1.5-canary.1",
   "type": "module",
   "private": false,
   "scripts": {

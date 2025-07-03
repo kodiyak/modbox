@@ -1,5 +1,13 @@
 # @modpack/plugins
 
+## 0.1.5-canary.1
+
+### Patch Changes
+
+- 1920130: Hotfix
+- Updated dependencies [1920130]
+  - @modpack/utils@0.1.5-canary.1
+
 ## 0.1.5-canary.0
 
 ### Patch Changes
