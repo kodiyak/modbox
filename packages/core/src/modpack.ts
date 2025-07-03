@@ -19,7 +19,7 @@ import type { ModpackBootOptions } from "./types";
 export class Modpack {
 	static async boot({ debug, plugins = [] }: ModpackBootOptions) {
 		if (debug) Logger.enable("*");
-		const fs = new VirtualFiles();
+		const fs = new VirtualFiles(Logger.create("virtual-files"));
 		console.log("Booting Modpack...");
 		const extractor = new ModulesExtractor(
 			Logger.create("modules-extractor"),
