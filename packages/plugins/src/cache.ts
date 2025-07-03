@@ -6,13 +6,13 @@ export function cache() {
 		name: "@modpack/plugin-cache",
 		pipeline: {
 			fetcher: {
-				fetch: async ({ url, next, logger }) => {
+				fetch: async ({ url, options, next, logger }) => {
 					if (registry.has(url)) {
 						const cachedResponse = registry.get(url);
 						logger.debug(`[HIT] ${url}`, { response: cachedResponse });
 						return cachedResponse;
 					}
-					const response = await next();
+					const response = await next({ url, options });
 					if (response) {
 						registry.set(url, response);
 						logger.debug(`[MISS] ${url}`, { response });

@@ -58,7 +58,7 @@ export type FetcherResult = Promise<Response | undefined>;
 interface FetchMiddlewareProps {
 	url: string;
 	options: RequestInit | undefined;
-	next: (props: Partial<Omit<FetchMiddlewareProps, "next">>) => FetcherResult;
+	next: (props?: Partial<Omit<FetchMiddlewareProps, "next">>) => FetcherResult;
 }
 type FetcherMiddleware = (
 	props: FetchMiddlewareProps & PluginMiddlewareContext,
