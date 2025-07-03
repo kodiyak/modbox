@@ -39,7 +39,6 @@ export class PolyfillSourcer {
 		parent: string,
 		defaultSource: DefaultSourcer,
 	): Promise<SourceResult> {
-		this.logger.debug(`Sourcing URL: ${url}`, { options, parent });
 		return this.runHooks(url, parent, options, defaultSource);
 	}
 
