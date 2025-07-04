@@ -1,5 +1,16 @@
 # @modpack/utils
 
+## 0.2.0-canary.3
+
+### Minor Changes
+
+- 6842e09: Bump minor version
+
+### Patch Changes
+
+- Updated dependencies [6842e09]
+  - @modpack/core@0.2.0-canary.3
+
 ## 0.1.5-canary.2
 
 ### Patch Changes
