@@ -12,9 +12,13 @@
     "@modpack/utils": "0.1.4"
   },
   "changesets": [
+    "cruel-signs-end",
+    "dark-yaks-open",
+    "deep-numbers-create",
     "early-sites-work",
     "lazy-guests-tap",
     "modern-corners-clap",
-    "salty-snails-call"
+    "salty-snails-call",
+    "small-crabs-think"
   ]
 }

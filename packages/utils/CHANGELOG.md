@@ -1,5 +1,15 @@
 # @modpack/utils
 
+## 0.1.5-canary.2
+
+### Patch Changes
+
+- cd5cc26: Add isUrl util
+- cd5cc26: Remove unused plugins
+- Updated dependencies [cd5cc26]
+- Updated dependencies [6e01664]
+  - @modpack/core@0.1.5-canary.2
+
 ## 0.1.5-canary.1
 
 ### Patch Changes
