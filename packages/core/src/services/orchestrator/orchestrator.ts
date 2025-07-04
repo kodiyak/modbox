@@ -27,7 +27,21 @@ export class Orchestrator {
 
 		this.fs.events.on("file:updated", async (data) => {
 			// HMR - Refresh the module in the bundler
-			await this.bundler.refresh(`file://${data.path}`);
+			try {
+				const { module: result, updated } = await this.bundler.refresh(
+					`file://${data.path}`,
+				);
+
+				this.hooks.onModuleUpdate?.({
+					result: module,
+					error: null,
+					updated,
+					fs: this.fs,
+					logger: this.logger,
+					path: data.path,
+					content: data.content,
+				});
+			} catch (error) {}
 		});
 	}
 

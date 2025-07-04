@@ -5,11 +5,10 @@ import type {
 	TransformerHook,
 } from "../bundler";
 import type { ModuleExtractorHandler } from "../graph";
-import type { OnMountHook } from "../orchestrator";
+import type { OrchestratorHooks } from "../orchestrator";
 
-export interface ModpackPlugin {
+export interface ModpackPlugin extends OrchestratorHooks {
 	name: string;
-	onMount?: OnMountHook;
 	pipeline?: {
 		resolver?: ResolverHook;
 		fetcher?: FetcherHook;

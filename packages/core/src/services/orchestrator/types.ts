@@ -10,8 +10,18 @@ export type OnMountHook = (props: {
 	fs: VirtualFiles;
 	logger: Logger;
 }) => Promise<void> | void;
+export type OnModuleUpdateHook = (props: {
+	path: string;
+	content: string;
+	error: Error | null;
+	updated: boolean;
+	result?: any;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
 export interface OrchestratorHooks {
 	onMount?: OnMountHook;
+	onModuleUpdate?: OnModuleUpdateHook;
 }
 
 export interface OrchestratorOptions extends OrchestratorHooks {

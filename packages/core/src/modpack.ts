@@ -85,6 +85,16 @@ export class Modpack {
 						),
 					);
 				},
+				onModuleUpdate: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin?.onModuleUpdate?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
 			},
 			Logger.create("orchestrator"),
 			bundler,
