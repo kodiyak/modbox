@@ -1,5 +1,11 @@
 # @modpack/plugins
 
+## 0.1.5-canary.3
+
+### Patch Changes
+
+- 77d8b95: Plugin build hotfix
+
 ## 0.1.5-canary.2
 
 ### Patch Changes
