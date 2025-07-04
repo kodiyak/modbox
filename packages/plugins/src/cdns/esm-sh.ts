@@ -20,7 +20,7 @@ export function esmSh(options: EsmShOptions = {}) {
 				},
 			},
 			resolver: {
-				resolve: ({ next, path: currentPath, parent, logger, fs }) => {
+				resolve: ({ next, path: currentPath, parent, logger }) => {
 					let path = currentPath;
 					const versionQueryParam = path.match(/\?v=\d+$/);
 					if (versionQueryParam) {
