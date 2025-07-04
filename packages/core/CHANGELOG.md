@@ -1,5 +1,12 @@
 # @modpack/core
 
+## 0.1.5-canary.2
+
+### Patch Changes
+
+- cd5cc26: Remove unused plugins
+- 6e01664: HMR Fast Refresh Implemented
+
 ## 0.1.5-canary.1
 
 ### Patch Changes
