@@ -1,7 +1,11 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
-import type { FetcherHook, FetcherResult } from "../types";
+import type {
+	FetcherHook,
+	FetcherResult,
+	FetchMiddlewareProps,
+} from "../types";
 
 type DefaultFetcher = (
 	url: string,
@@ -37,18 +41,24 @@ export class PolyfillFetcher {
 		opts: RequestInit | undefined,
 		defaultFetch: DefaultFetcher,
 	): FetcherResult {
-		const executeHook = async (
-			index: number,
-			currentUrl: string,
-			currentOpts: RequestInit | undefined,
-		): FetcherResult => {
+		const executeHook = async ({
+			index,
+			options: currentOpts,
+			url: currentUrl,
+		}: Omit<FetchMiddlewareProps, "next"> & {
+			index: number;
+		}): FetcherResult => {
 			const hook = this.hooks[index];
 			if (!hook) {
 				return defaultFetch(currentUrl, currentOpts);
 			}
 
 			const next = () => {
-				return executeHook(index + 1, currentUrl, currentOpts);
+				return executeHook({
+					index: index + 1,
+					url: currentUrl,
+					options: currentOpts,
+				});
 			};
 
 			const props: Parameters<FetcherHook["fetch"]>[0] = {
@@ -71,6 +81,10 @@ export class PolyfillFetcher {
 			return next();
 		};
 
-		return executeHook(0, url, opts);
+		return executeHook({
+			index: 0,
+			url,
+			options: opts,
+		});
 	}
 }
