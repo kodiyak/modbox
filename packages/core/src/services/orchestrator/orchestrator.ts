@@ -32,7 +32,7 @@ export class Orchestrator {
 					`file://${data.path}`,
 				);
 
-				this.hooks.onModuleUpdate?.({
+				await this.hooks.onModuleUpdate?.({
 					result: module,
 					error: null,
 					updated,
@@ -41,7 +41,18 @@ export class Orchestrator {
 					path: data.path,
 					content: data.content,
 				});
-			} catch (error) {}
+			} catch (error) {
+				this.logger.error("Failed to refresh module:", error);
+				await this.hooks.onModuleUpdate?.({
+					result: undefined,
+					error: error as Error,
+					updated: false,
+					fs: this.fs,
+					logger: this.logger,
+					path: data.path,
+					content: data.content,
+				});
+			}
 		});
 	}
 
