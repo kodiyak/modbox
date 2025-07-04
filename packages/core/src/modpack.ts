@@ -9,7 +9,6 @@ import {
 	PolyfillFetcher,
 	PolyfillResolver,
 	PolyfillSourcer,
-	PolyfillTransformer,
 	ResponseRegistry,
 	VirtualFiles,
 } from "./services";
@@ -55,17 +54,6 @@ export class Modpack {
 					...plugin.pipeline?.sourcer!,
 				})),
 		);
-		const transformer = new PolyfillTransformer(
-			Logger.create("modules-transformer"),
-			registry,
-			fs,
-			plugins
-				.filter((plugin) => plugin.pipeline?.transformer)
-				.map((plugin) => ({
-					name: plugin.name,
-					...plugin.pipeline?.transformer!,
-				})),
-		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
 			registry,
@@ -82,7 +70,6 @@ export class Modpack {
 			registry,
 			fetcher,
 			resolver,
-			transformer,
 			sourcer,
 		);
 		/** @todo: refactor options */

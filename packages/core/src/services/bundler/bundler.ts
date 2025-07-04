@@ -6,7 +6,6 @@ import type {
 	PolyfillFetcher,
 	PolyfillResolver,
 	PolyfillSourcer,
-	PolyfillTransformer,
 } from "./polyfill";
 import type {
 	BundlerBuildOptions,
@@ -24,7 +23,6 @@ export class Bundler {
 
 	private readonly fetcher: PolyfillFetcher;
 	private readonly resolver: PolyfillResolver;
-	private readonly transformer: PolyfillTransformer;
 	private readonly sourcer: PolyfillSourcer;
 
 	private get window() {
@@ -42,14 +40,12 @@ export class Bundler {
 		registry: BundlerRegistry,
 		fetcher: PolyfillFetcher,
 		resolver: PolyfillResolver,
-		transformer: PolyfillTransformer,
 		sourcer: PolyfillSourcer,
 	) {
 		this.logger = logger;
 		this.registry = registry;
 		this.fetcher = fetcher;
 		this.resolver = resolver;
-		this.transformer = transformer;
 		this.sourcer = sourcer;
 	}
 
@@ -80,23 +76,8 @@ export class Bundler {
 					source: this.sourcer.source.bind(this.sourcer),
 					resolve: this.resolver.resolve.bind(this.resolver),
 					fetch: async (url: string, opts: RequestInit) => {
-						const result = await this.fetcher.fetch(url, opts, () => {
+						return this.fetcher.fetch(url, opts, () => {
 							return fetch(url, opts);
-						});
-
-						if (!result || !result.ok) return result;
-
-						const transformedResult = await this.transformer.transform(
-							await result.text(),
-							url,
-							(source) => source,
-						);
-
-						return new Response(transformedResult, {
-							headers: {
-								"Content-Type": "application/javascript",
-								"Content-Length": transformedResult.length.toString(),
-							},
 						});
 					},
 				},
