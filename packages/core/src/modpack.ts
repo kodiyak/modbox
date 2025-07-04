@@ -2,7 +2,6 @@ import {
 	BlobsRegistry,
 	Bundler,
 	ExternalRegistry,
-	GraphBuilder,
 	ModulesExtractor,
 	ModulesRegistry,
 	Orchestrator,
@@ -72,19 +71,18 @@ export class Modpack {
 			resolver,
 			sourcer,
 		);
-		/** @todo: refactor options */
-		const graphBuilder = new GraphBuilder(
-			Logger.create("graph-builder"),
-			fs,
-			extractor,
-			{},
-		);
 
 		return new Orchestrator(
-			{ debug },
+			{
+				debug,
+				onMount: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) => plugin?.onMount?.(props)),
+					);
+				},
+			},
 			Logger.create("orchestrator"),
 			bundler,
-			graphBuilder,
 			fs,
 		);
 	}

@@ -1,40 +1,55 @@
-import type { Bundler, GraphBuilder, VirtualFiles } from "../../services";
+import type { Bundler, VirtualFiles } from "../../services";
 import type { Logger } from "../../shared/logger";
-import type { OrchestratorMountOptions, OrchestratorOptions } from "./types";
+import type {
+	OrchestratorHooks,
+	OrchestratorMountOptions,
+	OrchestratorOptions,
+} from "./types";
 
 export class Orchestrator {
 	private readonly logger: Logger;
 	private readonly bundler: Bundler;
-	private readonly graph: GraphBuilder;
 	public readonly fs: VirtualFiles;
+	private readonly hooks: OrchestratorHooks;
 
 	constructor(
-		// @ts-expect-error: This is a placeholder for the options type, which can be defined later.
-		options: OrchestratorOptions = {},
+		options: OrchestratorOptions & OrchestratorHooks = {},
 		logger: Logger,
 		bundler: Bundler,
-		graph: GraphBuilder,
 		fs: VirtualFiles,
 	) {
 		this.logger = logger;
 		this.bundler = bundler;
-		this.graph = graph;
 		this.fs = fs;
 
-		this.logger.info("Orchestrator initialized");
+		const { onMount } = options;
+		this.hooks = { onMount };
 
 		this.fs.events.on("file:updated", async (data) => {
-			this.logger.debug(`File updated: ${data.path}`);
+			// HMR - Refresh the module in the bundler
 			await this.bundler.refresh(`file://${data.path}`);
 		});
 	}
 
 	async mount(entrypoint: string, options?: OrchestratorMountOptions) {
-		this.logger.info("Mounting modules...", this.fs.readdir());
-		await this.graph.build();
-		const result = await this.bundler.build(entrypoint, options ?? {});
-		this.logger.info("Modules mounted successfully");
-
-		return result;
+		try {
+			const result = await this.bundler.build(entrypoint, options ?? {});
+			await this.hooks.onMount?.({
+				entrypoint,
+				options,
+				result,
+				error: null,
+				fs: this.fs,
+			});
+		} catch (error) {
+			this.logger.error("Failed to mount entrypoint:", error);
+			await this.hooks.onMount?.({
+				entrypoint,
+				options,
+				error: error as Error,
+				result: undefined,
+				fs: this.fs,
+			});
+		}
 	}
 }

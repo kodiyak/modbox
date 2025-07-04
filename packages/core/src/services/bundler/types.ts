@@ -55,7 +55,7 @@ export interface BundlerBuildOptions extends GraphBuilderOptions {
 
 // Fetcher [Internal]
 export type FetcherResult = Promise<Response | undefined>;
-interface FetchMiddlewareProps {
+export interface FetchMiddlewareProps {
 	url: string;
 	options: RequestInit | undefined;
 	next: (props?: Partial<Omit<FetchMiddlewareProps, "next">>) => FetcherResult;
@@ -155,5 +155,5 @@ export interface EsmsInitOptions {
 export interface IImportShim {
 	addImportMap(map: ImportMap): void;
 	importShim(specifier: string): Promise<any>;
-	hotReload(url: string): Promise<any>;
+	hotReload(url: string): Promise<boolean>;
 }
