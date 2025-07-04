@@ -75,10 +75,20 @@ export class Modpack {
 		return new Orchestrator(
 			{
 				debug,
-				onMount: async (props) => {
+				onBuildStart: async (props) => {
 					await Promise.all(
 						plugins.map(async (plugin) =>
-							plugin?.onMount?.({
+							plugin?.onBuildStart?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
+				onBuildEnd: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin?.onBuildEnd?.({
 								...props,
 								logger: props.logger.namespace(plugin.name),
 							}),

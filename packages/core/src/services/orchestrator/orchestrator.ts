@@ -22,61 +22,60 @@ export class Orchestrator {
 		this.bundler = bundler;
 		this.fs = fs;
 
-		const { onMount } = options;
-		this.hooks = { onMount };
+		const { debug: _, ...hooks } = options;
+		this.hooks = hooks;
 
 		this.fs.events.on("file:updated", async (data) => {
 			// HMR - Refresh the module in the bundler
+			let updated = false;
+			let result: any;
+			let error: Error | null = null;
 			try {
-				const { module: result, updated } = await this.bundler.refresh(
+				const { module, updated: hotReloaded } = await this.bundler.refresh(
 					`file://${data.path}`,
 				);
-
-				await this.hooks.onModuleUpdate?.({
-					result: module,
-					error: null,
-					updated,
-					fs: this.fs,
-					logger: this.logger,
-					path: data.path,
-					content: data.content,
-				});
-			} catch (error) {
-				this.logger.error("Failed to refresh module:", error);
-				await this.hooks.onModuleUpdate?.({
-					result: undefined,
-					error: error as Error,
-					updated: false,
-					fs: this.fs,
-					logger: this.logger,
-					path: data.path,
-					content: data.content,
-				});
+				result = module;
+				updated = hotReloaded;
+			} catch (err) {
+				this.logger.error("Failed to refresh module:", err);
+				error = err as Error;
 			}
+
+			await this.hooks.onModuleUpdate?.({
+				result,
+				error,
+				updated,
+				fs: this.fs,
+				logger: this.logger,
+				path: data.path,
+				content: data.content,
+			});
 		});
 	}
 
 	async mount(entrypoint: string, options?: OrchestratorMountOptions) {
+		let error: Error | null = null;
+		let result: any;
+		await this.hooks.onBuildStart?.({
+			entrypoint,
+			options,
+			fs: this.fs,
+			logger: this.logger,
+		});
+
 		try {
-			const result = await this.bundler.build(entrypoint, options ?? {});
-			await this.hooks.onMount?.({
-				entrypoint,
-				options,
-				result,
-				error: null,
-				fs: this.fs,
-				logger: this.logger,
-			});
-		} catch (error) {
-			this.logger.error("Failed to mount entrypoint:", error);
-			await this.hooks.onMount?.({
-				entrypoint,
-				options,
-				error: error as Error,
-				result: undefined,
-				fs: this.fs,
-				logger: this.logger,
-			});
+			result = await this.bundler.build(entrypoint, options ?? {});
+		} catch (err) {
+			this.logger.error("Failed to mount entrypoint:", err);
+			error = err as Error;
 		}
+		await this.hooks.onBuildEnd?.({
+			entrypoint,
+			options,
+			error,
+			result,
+			fs: this.fs,
+			logger: this.logger,
+		});
 	}
 }
