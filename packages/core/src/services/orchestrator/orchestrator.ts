@@ -40,6 +40,7 @@ export class Orchestrator {
 				result,
 				error: null,
 				fs: this.fs,
+				logger: this.logger,
 			});
 		} catch (error) {
 			this.logger.error("Failed to mount entrypoint:", error);
@@ -49,6 +50,7 @@ export class Orchestrator {
 				error: error as Error,
 				result: undefined,
 				fs: this.fs,
+				logger: this.logger,
 			});
 		}
 	}

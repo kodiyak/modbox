@@ -77,7 +77,12 @@ export class Modpack {
 				debug,
 				onMount: async (props) => {
 					await Promise.all(
-						plugins.map(async (plugin) => plugin?.onMount?.(props)),
+						plugins.map(async (plugin) =>
+							plugin?.onMount?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
 					);
 				},
 			},

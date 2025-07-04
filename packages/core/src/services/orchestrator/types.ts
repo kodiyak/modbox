@@ -1,3 +1,4 @@
+import type { Logger } from "../../shared";
 import type { BundlerBuildOptions } from "../bundler";
 import type { VirtualFiles } from "../types";
 
@@ -7,6 +8,7 @@ export type OnMountHook = (props: {
 	error: Error | null;
 	result?: any;
 	fs: VirtualFiles;
+	logger: Logger;
 }) => Promise<void> | void;
 export interface OrchestratorHooks {
 	onMount?: OnMountHook;
