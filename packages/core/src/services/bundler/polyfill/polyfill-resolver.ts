@@ -41,22 +41,24 @@ export class PolyfillResolver {
 		parent: string,
 		defaultResolve: DefaultResolver,
 	): string {
-		const executeHook = (
-			index: number,
-			currentPath: string,
-			currentParent: string,
-		): string => {
+		const executeHook = ({
+			index,
+			path: currentPath,
+			parent: currentParent,
+		}: Omit<ResolveMiddlewareProps, "next"> & {
+			index: number;
+		}): string => {
 			const hook = this.hooks[index];
 			if (!hook) {
 				return defaultResolve(currentPath, currentParent);
 			}
 
 			const next: ResolveMiddlewareProps["next"] = (props) => {
-				return executeHook(
-					index + 1,
-					props?.path ?? currentPath,
-					props?.parent ?? currentParent,
-				);
+				return executeHook({
+					index: index + 1,
+					path: props?.path ?? currentPath,
+					parent: props?.parent ?? currentParent,
+				});
 			};
 
 			const props: Parameters<ResolverHook["resolve"]>[0] = {
@@ -79,6 +81,6 @@ export class PolyfillResolver {
 			return next();
 		};
 
-		return executeHook(0, path, parent);
+		return executeHook({ index: 0, path, parent });
 	}
 }
