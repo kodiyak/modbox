@@ -14,13 +14,27 @@ import {
 import { BundlerRegistry } from "./services/bundler/bundler-registry";
 import { getPluginLogger, getPluginReporter } from "./services/plugins";
 import { Logger } from "./shared";
-import type { ModpackBootOptions } from "./types";
+import type { ModpackBootOptions, ModpackPlugin } from "./types";
+
+function getModpackPlugin({
+	debug: _,
+	plugins: __,
+	...hooks
+}: ModpackBootOptions) {
+	const plugin: ModpackPlugin = {
+		name: "runtime",
+		...hooks,
+	};
+
+	return plugin;
+}
 
 export class Modpack {
-	static async boot({ debug, plugins = [] }: ModpackBootOptions) {
+	static async boot({ debug, plugins = [], ...rest }: ModpackBootOptions) {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles(Logger.create("virtual-files"));
 		console.log("Booting Modpack...");
+		plugins.push(getModpackPlugin(rest));
 		const extractor = new ModulesExtractor(
 			Logger.create("modules-extractor"),
 			plugins.map((plugin) => plugin.analyze?.process!).filter(Boolean),
