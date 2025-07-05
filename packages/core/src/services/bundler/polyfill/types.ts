@@ -1,5 +1,5 @@
 import type { Logger } from "../../../shared";
-import type { PluginReporter } from "../../plugins";
+import type { IPluginReporter } from "../../plugins";
 import type { VirtualFiles } from "../../types";
 import type { PluginMiddlewareContext } from "../types";
 
@@ -22,7 +22,7 @@ export type OnFetchStartHook = (props: {
 	options?: RequestInit;
 	fs: VirtualFiles;
 	logger: Logger;
-	reporter: PluginReporter;
+	reporter: IPluginReporter;
 }) => Promise<void> | void;
 export type OnFetchEndHook = (props: {
 	url: string;
@@ -31,7 +31,7 @@ export type OnFetchEndHook = (props: {
 	error: Error | null;
 	fs: VirtualFiles;
 	logger: Logger;
-	reporter: PluginReporter;
+	reporter: IPluginReporter;
 }) => Promise<void> | void;
 export interface FetcherHooks {
 	onFetchStart?: OnFetchStartHook;
@@ -59,7 +59,7 @@ export type OnResolveStartHook = (props: {
 	parent: string;
 	fs: VirtualFiles;
 	logger: Logger;
-	reporter: PluginReporter;
+	reporter: IPluginReporter;
 }) => Promise<void> | void;
 export type OnResolveEndHook = (props: {
 	path: string;
@@ -68,7 +68,7 @@ export type OnResolveEndHook = (props: {
 	error: Error | null;
 	fs: VirtualFiles;
 	logger: Logger;
-	reporter: PluginReporter;
+	reporter: IPluginReporter;
 }) => Promise<void> | void;
 export interface ResolverHooks {
 	onResolveStart?: OnResolveStartHook;
@@ -101,7 +101,7 @@ export type OnSourceStartHook = (props: {
 	options?: RequestInit;
 	fs: VirtualFiles;
 	logger: Logger;
-	reporter: PluginReporter;
+	reporter: IPluginReporter;
 }) => Promise<void> | void;
 export type OnSourceEndHook = (props: {
 	url: string;
@@ -111,7 +111,7 @@ export type OnSourceEndHook = (props: {
 	error: Error | null;
 	fs: VirtualFiles;
 	logger: Logger;
-	reporter: PluginReporter;
+	reporter: IPluginReporter;
 }) => Promise<void> | void;
 export interface SourcerHooks {
 	onSourceStart?: OnSourceStartHook;

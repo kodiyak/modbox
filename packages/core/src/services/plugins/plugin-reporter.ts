@@ -11,11 +11,9 @@ const PluginReporterEvents = z.object({
 
 type PluginReporterEventsProps = z.infer<typeof PluginReporterEvents>;
 
+export type IReportLevel = PluginReporterEventsProps["plugin:log"]["level"];
 export interface IPluginReporter {
-	log(
-		level: PluginReporterEventsProps["plugin:log"]["level"],
-		message: string,
-	): void;
+	log(level: IReportLevel, message: string): void;
 }
 
 export class PluginReporter implements IPluginReporter {
