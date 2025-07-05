@@ -43,6 +43,7 @@ export type OnBuildEndHook = (props: {
 }) => Promise<void> | void;
 export interface OrchestratorHooks {
 	onBoot?: OnBootHook;
+	onLog?: OnLogHook;
 	onModuleUpdate?: OnModuleUpdateHook;
 	onBuildStart?: OnBuildStartHook;
 	onBuildEnd?: OnBuildEndHook;

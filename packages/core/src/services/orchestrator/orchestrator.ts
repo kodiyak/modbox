@@ -1,6 +1,11 @@
 import type { Bundler, VirtualFiles } from "../../services";
 import type { Logger } from "../../shared/logger";
-import { PluginReporter } from "../plugins";
+import {
+	getPluginLogger,
+	getPluginReporter,
+	type ModpackPlugin,
+	PluginReporter,
+} from "../plugins";
 import type {
 	OrchestratorHooks,
 	OrchestratorMountOptions,
@@ -29,32 +34,7 @@ export class Orchestrator {
 		this.hooks = hooks;
 
 		this.fs.events.on("file:updated", async (data) => {
-			// HMR - Refresh the module in the bundler
-			let updated = false;
-			let result: any;
-			let error: Error | null = null;
-			try {
-				const { module, updated: hotReloaded } = await this.bundler.refresh(
-					`file://${data.path}`,
-				);
-				result = module;
-				updated = hotReloaded;
-			} catch (err) {
-				this.logger.error("Failed to refresh module:", err);
-				error = err as Error;
-			}
-
-			await this.hooks.onModuleUpdate?.({
-				result,
-				error,
-				updated,
-				fs: this.fs,
-				path: data.path,
-				content: data.content,
-				// placeholder for plugin reporter and logger
-				reporter: this.reporter,
-				logger: this.logger,
-			});
+			await this.refresh(data.path, data.content);
 		});
 	}
 
@@ -85,6 +65,55 @@ export class Orchestrator {
 			// placeholder for plugin reporter and logger
 			logger: this.logger,
 			reporter: this.reporter,
+		});
+	}
+
+	async refresh(path: string, content: string) {
+		// HMR - Refresh the module in the bundler
+		let updated = false;
+		let result: any;
+		let error: Error | null = null;
+		try {
+			const { module, updated: hotReloaded } = await this.bundler.refresh(
+				`file://${path}`,
+			);
+			result = module;
+			updated = hotReloaded;
+		} catch (err) {
+			this.logger.error("Failed to refresh module:", err);
+			error = err as Error;
+		}
+
+		await this.hooks.onModuleUpdate?.({
+			result,
+			error,
+			updated,
+			fs: this.fs,
+			path: path,
+			content: content,
+			// placeholder for plugin reporter and logger
+			reporter: this.reporter,
+			logger: this.logger,
+		});
+	}
+
+	async addPlugin(plugin: ModpackPlugin) {
+		const reporter = getPluginReporter(plugin.name);
+		const logger = getPluginLogger(plugin.name);
+		reporter.getEventEmitter().on("plugin:log", async (data) => {
+			await this.hooks.onLog?.({
+				message: data.message,
+				level: data.level,
+				fs: this.fs,
+				logger,
+				reporter,
+			});
+		});
+
+		await plugin.onBoot?.({
+			fs: this.fs,
+			logger,
+			reporter,
 		});
 	}
 }

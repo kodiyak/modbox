@@ -20,6 +20,8 @@ export class PluginReporter implements IPluginReporter {
 	private readonly events: EventEmitter<typeof PluginReporterEvents>;
 	private readonly name: string;
 
+	private static reporters: Record<string, PluginReporter> = {};
+
 	constructor(name: string) {
 		this.name = name;
 		this.events = new EventEmitter(
@@ -29,7 +31,10 @@ export class PluginReporter implements IPluginReporter {
 	}
 
 	static create(name: string): PluginReporter {
-		return new PluginReporter(name);
+		if (!PluginReporter.reporters[name]) {
+			PluginReporter.reporters[name] = new PluginReporter(name);
+		}
+		return PluginReporter.reporters[name];
 	}
 
 	log(

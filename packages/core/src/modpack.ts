@@ -170,6 +170,17 @@ export class Modpack {
 						),
 					);
 				},
+				onLog: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin?.onLog?.({
+								...props,
+								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
+							}),
+						),
+					);
+				},
 			},
 			Logger.create("orchestrator"),
 			bundler,
@@ -177,13 +188,8 @@ export class Modpack {
 		);
 
 		await Promise.all(
-			plugins.map(async (plugin) =>
-				plugin.onBoot?.({
-					fs,
-					logger: getPluginLogger(plugin.name),
-					reporter: getPluginReporter(plugin.name),
-				}),
-			),
+			// Bootstrap plugins
+			plugins.map(async (plugin) => orchestrator.addPlugin(plugin)),
 		);
 
 		return orchestrator;

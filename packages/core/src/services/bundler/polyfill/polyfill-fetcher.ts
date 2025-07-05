@@ -1,6 +1,10 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import { getPluginLogger, PluginReporter } from "../../plugins";
+import {
+	getPluginLogger,
+	getPluginReporter,
+	PluginReporter,
+} from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	FetcherHook,
@@ -52,7 +56,7 @@ export class PolyfillFetcher {
 			index,
 			options: currentOpts,
 			url: currentUrl,
-		}: Omit<FetchMiddlewareProps, "next"> & {
+		}: Omit<FetchMiddlewareProps, "next" | "reporter"> & {
 			index: number;
 		}): FetcherResult => {
 			const hook = this.handlers[index];
@@ -73,6 +77,7 @@ export class PolyfillFetcher {
 				options: currentOpts,
 				next,
 				logger: getPluginLogger(hook.name),
+				reporter: getPluginReporter(hook.name),
 				registry: this.registry,
 				fs: this.fs,
 			};

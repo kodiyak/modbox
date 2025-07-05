@@ -1,6 +1,10 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import { getPluginLogger, PluginReporter } from "../../plugins";
+import {
+	getPluginLogger,
+	getPluginReporter,
+	PluginReporter,
+} from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	SourceMiddlewareProps,
@@ -55,24 +59,32 @@ export class PolyfillSourcer {
 		options: RequestInit | undefined,
 		defaultSource: DefaultSourcer,
 	): Promise<SourceResult> {
-		const executeHook = async (
-			index: number,
-			currentUrl: string,
-			currentParent: string,
-			currentOptions: RequestInit | undefined,
-		): Promise<SourceResult> => {
+		// const executeHook = async (
+		// 	index: number,
+		// 	currentUrl: string,
+		// 	currentParent: string,
+		// 	currentOptions: RequestInit | undefined,
+		// ): Promise<SourceResult> => {
+		const executeHook = async ({
+			index,
+			url: currentUrl,
+			parent: currentParent,
+			options: currentOptions,
+		}: Omit<SourceMiddlewareProps, "next" | "reporter"> & {
+			index: number;
+		}): Promise<SourceResult> => {
 			const hook = this.handlers[index];
 			if (!hook) {
 				return defaultSource(currentUrl, currentParent, currentOptions);
 			}
 
 			const next = (props?: Partial<Omit<SourceMiddlewareProps, "next">>) => {
-				return executeHook(
-					index + 1,
-					props?.url ?? currentUrl,
-					props?.parent ?? currentParent,
-					props?.options ?? currentOptions,
-				);
+				return executeHook({
+					index: index + 1,
+					url: props?.url ?? currentUrl,
+					parent: props?.parent ?? currentParent,
+					options: props?.options ?? currentOptions,
+				});
 			};
 
 			const props: Parameters<SourcerHook["source"]>[0] = {
@@ -80,6 +92,7 @@ export class PolyfillSourcer {
 				parent: currentParent,
 				options: currentOptions,
 				logger: getPluginLogger(hook.name),
+				reporter: getPluginReporter(hook.name),
 				registry: this.registry,
 				fs: this.fs,
 				next,
@@ -109,7 +122,7 @@ export class PolyfillSourcer {
 				reporter: this.reporter,
 			});
 
-			result = await executeHook(0, url, parent, options);
+			result = await executeHook({ index: 0, url, parent, options });
 		} catch (err: any) {
 			error = err as Error;
 			this.logger.error(

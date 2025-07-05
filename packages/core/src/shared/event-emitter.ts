@@ -30,10 +30,11 @@ export class EventEmitter<
 	}
 
 	public emit<K extends keyof O>(event: K, data: O[K]) {
-		const parsedData = this.schema.safeParse({ [event]: data });
-		if (parsedData!.success) {
+		const shape = (this.schema as any).shape?.[event];
+		const parsedData = shape.safeParse(data);
+		if (!parsedData!.success) {
 			console.error(
-				`[${this.name}][${event.toString()}] Invalid data: ${JSON.stringify((parsedData.error as any)?.issues)}`,
+				`[${this.name}][${event.toString()}] Invalid data: ${JSON.stringify((parsedData.error as any)?.issues, null, 2)}`,
 				data,
 			);
 			return;

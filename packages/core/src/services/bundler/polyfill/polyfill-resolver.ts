@@ -1,6 +1,10 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import { getPluginLogger, PluginReporter } from "../../plugins";
+import {
+	getPluginLogger,
+	getPluginReporter,
+	PluginReporter,
+} from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	ResolveMiddlewareProps,
@@ -52,7 +56,7 @@ export class PolyfillResolver {
 			index,
 			path: currentPath,
 			parent: currentParent,
-		}: Omit<ResolveMiddlewareProps, "next"> & {
+		}: Omit<ResolveMiddlewareProps, "next" | "reporter"> & {
 			index: number;
 		}): string => {
 			const hook = this.handlers[index];
@@ -73,6 +77,7 @@ export class PolyfillResolver {
 				parent: currentParent,
 				next,
 				logger: getPluginLogger(hook.name),
+				reporter: getPluginReporter(hook.name),
 				registry: this.registry,
 				fs: this.fs,
 			};

@@ -8,6 +8,7 @@ export type FetcherResult = Promise<Response | undefined>;
 export interface FetchMiddlewareProps {
 	url: string;
 	options: RequestInit | undefined;
+	reporter: IPluginReporter;
 	next: (props?: Partial<Omit<FetchMiddlewareProps, "next">>) => FetcherResult;
 }
 type FetcherMiddleware = (
@@ -43,6 +44,7 @@ export type ResolverResult = string;
 export interface ResolveMiddlewareProps {
 	path: string;
 	parent: string;
+	reporter: IPluginReporter;
 	next: (
 		props?: Partial<Omit<ResolveMiddlewareProps, "next">>,
 	) => ResolverResult;
@@ -84,6 +86,7 @@ export interface SourceMiddlewareProps {
 	url: string;
 	parent: string;
 	options: RequestInit | undefined;
+	reporter: IPluginReporter;
 	next: (
 		props?: Partial<Omit<SourceMiddlewareProps, "next">>,
 	) => SourceResult | Promise<SourceResult>;
