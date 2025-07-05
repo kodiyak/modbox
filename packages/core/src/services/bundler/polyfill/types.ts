@@ -72,3 +72,23 @@ export type SourcerHook = {
 	source: SourceMiddleware;
 	cleanup?: (url: string) => void;
 };
+export type OnSourceStartHook = (props: {
+	url: string;
+	parent: string;
+	options?: RequestInit;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
+export type OnSourceEndHook = (props: {
+	url: string;
+	parent: string;
+	options?: RequestInit;
+	result: SourceResult | undefined;
+	error: Error | null;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
+export interface SourcerHooks {
+	onSourceStart?: OnSourceStartHook;
+	onSourceEnd?: OnSourceEndHook;
+}

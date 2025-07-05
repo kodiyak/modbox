@@ -1,7 +1,12 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
-import type { SourceMiddlewareProps, SourceResult, SourcerHook } from "./types";
+import type {
+	SourceMiddlewareProps,
+	SourceResult,
+	SourcerHook,
+	SourcerHooks,
+} from "./types";
 
 type DefaultSourcer = (
 	url: string,
@@ -9,24 +14,27 @@ type DefaultSourcer = (
 	options: RequestInit | undefined,
 ) => Promise<SourceResult>;
 
-type PolyfillSourcerHook = SourcerHook & { name: string };
+type SourcePluginHandler = SourcerHook & { name: string };
 
 export class PolyfillSourcer {
-	private readonly hooks: PolyfillSourcerHook[] = [];
+	private readonly handlers: SourcePluginHandler[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
+	private readonly hooks: SourcerHooks;
 
 	constructor(
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		hooks: PolyfillSourcerHook[] = [],
+		handlers: SourcePluginHandler[] = [],
+		hooks: SourcerHooks = {},
 	) {
-		this.hooks = hooks;
+		this.handlers = handlers;
 		this.logger = logger;
 		this.registry = registry;
 		this.fs = fs;
+		this.hooks = hooks;
 	}
 
 	async source(
@@ -50,7 +58,7 @@ export class PolyfillSourcer {
 			currentParent: string,
 			currentOptions: RequestInit | undefined,
 		): Promise<SourceResult> => {
-			const hook = this.hooks[index];
+			const hook = this.handlers[index];
 			if (!hook) {
 				return defaultSource(currentUrl, currentParent, currentOptions);
 			}
@@ -85,6 +93,41 @@ export class PolyfillSourcer {
 			return next();
 		};
 
-		return executeHook(0, url, parent, options);
+		let result: SourceResult | undefined;
+		let error: Error | null = null;
+		try {
+			await this.hooks.onSourceStart?.({
+				url,
+				parent,
+				options,
+				fs: this.fs,
+				logger: this.logger,
+			});
+
+			result = await executeHook(0, url, parent, options);
+		} catch (err: any) {
+			error = err as Error;
+			this.logger.error(
+				`Error in sourcer "${this.handlers[0]?.name}": ${error.message}`,
+			);
+		}
+
+		await this.hooks.onSourceEnd?.({
+			url,
+			parent,
+			options,
+			result,
+			error,
+			fs: this.fs,
+			logger: this.logger,
+		});
+
+		if (!result) {
+			throw new Error(
+				`Failed to source "${url}" from "${parent}". No source returned.`,
+			);
+		}
+
+		return result;
 	}
 }

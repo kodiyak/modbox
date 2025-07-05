@@ -64,6 +64,28 @@ export class Modpack {
 					name: plugin.name,
 					...plugin.pipeline?.sourcer!,
 				})),
+			{
+				onSourceStart: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin.onSourceStart?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
+				onSourceEnd: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin.onSourceEnd?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
+			},
 		);
 		const resolver = new PolyfillResolver(
 			Logger.create("modules-resolver"),
