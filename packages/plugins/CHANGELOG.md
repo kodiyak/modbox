@@ -1,5 +1,11 @@
 # @modpack/plugins
 
+## 0.2.0-canary.8
+
+### Patch Changes
+
+- 3f5bfc8: Add external option to esm.sh plugin
+
 ## 0.2.0-canary.7
 
 ### Patch Changes
