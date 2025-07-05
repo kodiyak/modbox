@@ -1,6 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import { getPluginLogger } from "../../plugins";
+import { getPluginLogger, PluginReporter } from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	FetcherHook,
@@ -22,6 +22,7 @@ export class PolyfillFetcher {
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
 	private readonly hooks: FetcherHooks;
+	private readonly reporter: PluginReporter;
 
 	constructor(
 		logger: Logger,
@@ -35,6 +36,7 @@ export class PolyfillFetcher {
 		this.registry = registry;
 		this.fs = fs;
 		this.hooks = hooks;
+		this.reporter = PluginReporter.create("fetcher");
 	}
 
 	async fetch(url: string, opts: RequestInit, defaultFetch: DefaultFetcher) {
@@ -94,6 +96,7 @@ export class PolyfillFetcher {
 				options: opts,
 				fs: this.fs,
 				logger: this.logger,
+				reporter: this.reporter,
 			});
 			response = await executeHook({
 				index: 0,
@@ -111,6 +114,7 @@ export class PolyfillFetcher {
 			error,
 			fs: this.fs,
 			logger: this.logger,
+			reporter: this.reporter,
 		});
 
 		return response;

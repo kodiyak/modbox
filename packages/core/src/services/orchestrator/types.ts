@@ -1,10 +1,12 @@
 import type { Logger } from "../../shared";
 import type { BundlerBuildOptions } from "../bundler";
+import type { PluginReporter } from "../plugins";
 import type { VirtualFiles } from "../types";
 
 export type OnBootHook = (props: {
 	fs: VirtualFiles;
 	logger: Logger;
+	reporter: PluginReporter;
 }) => Promise<void> | void;
 export type OnModuleUpdateHook = (props: {
 	path: string;
@@ -14,12 +16,14 @@ export type OnModuleUpdateHook = (props: {
 	result?: any;
 	fs: VirtualFiles;
 	logger: Logger;
+	reporter: PluginReporter;
 }) => Promise<void> | void;
 export type OnBuildStartHook = (props: {
 	entrypoint: string;
 	options?: OrchestratorMountOptions;
 	fs: VirtualFiles;
 	logger: Logger;
+	reporter: PluginReporter;
 }) => Promise<void> | void;
 export type OnBuildEndHook = (props: {
 	entrypoint: string;
@@ -28,6 +32,7 @@ export type OnBuildEndHook = (props: {
 	result?: any;
 	fs: VirtualFiles;
 	logger: Logger;
+	reporter: PluginReporter;
 }) => Promise<void> | void;
 export interface OrchestratorHooks {
 	onBoot?: OnBootHook;

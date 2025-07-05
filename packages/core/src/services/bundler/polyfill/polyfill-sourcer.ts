@@ -1,6 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import { getPluginLogger } from "../../plugins";
+import { getPluginLogger, PluginReporter } from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	SourceMiddlewareProps,
@@ -23,6 +23,7 @@ export class PolyfillSourcer {
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
 	private readonly hooks: SourcerHooks;
+	private readonly reporter: PluginReporter;
 
 	constructor(
 		logger: Logger,
@@ -36,6 +37,7 @@ export class PolyfillSourcer {
 		this.registry = registry;
 		this.fs = fs;
 		this.hooks = hooks;
+		this.reporter = PluginReporter.create("sourcer");
 	}
 
 	async source(
@@ -102,7 +104,9 @@ export class PolyfillSourcer {
 				parent,
 				options,
 				fs: this.fs,
+				// placeholder for plugin reporter and logger
 				logger: this.logger,
+				reporter: this.reporter,
 			});
 
 			result = await executeHook(0, url, parent, options);
@@ -120,7 +124,9 @@ export class PolyfillSourcer {
 			result,
 			error,
 			fs: this.fs,
+			// placeholder for plugin reporter and logger
 			logger: this.logger,
+			reporter: this.reporter,
 		});
 
 		if (!result) {

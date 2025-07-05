@@ -1,6 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
-import { getPluginLogger } from "../../plugins";
+import { getPluginLogger, PluginReporter } from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	ResolveMiddlewareProps,
@@ -18,6 +18,7 @@ export class PolyfillResolver {
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
 	private readonly hooks: ResolverHooks;
+	private readonly reporter: PluginReporter;
 
 	constructor(
 		logger: Logger,
@@ -31,6 +32,7 @@ export class PolyfillResolver {
 		this.registry = registry;
 		this.fs = fs;
 		this.hooks = hooks;
+		this.reporter = PluginReporter.create("resolver");
 	}
 
 	resolve(
@@ -94,7 +96,9 @@ export class PolyfillResolver {
 				path,
 				parent,
 				fs: this.fs,
+				// placeholder for plugin reporter and logger
 				logger: this.logger,
+				reporter: this.reporter,
 			});
 			result = executeHook({ index: 0, path, parent });
 			this.hooks.onResolveEnd?.({
@@ -103,7 +107,9 @@ export class PolyfillResolver {
 				result,
 				error: null,
 				fs: this.fs,
+				// placeholder for plugin reporter and logger
 				logger: this.logger,
+				reporter: this.reporter,
 			});
 		} catch (err) {
 			error = err instanceof Error ? err : new Error(String(err));
@@ -117,7 +123,9 @@ export class PolyfillResolver {
 				result: undefined,
 				error,
 				fs: this.fs,
+				// placeholder for plugin reporter and logger
 				logger: this.logger,
+				reporter: this.reporter,
 			});
 		}
 

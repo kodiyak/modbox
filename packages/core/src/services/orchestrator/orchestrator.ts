@@ -1,5 +1,6 @@
 import type { Bundler, VirtualFiles } from "../../services";
 import type { Logger } from "../../shared/logger";
+import { PluginReporter } from "../plugins";
 import type {
 	OrchestratorHooks,
 	OrchestratorMountOptions,
@@ -8,6 +9,7 @@ import type {
 
 export class Orchestrator {
 	private readonly logger: Logger;
+	private readonly reporter: PluginReporter;
 	private readonly bundler: Bundler;
 	public readonly fs: VirtualFiles;
 	private readonly hooks: OrchestratorHooks;
@@ -21,6 +23,7 @@ export class Orchestrator {
 		this.logger = logger;
 		this.bundler = bundler;
 		this.fs = fs;
+		this.reporter = PluginReporter.create("orchestrator");
 
 		const { debug: _, ...hooks } = options;
 		this.hooks = hooks;
@@ -46,9 +49,11 @@ export class Orchestrator {
 				error,
 				updated,
 				fs: this.fs,
-				logger: this.logger,
 				path: data.path,
 				content: data.content,
+				// placeholder for plugin reporter and logger
+				reporter: this.reporter,
+				logger: this.logger,
 			});
 		});
 	}
@@ -60,7 +65,9 @@ export class Orchestrator {
 			entrypoint,
 			options,
 			fs: this.fs,
+			// placeholder for plugin reporter and logger
 			logger: this.logger,
+			reporter: this.reporter,
 		});
 
 		try {
@@ -75,7 +82,9 @@ export class Orchestrator {
 			error,
 			result,
 			fs: this.fs,
+			// placeholder for plugin reporter and logger
 			logger: this.logger,
+			reporter: this.reporter,
 		});
 	}
 }

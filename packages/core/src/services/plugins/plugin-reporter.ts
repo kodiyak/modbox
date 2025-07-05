@@ -1,0 +1,51 @@
+import { z } from "zod";
+import { EventEmitter } from "../../shared";
+
+const PluginReporterEvents = z.object({
+	"plugin:log": z.object({
+		name: z.string(),
+		level: z.enum(["debug", "info", "warn", "error"]),
+		message: z.string(),
+	}),
+});
+
+type PluginReporterEventsProps = z.infer<typeof PluginReporterEvents>;
+
+export interface IPluginReporter {
+	log(
+		level: PluginReporterEventsProps["plugin:log"]["level"],
+		message: string,
+	): void;
+}
+
+export class PluginReporter implements IPluginReporter {
+	private readonly events: EventEmitter<typeof PluginReporterEvents>;
+	private readonly name: string;
+
+	constructor(name: string) {
+		this.name = name;
+		this.events = new EventEmitter(
+			PluginReporterEvents,
+			`PluginReporter[${name}]`,
+		);
+	}
+
+	static create(name: string): PluginReporter {
+		return new PluginReporter(name);
+	}
+
+	log(
+		level: PluginReporterEventsProps["plugin:log"]["level"],
+		message: string,
+	) {
+		this.events.emit("plugin:log", {
+			name: this.name,
+			level,
+			message,
+		});
+	}
+
+	getEventEmitter() {
+		return this.events;
+	}
+}

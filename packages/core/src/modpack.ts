@@ -12,7 +12,7 @@ import {
 	VirtualFiles,
 } from "./services";
 import { BundlerRegistry } from "./services/bundler/bundler-registry";
-import { getPluginLogger } from "./services/plugins";
+import { getPluginLogger, getPluginReporter } from "./services/plugins";
 import { Logger } from "./shared";
 import type { ModpackBootOptions } from "./types";
 
@@ -49,6 +49,7 @@ export class Modpack {
 							plugin.onFetchStart?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -72,6 +73,7 @@ export class Modpack {
 							plugin.onSourceStart?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -82,6 +84,7 @@ export class Modpack {
 							plugin.onSourceEnd?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -105,6 +108,7 @@ export class Modpack {
 							plugin.onResolveStart?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -115,6 +119,7 @@ export class Modpack {
 							plugin.onResolveEnd?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -138,6 +143,7 @@ export class Modpack {
 							plugin?.onBuildStart?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -148,6 +154,7 @@ export class Modpack {
 							plugin?.onBuildEnd?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -158,6 +165,7 @@ export class Modpack {
 							plugin?.onModuleUpdate?.({
 								...props,
 								logger: getPluginLogger(plugin.name),
+								reporter: getPluginReporter(plugin.name),
 							}),
 						),
 					);
@@ -173,6 +181,7 @@ export class Modpack {
 				plugin.onBoot?.({
 					fs,
 					logger: getPluginLogger(plugin.name),
+					reporter: getPluginReporter(plugin.name),
 				}),
 			),
 		);
