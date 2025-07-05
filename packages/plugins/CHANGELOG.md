@@ -1,5 +1,16 @@
 # @modpack/plugins
 
+## 0.2.0-canary.6
+
+### Minor Changes
+
+- 989b507: Bump version
+
+### Patch Changes
+
+- Updated dependencies [989b507]
+  - @modpack/utils@0.2.0-canary.5
+
 ## 0.2.0-canary.5
 
 ### Patch Changes
