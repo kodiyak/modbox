@@ -11,29 +11,28 @@ export function swc(options: SwcOptions = {}) {
 		options;
 	return definePlugin({
 		name: "@modpack/plugin-swc",
-		onMount: async (props) => {
-			console.warn(
-				"@modpack/plugin-swc is deprecated. Please use @modpack/plugin-transformers instead.",
-				props,
-			);
-		},
 		pipeline: {
 			sourcer: {
-				source: async ({ url: currentUrl, next, fs }) => {
+				source: async ({ url: currentUrl, next, fs, reporter }) => {
 					const url = removeVersionQueryParam(currentUrl);
-					if (
-						isUrl(url) &&
-						url.startsWith("file://") &&
-						extensions.some((ext) => url.endsWith(ext))
-					) {
-						const filePath = url.replace("file://", "");
-						const content = fs.readFile(filePath);
-						if (content) {
-							return {
-								source: transformSync(content, swcOptions).code,
-								type: filePath.split(".").pop()!,
-							};
+					try {
+						if (
+							isUrl(url) &&
+							url.startsWith("file://") &&
+							extensions.some((ext) => url.endsWith(ext))
+						) {
+							const filePath = url.replace("file://", "");
+							const content = fs.readFile(filePath);
+							if (content) {
+								reporter.log("info", `Transforming ${filePath}`);
+								return {
+									source: transformSync(content, swcOptions).code,
+									type: filePath.split(".").pop()!,
+								};
+							}
 						}
+					} catch (error) {
+						reporter.log("error", String(error));
 					}
 
 					return next();
