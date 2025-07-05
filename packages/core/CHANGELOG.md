@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.0-canary.7
+
+### Patch Changes
+
+- 38327b6: Publish Canary Package
+
 ## 0.2.0-canary.6
 
 ### Patch Changes
