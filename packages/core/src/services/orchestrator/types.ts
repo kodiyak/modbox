@@ -2,6 +2,10 @@ import type { Logger } from "../../shared";
 import type { BundlerBuildOptions } from "../bundler";
 import type { VirtualFiles } from "../types";
 
+export type OnBootHook = (props: {
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
 export type OnModuleUpdateHook = (props: {
 	path: string;
 	content: string;
@@ -26,6 +30,7 @@ export type OnBuildEndHook = (props: {
 	logger: Logger;
 }) => Promise<void> | void;
 export interface OrchestratorHooks {
+	onBoot?: OnBootHook;
 	onModuleUpdate?: OnModuleUpdateHook;
 	onBuildStart?: OnBuildStartHook;
 	onBuildEnd?: OnBuildEndHook;

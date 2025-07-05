@@ -1,5 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
+import { getPluginLogger } from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	SourceMiddlewareProps,
@@ -76,7 +77,7 @@ export class PolyfillSourcer {
 				url: currentUrl,
 				parent: currentParent,
 				options: currentOptions,
-				logger: this.logger.namespace(hook.name),
+				logger: getPluginLogger(hook.name),
 				registry: this.registry,
 				fs: this.fs,
 				next,

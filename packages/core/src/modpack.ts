@@ -12,6 +12,7 @@ import {
 	VirtualFiles,
 } from "./services";
 import { BundlerRegistry } from "./services/bundler/bundler-registry";
+import { getPluginLogger } from "./services/plugins";
 import { Logger } from "./shared";
 import type { ModpackBootOptions } from "./types";
 
@@ -47,7 +48,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin.onFetchStart?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -70,7 +71,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin.onSourceStart?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -80,7 +81,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin.onSourceEnd?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -103,7 +104,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin.onResolveStart?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -113,7 +114,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin.onResolveEnd?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -128,7 +129,7 @@ export class Modpack {
 			sourcer,
 		);
 
-		return new Orchestrator(
+		const orchestrator = new Orchestrator(
 			{
 				debug,
 				onBuildStart: async (props) => {
@@ -136,7 +137,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin?.onBuildStart?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -146,7 +147,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin?.onBuildEnd?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -156,7 +157,7 @@ export class Modpack {
 						plugins.map(async (plugin) =>
 							plugin?.onModuleUpdate?.({
 								...props,
-								logger: props.logger.namespace(plugin.name),
+								logger: getPluginLogger(plugin.name),
 							}),
 						),
 					);
@@ -166,5 +167,16 @@ export class Modpack {
 			bundler,
 			fs,
 		);
+
+		await Promise.all(
+			plugins.map(async (plugin) =>
+				plugin.onBoot?.({
+					fs,
+					logger: getPluginLogger(plugin.name),
+				}),
+			),
+		);
+
+		return orchestrator;
 	}
 }

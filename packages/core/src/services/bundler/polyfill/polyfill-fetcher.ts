@@ -1,5 +1,6 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
+import { getPluginLogger } from "../../plugins";
 import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	FetcherHook,
@@ -69,7 +70,7 @@ export class PolyfillFetcher {
 				url: currentUrl,
 				options: currentOpts,
 				next,
-				logger: this.logger.namespace(hook.name),
+				logger: getPluginLogger(hook.name),
 				registry: this.registry,
 				fs: this.fs,
 			};
