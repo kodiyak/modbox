@@ -1,5 +1,17 @@
 # @modpack/core
 
+## 0.2.0-canary.4
+
+### Patch Changes
+
+- bc19855: Add onLog hook
+- 1f569ec: Add onResolveStart and onResolveEnd hooks
+- be4dc9e: onMount hook
+- be4dc9e: onBuildStart hook
+- be4dc9e: onBuildEnd hook
+- b4f3481: Add onSourceStart and onSourceEnd hooks
+- d62c71c: Add onFetchStart and onFetchEnd hooks
+
 ## 0.2.0-canary.3
 
 ### Minor Changes

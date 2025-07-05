@@ -1,5 +1,25 @@
 # @modpack/plugins
 
+## 0.2.0-canary.5
+
+### Patch Changes
+
+- bc19855: Add onLog hook
+- 1f569ec: Add onResolveStart and onResolveEnd hooks
+- be4dc9e: onMount hook
+- be4dc9e: onBuildStart hook
+- be4dc9e: onBuildEnd hook
+- b4f3481: Add onSourceStart and onSourceEnd hooks
+- d62c71c: Add onFetchStart and onFetchEnd hooks
+- Updated dependencies [bc19855]
+- Updated dependencies [1f569ec]
+- Updated dependencies [be4dc9e]
+- Updated dependencies [be4dc9e]
+- Updated dependencies [be4dc9e]
+- Updated dependencies [b4f3481]
+- Updated dependencies [d62c71c]
+  - @modpack/utils@0.2.0-canary.4
+
 ## 0.2.0-canary.4
 
 ### Minor Changes
