@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.0-canary.6
+
+### Patch Changes
+
+- 19572aa: Add runtime plugin and enhance modpack exports
+
 ## 0.2.0-canary.5
 
 ### Minor Changes

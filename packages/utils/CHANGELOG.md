@@ -1,5 +1,12 @@
 # @modpack/utils
 
+## 0.2.0-canary.6
+
+### Patch Changes
+
+- Updated dependencies [19572aa]
+  - @modpack/core@0.2.0-canary.6
+
 ## 0.2.0-canary.5
 
 ### Minor Changes
