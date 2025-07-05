@@ -21,7 +21,7 @@ export function esmSh(options: EsmShOptions = {}) {
 				},
 			},
 			resolver: {
-				resolve: ({ next, path: currentPath, parent, logger }) => {
+				resolve: ({ next, path: currentPath, parent }) => {
 					let path = currentPath;
 					const versionQueryParam = path.match(/\?v=\d+$/);
 					if (versionQueryParam) {
