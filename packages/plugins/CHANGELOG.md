@@ -1,5 +1,14 @@
 # @modpack/plugins
 
+## 0.2.0-canary.9
+
+### Patch Changes
+
+- 38327b6: Publish Canary Package
+- 82a24c2: Fix: Remove unused logger parameter
+- Updated dependencies [38327b6]
+  - @modpack/utils@0.2.0-canary.7
+
 ## 0.2.0-canary.8
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @modpack/utils
 
+## 0.2.0-canary.7
+
+### Patch Changes
+
+- 38327b6: Publish Canary Package
+- Updated dependencies [38327b6]
+  - @modpack/core@0.2.0-canary.7
+
 ## 0.2.0-canary.6
 
 ### Patch Changes
