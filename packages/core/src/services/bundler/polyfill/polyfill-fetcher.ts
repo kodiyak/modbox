@@ -1,31 +1,39 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
-import type { FetcherHook, FetcherResult, FetchMiddlewareProps } from "./types";
+import type {
+	FetcherHook,
+	FetcherHooks,
+	FetcherResult,
+	FetchMiddlewareProps,
+} from "./types";
 
 type DefaultFetcher = (
 	url: string,
 	opts: RequestInit | undefined,
 ) => Promise<Response>;
 
-type PolyfillFetcherHook = FetcherHook & { name: string };
+type PolyfillPluginHandler = FetcherHook & { name: string };
 
 export class PolyfillFetcher {
-	private readonly hooks: PolyfillFetcherHook[] = [];
+	private readonly handlers: PolyfillPluginHandler[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
+	private readonly hooks: FetcherHooks;
 
 	constructor(
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		hooks: PolyfillFetcherHook[] = [],
+		handlers: PolyfillPluginHandler[] = [],
+		hooks: FetcherHooks,
 	) {
-		this.hooks = hooks;
+		this.handlers = handlers;
 		this.logger = logger;
 		this.registry = registry;
 		this.fs = fs;
+		this.hooks = hooks;
 	}
 
 	async fetch(url: string, opts: RequestInit, defaultFetch: DefaultFetcher) {
@@ -44,7 +52,7 @@ export class PolyfillFetcher {
 		}: Omit<FetchMiddlewareProps, "next"> & {
 			index: number;
 		}): FetcherResult => {
-			const hook = this.hooks[index];
+			const hook = this.handlers[index];
 			if (!hook) {
 				return defaultFetch(currentUrl, currentOpts);
 			}
@@ -77,10 +85,33 @@ export class PolyfillFetcher {
 			return next();
 		};
 
-		return executeHook({
-			index: 0,
+		let response: Response | undefined;
+		let error: Error | null = null;
+		try {
+			await this.hooks.onFetchStart?.({
+				url,
+				options: opts,
+				fs: this.fs,
+				logger: this.logger,
+			});
+			response = await executeHook({
+				index: 0,
+				url,
+				options: opts,
+			});
+		} catch (err) {
+			this.logger.error(`Error fetching "${url}":`, err);
+			error = err as Error;
+		}
+		await this.hooks.onFetchEnd?.({
 			url,
 			options: opts,
+			response,
+			error,
+			fs: this.fs,
+			logger: this.logger,
 		});
+
+		return response;
 	}
 }

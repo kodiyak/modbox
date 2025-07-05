@@ -41,6 +41,18 @@ export class Modpack {
 					name: plugin.name,
 					...plugin.pipeline?.fetcher!,
 				})),
+			{
+				onFetchStart: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin.onFetchStart?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
+			},
 		);
 		const sourcer = new PolyfillSourcer(
 			Logger.create("modules-sourcer"),

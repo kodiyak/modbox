@@ -1,3 +1,5 @@
+import type { Logger } from "../../../shared";
+import type { VirtualFiles } from "../../types";
 import type { PluginMiddlewareContext } from "../types";
 
 // Fetcher [Internal]
@@ -14,6 +16,24 @@ export type FetcherHook = {
 	fetch: FetcherMiddleware;
 	cleanup?: (url: string) => void;
 };
+export type OnFetchStartHook = (props: {
+	url: string;
+	options?: RequestInit;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
+export type OnFetchEndHook = (props: {
+	url: string;
+	options?: RequestInit;
+	response: Response | undefined;
+	error: Error | null;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
+export interface FetcherHooks {
+	onFetchStart?: OnFetchStartHook;
+	onFetchEnd?: OnFetchEndHook;
+}
 
 // Resolver [Internal]
 export type ResolverResult = string;
