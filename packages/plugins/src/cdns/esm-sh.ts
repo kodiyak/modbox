@@ -2,10 +2,11 @@ import { definePlugin, isUrl } from "@modpack/utils";
 
 interface EsmShOptions {
 	registry?: "npm" | "jsr" | "github" | "pr";
+	external?: string[];
 }
 
 export function esmSh(options: EsmShOptions = {}) {
-	const { registry = "npm" } = options;
+	const { registry = "npm", external = [] } = options;
 
 	return definePlugin({
 		name: "@modpack/plugin-esm.sh",
@@ -32,9 +33,10 @@ export function esmSh(options: EsmShOptions = {}) {
 							path = path.slice(1);
 						}
 						if (path.startsWith("./")) {
-							logger.warn(
-								`esm.sh resolver does not support relative paths: ${path}`,
-							);
+							return next();
+						}
+
+						if (external.includes(path)) {
 							return next();
 						}
 
