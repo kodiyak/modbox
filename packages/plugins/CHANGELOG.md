@@ -1,5 +1,11 @@
 # @modpack/plugins
 
+## 0.2.0-canary.7
+
+### Patch Changes
+
+- @modpack/utils@0.2.0-canary.6
+
 ## 0.2.0-canary.6
 
 ### Minor Changes
