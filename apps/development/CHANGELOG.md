@@ -1,5 +1,19 @@
 # development
 
+## 0.0.4-canary.5
+
+### Patch Changes
+
+- Updated dependencies [bc19855]
+- Updated dependencies [1f569ec]
+- Updated dependencies [be4dc9e]
+- Updated dependencies [be4dc9e]
+- Updated dependencies [be4dc9e]
+- Updated dependencies [b4f3481]
+- Updated dependencies [d62c71c]
+  - @modpack/plugins@0.2.0-canary.5
+  - @modpack/core@0.2.0-canary.4
+
 ## 0.0.4-canary.4
 
 ### Patch Changes
