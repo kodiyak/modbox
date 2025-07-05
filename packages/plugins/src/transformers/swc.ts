@@ -11,6 +11,12 @@ export function swc(options: SwcOptions = {}) {
 		options;
 	return definePlugin({
 		name: "@modpack/plugin-swc",
+		onMount: async (props) => {
+			console.warn(
+				"@modpack/plugin-swc is deprecated. Please use @modpack/plugin-transformers instead.",
+				props,
+			);
+		},
 		pipeline: {
 			sourcer: {
 				source: async ({ url: currentUrl, next, fs }) => {

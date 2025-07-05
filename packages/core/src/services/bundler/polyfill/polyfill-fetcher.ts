@@ -1,11 +1,7 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
-import type {
-	FetcherHook,
-	FetcherResult,
-	FetchMiddlewareProps,
-} from "../types";
+import type { FetcherHook, FetcherResult, FetchMiddlewareProps } from "./types";
 
 type DefaultFetcher = (
 	url: string,

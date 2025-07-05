@@ -5,7 +5,7 @@ import type {
 	ResolveMiddlewareProps,
 	ResolverHook,
 	ResolverResult,
-} from "../types";
+} from "./types";
 
 type DefaultResolver = (path: string, parent: string) => ResolverResult;
 type PolyfillResolverHook = ResolverHook & { name: string };

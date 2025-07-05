@@ -5,20 +5,16 @@
   "private": false,
   "scripts": {
     "test": "vitest",
+    "dev": "tsup src/index.ts --dts --format esm,cjs --out-dir dist --watch",
     "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
     "lint": "biome lint",
     "pub:canary": "pnpm build && pnpm publish --no-git-checks --access public --tag canary"
   },
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    },
-    "./types": {
-      "types": "./src/types.ts",
-      "import": "./dist/types.js",
-      "require": "./dist/types.cjs"
     }
   },
   "dependencies": {

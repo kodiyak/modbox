@@ -111,9 +111,14 @@ export class Bundler {
 		return m;
 	}
 
-	public async refresh(path: string): Promise<any> {
-		await this.import(path);
-		await this.shims.hotReload(path);
+	public async refresh(path: string) {
+		const importResult = await this.import(path);
+		const hotResult = await this.shims.hotReload(path);
+
+		return {
+			updated: hotResult,
+			module: importResult,
+		};
 	}
 
 	private getEsmsInitOptions(): EsmsInitOptions {

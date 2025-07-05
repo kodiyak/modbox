@@ -1,11 +1,7 @@
 import type { Logger } from "../../../shared";
 import type { VirtualFiles } from "../../../shared/virtual-files";
 import type { BundlerRegistry } from "../bundler-registry";
-import type {
-	SourceMiddlewareProps,
-	SourceResult,
-	SourcerHook,
-} from "../types";
+import type { SourceMiddlewareProps, SourceResult, SourcerHook } from "./types";
 
 type DefaultSourcer = (
 	url: string,
