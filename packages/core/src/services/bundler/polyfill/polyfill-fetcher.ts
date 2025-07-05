@@ -13,10 +13,10 @@ type DefaultFetcher = (
 	opts: RequestInit | undefined,
 ) => Promise<Response>;
 
-type PolyfillPluginHandler = FetcherHook & { name: string };
+type FetcherPluginHandler = FetcherHook & { name: string };
 
 export class PolyfillFetcher {
-	private readonly handlers: PolyfillPluginHandler[] = [];
+	private readonly handlers: FetcherPluginHandler[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
@@ -26,8 +26,8 @@ export class PolyfillFetcher {
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		handlers: PolyfillPluginHandler[] = [],
-		hooks: FetcherHooks,
+		handlers: FetcherPluginHandler[] = [],
+		hooks: FetcherHooks = {},
 	) {
 		this.handlers = handlers;
 		this.logger = logger;
