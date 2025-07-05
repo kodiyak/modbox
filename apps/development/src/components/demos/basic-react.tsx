@@ -1,15 +1,24 @@
 import { Modpack } from "@modpack/core";
-import { esmSh, resolver, swc, virtual } from "@modpack/plugins";
-import { useRef } from "react";
+import { esmSh, inject, resolver, swc, virtual } from "@modpack/plugins";
+import * as React from "react";
+import * as DevJSXRuntime from "react/jsx-dev-runtime";
+import * as JSXRuntime from "react/jsx-runtime";
+import * as ReactDOM from "react-dom/client";
 
 export default function BasicReact() {
-	const modpackRef = useRef<any | null>(null);
+	const modpackRef = React.useRef<any | null>(null);
 	const load = async () => {
-		const v = virtual();
-		console.log({ v });
 		const modpack = await Modpack.boot({
 			debug: true,
 			plugins: [
+				inject({
+					modules: {
+						react: React,
+						"react/jsx-dev-runtime": DevJSXRuntime,
+						"react/jsx-runtime": JSXRuntime,
+						"react-dom/client": ReactDOM,
+					},
+				}),
 				swc({
 					extensions: [".js", ".ts", ".tsx", ".jsx"],
 					jsc: {
@@ -25,11 +34,7 @@ export default function BasicReact() {
 								throwIfNamespace: false,
 								development: true,
 								runtime: "automatic",
-								refresh: {
-									refreshReg: "self.$RefreshReg$",
-									refreshSig: "self.$RefreshSig$",
-									emitFullSignatures: true,
-								},
+								refresh: true,
 							},
 						},
 					},
@@ -46,22 +51,26 @@ export default function BasicReact() {
 					index: true,
 				}),
 				virtual(),
-				esmSh({ registry: "npm" }),
+				esmSh({
+					registry: "npm",
+					external: [
+						"react",
+						"react/jsx-dev-runtime",
+						"react/jsx-runtime",
+						"react-dom/client",
+					],
+				}),
 			],
 		});
 		modpack.fs.writeFile(
 			"/main.js",
 			`import { createRoot } from 'react-dom/client'
-			import { useState } from 'react';
 
 			const Application = () => {
-				const [count, setCount] = useState(0);
 				return (
 					<div>
-						<h1>Count: {count}</h1>
+						<h1>Count: N/A</h1>
 						<h2>This is a basic React Demo Application</h2>
-						<button onClick={() => setCount(count + 1)}>Increment</button>
-						<button onClick={() => setCount(count - 1)}>Decrement</button>
 					</div>
 				)
 			}
