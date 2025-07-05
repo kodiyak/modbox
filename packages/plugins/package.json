@@ -1,6 +1,6 @@
 {
   "name": "@modpack/plugins",
-  "version": "0.2.0-canary.9",
+  "version": "0.2.0-canary.10",
   "type": "module",
   "private": false,
   "exports": {

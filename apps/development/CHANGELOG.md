@@ -1,5 +1,13 @@
 # development
 
+## 0.0.4-canary.10
+
+### Patch Changes
+
+- Updated dependencies [0addcf6]
+  - @modpack/plugins@0.2.0-canary.10
+  - @modpack/core@0.2.0-canary.8
+
 ## 0.0.4-canary.9
 
 ### Patch Changes

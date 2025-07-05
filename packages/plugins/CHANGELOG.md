@@ -1,5 +1,13 @@
 # @modpack/plugins
 
+## 0.2.0-canary.10
+
+### Patch Changes
+
+- 0addcf6: Add inject plugin
+- Updated dependencies [0addcf6]
+  - @modpack/utils@0.2.0-canary.8
+
 ## 0.2.0-canary.9
 
 ### Patch Changes

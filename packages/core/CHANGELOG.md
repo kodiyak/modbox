@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.0-canary.8
+
+### Patch Changes
+
+- 0addcf6: Add inject plugin
+
 ## 0.2.0-canary.7
 
 ### Patch Changes
