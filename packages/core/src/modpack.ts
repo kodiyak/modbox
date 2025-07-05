@@ -97,6 +97,28 @@ export class Modpack {
 					name: plugin.name,
 					...plugin.pipeline?.resolver!,
 				})),
+			{
+				onResolveStart: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin.onResolveStart?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
+				onResolveEnd: async (props) => {
+					await Promise.all(
+						plugins.map(async (plugin) =>
+							plugin.onResolveEnd?.({
+								...props,
+								logger: props.logger.namespace(plugin.name),
+							}),
+						),
+					);
+				},
+			},
 		);
 		const bundler = new Bundler(
 			Logger.create("bundler"),

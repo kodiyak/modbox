@@ -4,6 +4,7 @@ import type { BundlerRegistry } from "../bundler-registry";
 import type {
 	ResolveMiddlewareProps,
 	ResolverHook,
+	ResolverHooks,
 	ResolverResult,
 } from "./types";
 
@@ -11,21 +12,24 @@ type DefaultResolver = (path: string, parent: string) => ResolverResult;
 type PolyfillResolverHook = ResolverHook & { name: string };
 
 export class PolyfillResolver {
-	private readonly hooks: PolyfillResolverHook[] = [];
+	private readonly handlers: PolyfillResolverHook[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
+	private readonly hooks: ResolverHooks;
 
 	constructor(
 		logger: Logger,
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
-		hooks: PolyfillResolverHook[] = [],
+		handlers: PolyfillResolverHook[] = [],
+		hooks: ResolverHooks = {},
 	) {
-		this.hooks = hooks;
+		this.handlers = handlers;
 		this.logger = logger;
 		this.registry = registry;
 		this.fs = fs;
+		this.hooks = hooks;
 	}
 
 	resolve(
@@ -48,7 +52,7 @@ export class PolyfillResolver {
 		}: Omit<ResolveMiddlewareProps, "next"> & {
 			index: number;
 		}): string => {
-			const hook = this.hooks[index];
+			const hook = this.handlers[index];
 			if (!hook) {
 				return defaultResolve(currentPath, currentParent);
 			}
@@ -81,6 +85,45 @@ export class PolyfillResolver {
 			return next();
 		};
 
-		return executeHook({ index: 0, path, parent });
+		let result: string | undefined;
+		let error: Error | null = null;
+
+		try {
+			this.hooks.onResolveStart?.({
+				path,
+				parent,
+				fs: this.fs,
+				logger: this.logger,
+			});
+			result = executeHook({ index: 0, path, parent });
+			this.hooks.onResolveEnd?.({
+				path,
+				parent,
+				result,
+				error: null,
+				fs: this.fs,
+				logger: this.logger,
+			});
+		} catch (err) {
+			error = err instanceof Error ? err : new Error(String(err));
+			this.logger.error(
+				`Error resolving "${path}" (parent: "${parent}"):`,
+				error,
+			);
+			this.hooks.onResolveEnd?.({
+				path,
+				parent,
+				result: undefined,
+				error,
+				fs: this.fs,
+				logger: this.logger,
+			});
+		}
+
+		if (!result) {
+			throw new Error(`No resolver found for "${path}" (parent: "${parent}").`);
+		}
+
+		return result;
 	}
 }

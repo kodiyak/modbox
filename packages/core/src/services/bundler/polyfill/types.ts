@@ -51,6 +51,24 @@ export type ResolverHook = {
 	resolve: ResolverMiddleware;
 	cleanup?: (path: string) => void;
 };
+export type OnResolveStartHook = (props: {
+	path: string;
+	parent: string;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
+export type OnResolveEndHook = (props: {
+	path: string;
+	parent: string;
+	result: ResolverResult | undefined;
+	error: Error | null;
+	fs: VirtualFiles;
+	logger: Logger;
+}) => Promise<void> | void;
+export interface ResolverHooks {
+	onResolveStart?: OnResolveStartHook;
+	onResolveEnd?: OnResolveEndHook;
+}
 
 // Sourcer [Internal]
 export interface SourceResult {

@@ -2,6 +2,7 @@ import type {
 	FetcherHook,
 	FetcherHooks,
 	ResolverHook,
+	ResolverHooks,
 	SourcerHook,
 	SourcerHooks,
 	TransformerHook,
@@ -12,7 +13,8 @@ import type { OrchestratorHooks } from "../orchestrator";
 export interface ModpackPlugin
 	extends OrchestratorHooks,
 		FetcherHooks,
-		SourcerHooks {
+		SourcerHooks,
+		ResolverHooks {
 	name: string;
 	pipeline?: {
 		resolver?: ResolverHook;
