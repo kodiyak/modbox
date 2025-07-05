@@ -11,15 +11,6 @@ export function esmSh(options: EsmShOptions = {}) {
 	return definePlugin({
 		name: "@modpack/plugin-esm.sh",
 		pipeline: {
-			fetcher: {
-				fetch: async ({ url, next }) => {
-					if (isUrl(url) && url.includes("esm.sh")) {
-						return fetch(url);
-					}
-
-					return next();
-				},
-			},
 			resolver: {
 				resolve: ({ next, path: currentPath, parent }) => {
 					let path = currentPath;
@@ -47,8 +38,13 @@ export function esmSh(options: EsmShOptions = {}) {
 							pr: "https://esm.sh/pr",
 						}[registry];
 
+						const url = new URL(path, registryUrl);
+						if (external.length > 0) {
+							url.searchParams.set("external", external.join(","));
+						}
+
 						return next({
-							path: [registryUrl, path].join("/"),
+							path: url.toString(),
 							parent,
 						});
 					}

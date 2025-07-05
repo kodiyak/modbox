@@ -26,7 +26,10 @@ export function swc(options: SwcOptions = {}) {
 							if (content) {
 								reporter.log("info", `Transforming ${filePath}`);
 								return {
-									source: transformSync(content, swcOptions).code,
+									source: transformSync(content, {
+										...swcOptions,
+										filename: filePath,
+									}).code,
 									type: filePath.split(".").pop()!,
 								};
 							}
