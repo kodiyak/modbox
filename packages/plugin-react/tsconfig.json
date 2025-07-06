@@ -1,0 +1,10 @@
+{
+  "extends": "@modpack/typescript-config/lib.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@modpack/react",
+  "version": "0.2.0",
+  "type": "module",
+  "private": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "dev": "tsup src/index.ts --dts --format esm,cjs --out-dir dist --watch",
+    "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
+    "pub:canary": "pnpm build && pnpm publish --no-git-checks --access public --tag canary",
+    "lint": "biome lint"
+  },
+  "dependencies": {
+    "@modpack/utils": "workspace:*",
+    "react-refresh": "0.17.0"
+  },
+  "devDependencies": {
+    "@modpack/typescript-config": "workspace:*",
+    "@types/react-refresh": "^0.14.6"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  }
+}
