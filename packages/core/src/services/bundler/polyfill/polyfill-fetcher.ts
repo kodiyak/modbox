@@ -64,17 +64,19 @@ export class PolyfillFetcher {
 				return defaultFetch(currentUrl, currentOpts);
 			}
 
-			const next = () => {
+			const next = (
+				props?: Partial<Parameters<FetchMiddlewareProps["next"]>[0]>,
+			) => {
 				return executeHook({
 					index: index + 1,
-					url: currentUrl,
-					options: currentOpts,
+					url: props?.url ?? currentUrl,
+					options: props?.options ?? currentOpts,
 				});
 			};
 
 			const props: Parameters<FetcherHook["fetch"]>[0] = {
-				url: currentUrl,
-				options: currentOpts,
+				url: currentUrl ?? url,
+				options: currentOpts ?? opts,
 				next,
 				logger: getPluginLogger(hook.name),
 				reporter: getPluginReporter(hook.name),

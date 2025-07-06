@@ -59,12 +59,6 @@ export class PolyfillSourcer {
 		options: RequestInit | undefined,
 		defaultSource: DefaultSourcer,
 	): Promise<SourceResult> {
-		// const executeHook = async (
-		// 	index: number,
-		// 	currentUrl: string,
-		// 	currentParent: string,
-		// 	currentOptions: RequestInit | undefined,
-		// ): Promise<SourceResult> => {
 		const executeHook = async ({
 			index,
 			url: currentUrl,
