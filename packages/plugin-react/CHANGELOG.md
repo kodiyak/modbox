@@ -1,5 +1,13 @@
 # @modpack/react
 
+## 0.2.1-canary.1
+
+### Patch Changes
+
+- 57dea2e: Sync Plugin Packages
+- Updated dependencies [57dea2e]
+  - @modpack/utils@0.2.1-canary.13
+
 ## 0.2.1-canary.0
 
 ### Patch Changes

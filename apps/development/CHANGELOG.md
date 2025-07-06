@@ -1,5 +1,14 @@
 # development
 
+## 0.0.4-canary.12
+
+### Patch Changes
+
+- Updated dependencies [57dea2e]
+  - @modpack/swc@0.2.1-canary.13
+  - @modpack/plugins@0.2.1-canary.13
+  - @modpack/core@0.2.1-canary.13
+
 ## 0.0.4-canary.11
 
 ### Patch Changes

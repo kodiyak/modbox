@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.13
+
+### Patch Changes
+
+- 57dea2e: Sync Plugin Packages
+
 ## 0.2.1-canary.12
 
 ### Patch Changes
