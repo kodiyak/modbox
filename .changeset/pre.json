@@ -10,7 +10,8 @@
     "@modpack/plugins": "0.1.4",
     "@modpack/typescript-config": "0.0.0",
     "@modpack/utils": "0.1.4",
-    "@modpack/swc": "0.2.0"
+    "@modpack/swc": "0.2.0",
+    "@modpack/react": "0.2.0"
   },
   "changesets": [
     "bumpy-cougars-sip",
@@ -32,6 +33,7 @@
     "polite-loops-divide",
     "ripe-hands-retire",
     "salty-snails-call",
+    "short-bugs-repair",
     "small-crabs-think",
     "sour-shrimps-bake",
     "stale-apes-cough",
