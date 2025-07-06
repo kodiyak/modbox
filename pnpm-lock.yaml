@@ -220,9 +220,6 @@ importers:
       '@modpack/utils':
         specifier: workspace:*
         version: link:../utils
-      '@swc/wasm-web':
-        specifier: 1.12.9
-        version: 1.12.9
     devDependencies:
       '@modpack/typescript-config':
         specifier: workspace:*
