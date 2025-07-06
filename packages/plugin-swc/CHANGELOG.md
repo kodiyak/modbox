@@ -1,0 +1,9 @@
+# @modpack/swc
+
+## 0.2.1-canary.12
+
+### Patch Changes
+
+- 4a121b4: Extract SWC WASM to a Single Package Plugin
+- Updated dependencies [4a121b4]
+  - @modpack/utils@0.2.1-canary.12
