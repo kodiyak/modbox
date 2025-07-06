@@ -1,6 +1,5 @@
-import { definePlugin, isUrl } from "@modpack/utils";
+import { definePlugin, isUrl, removeVersionQueryParam } from "@modpack/utils";
 import { type Options, transformSync } from "@swc/wasm-web";
-import { removeVersionQueryParam } from "../utils";
 
 interface SwcOptions extends Options {
 	extensions?: string[];

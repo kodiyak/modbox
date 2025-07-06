@@ -60,6 +60,9 @@ importers:
       '@modpack/plugins':
         specifier: workspace:*
         version: link:../../packages/plugins
+      '@modpack/swc':
+        specifier: workspace:*
+        version: link:../../packages/plugin-swc
     devDependencies:
       '@eslint/js':
         specifier: ^9.29.0
@@ -198,6 +201,19 @@ importers:
       typescript-eslint:
         specifier: 8.34.0
         version: 8.34.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+
+  packages/plugin-swc:
+    dependencies:
+      '@modpack/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@swc/wasm-web':
+        specifier: 1.12.9
+        version: 1.12.9
+    devDependencies:
+      '@modpack/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
 
   packages/plugins:
     dependencies:

@@ -30,9 +30,9 @@ import {
   external,
   logger,
   resolver,
-  swc,
   virtual,
 } from "@modpack/plugins";
+import { swc } from "@modpack/plugins";
 ```
 
 ### Create a Modpack Instance
