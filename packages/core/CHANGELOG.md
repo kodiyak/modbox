@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.14
+
+### Patch Changes
+
+- ee1f1f4: Sync react version
+
 ## 0.2.1-canary.13
 
 ### Patch Changes
