@@ -1,5 +1,6 @@
 import { Modpack } from "@modpack/core";
-import { esmSh, inject, resolver, swc, virtual } from "@modpack/plugins";
+import { esmSh, inject, resolver, virtual } from "@modpack/plugins";
+import { swc } from "@modpack/swc";
 import * as React from "react";
 import * as DevJSXRuntime from "react/jsx-dev-runtime";
 import * as JSXRuntime from "react/jsx-runtime";
@@ -65,6 +66,7 @@ export default function BasicReact() {
 		modpack.fs.writeFile(
 			"/main.js",
 			`import { createRoot } from 'react-dom/client'
+			import 'lucide-react';
 
 			const Application = () => {
 				return (

@@ -1,7 +1,10 @@
 import {
 	BlobsRegistry,
 	Bundler,
+	BundlerRegistry,
 	ExternalRegistry,
+	getPluginLogger,
+	getPluginReporter,
 	ModulesExtractor,
 	ModulesRegistry,
 	Orchestrator,
@@ -11,29 +14,14 @@ import {
 	ResponseRegistry,
 	VirtualFiles,
 } from "./services";
-import { BundlerRegistry } from "./services/bundler/bundler-registry";
-import { getPluginLogger, getPluginReporter } from "./services/plugins";
 import { Logger } from "./shared";
-import type { ModpackBootOptions, ModpackPlugin } from "./types";
-
-function getModpackPlugin({
-	debug: _,
-	plugins: __,
-	...hooks
-}: ModpackBootOptions) {
-	const plugin: ModpackPlugin = {
-		name: "runtime",
-		...hooks,
-	};
-
-	return plugin;
-}
+import type { ModpackBootOptions } from "./types";
+import { getModpackPlugin } from "./utils";
 
 export class Modpack {
 	static async boot({ debug, plugins = [], ...rest }: ModpackBootOptions) {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles(Logger.create("virtual-files"));
-		console.log("Booting Modpack...");
 		plugins.push(getModpackPlugin(rest));
 		const extractor = new ModulesExtractor(
 			Logger.create("modules-extractor"),

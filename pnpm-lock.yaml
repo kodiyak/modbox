@@ -247,6 +247,22 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
 
+  packages/tests:
+    dependencies:
+      '@modpack/core':
+        specifier: workspace:*
+        version: link:../core
+      '@modpack/plugins':
+        specifier: workspace:*
+        version: link:../plugins
+      '@modpack/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@modpack/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+
   packages/typescript-config: {}
 
   packages/utils:

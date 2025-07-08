@@ -1,5 +1,6 @@
 import { Modpack } from "@modpack/core";
-import { resolver, swc, virtual } from "@modpack/plugins";
+import { resolver, virtual } from "@modpack/plugins";
+import { swc } from "@modpack/swc";
 
 export default function DemoTransformer() {
 	const load = async () => {

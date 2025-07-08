@@ -1,11 +1,11 @@
 {
-  "name": "@modpack/core",
+  "name": "@modpack/tests",
   "version": "0.2.1-canary.13",
   "type": "module",
   "private": false,
   "scripts": {
     "test": "vitest",
-    "dev": "tsup src/index.ts --dts --format esm,cjs --out-dir dist --watch",
+    "dev": "vitest -w",
     "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
     "lint": "biome lint",
     "pub:canary": "pnpm build && pnpm publish --no-git-checks --access public --tag canary"
@@ -15,18 +15,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    },
-    "./__internal-tests": {
-      "import": "./src/__internal.ts"
     }
   },
   "dependencies": {
-    "debug": "4.4.1",
-    "@swc/wasm-web": "1.12.9",
-    "eventemitter3": "5.0.1"
+    "@modpack/core": "workspace:*",
+    "@modpack/utils": "workspace:*",
+    "@modpack/plugins": "workspace:*"
   },
   "devDependencies": {
-    "@types/debug": "4.1.12",
     "@modpack/typescript-config": "workspace:*"
   }
 }
