@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter @modpack/* --filter development",
     "pub:canary": "turbo run build pub:canary --filter @modpack/*",
     "release": "changeset add",
     "release:publish": "turbo build --filter @modpack/* && changeset publish",

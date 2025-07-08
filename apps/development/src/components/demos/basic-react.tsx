@@ -1,5 +1,5 @@
 import { Modpack } from "@modpack/core";
-import { esmSh, inject, resolver, virtual } from "@modpack/plugins";
+import { esmSh, http, inject, resolver, virtual } from "@modpack/plugins";
 import { swc } from "@modpack/swc";
 import * as React from "react";
 import * as DevJSXRuntime from "react/jsx-dev-runtime";
@@ -12,6 +12,7 @@ export default function BasicReact() {
 		const modpack = await Modpack.boot({
 			debug: true,
 			plugins: [
+				http(),
 				inject({
 					modules: {
 						react: React,
