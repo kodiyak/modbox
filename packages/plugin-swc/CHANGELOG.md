@@ -1,5 +1,13 @@
 # @modpack/swc
 
+## 0.2.1-canary.19
+
+### Patch Changes
+
+- c0d42da: Fix esm.sh path resolution
+- Updated dependencies [c0d42da]
+  - @modpack/utils@0.2.1-canary.19
+
 ## 0.2.1-canary.18
 
 ### Patch Changes
