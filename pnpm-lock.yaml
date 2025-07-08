@@ -60,9 +60,15 @@ importers:
       '@modpack/plugins':
         specifier: workspace:*
         version: link:../../packages/plugins
+      '@modpack/react':
+        specifier: workspace:*
+        version: link:../../packages/plugin-react
       '@modpack/swc':
         specifier: workspace:*
         version: link:../../packages/plugin-swc
+      '@modpack/twind':
+        specifier: workspace:*
+        version: link:../../packages/plugin-twind
     devDependencies:
       '@eslint/js':
         specifier: ^9.29.0
@@ -232,6 +238,34 @@ importers:
       '@swc/wasm-web':
         specifier: 1.12.9
         version: 1.12.9
+    devDependencies:
+      '@modpack/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+
+  packages/plugin-twind:
+    dependencies:
+      '@modpack/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@twind/core':
+        specifier: 1.1.3
+        version: 1.1.3(typescript@5.8.3)
+      '@twind/preset-autoprefix':
+        specifier: 1.0.7
+        version: 1.0.7(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)
+      '@twind/preset-ext':
+        specifier: 1.0.7
+        version: 1.0.7(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)
+      '@twind/preset-line-clamp':
+        specifier: 1.0.7
+        version: 1.0.7(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)
+      '@twind/preset-tailwind':
+        specifier: 1.1.4
+        version: 1.1.4(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)
+      '@twind/preset-tailwind-forms':
+        specifier: 1.1.2
+        version: 1.1.2(@twind/core@1.1.3(typescript@5.8.3))(@twind/preset-tailwind@1.1.4(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3))(typescript@5.8.3)
     devDependencies:
       '@modpack/typescript-config':
         specifier: workspace:*
@@ -1569,6 +1603,66 @@ packages:
 
   '@tailwindcss/postcss@4.1.11':
     resolution: {integrity: sha512-q/EAIIpF6WpLhKEuQSEVMZNMIY8KhWoAemZ9eylNAih9jxMGAYPPWBn3I9QL/2jZ+e7OEz/tZkX5HwbBR4HohA==}
+
+  '@twind/core@1.1.3':
+    resolution: {integrity: sha512-/B/aNFerMb2IeyjSJy3SJxqVxhrT77gBDknLMiZqXIRr4vNJqiuhx7KqUSRzDCwUmyGuogkamz+aOLzN6MeSLw==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-autoprefix@1.0.7':
+    resolution: {integrity: sha512-3wmHO0pG/CVxYBNZUV0tWcL7CP0wD5KpyWAQE/KOalWmOVBj+nH6j3v6Y3I3pRuMFaG5DC78qbYbhA1O11uG3w==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-ext@1.0.7':
+    resolution: {integrity: sha512-v0yu6CooiUTUinAQY1r28Y4w28FyM+nnBNC/WuSOP33EM1D1uSZvmM+ihAZWwrLSrmRzEz8gWbyj6Wq2fowzrA==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-line-clamp@1.0.7':
+    resolution: {integrity: sha512-itKaXtj5O71zX0hljTDyiqAY6tcDovfT46NpT1ThWFtBLMsfiVlee8zSNeP1IYe4t1qALxFRfrpVjhqdkSOgGA==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-tailwind-forms@1.1.2':
+    resolution: {integrity: sha512-svO6rl/kid+qupMB9MsedPIFr1S3MVmlUN66+0k693umFEZXwtcj5x6DnJI6t412a2P1gdEH1J3eeHxcdUK5fg==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      '@twind/preset-tailwind': ^1.0.3
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@twind/preset-tailwind@1.1.4':
+    resolution: {integrity: sha512-zv85wrP/DW4AxgWrLfH7kyGn/KJF3K04FMLVl2AjoxZGYdCaoZDkL8ma3hzaKQ+WGgBFRubuB/Ku2Rtv/wjzVw==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      '@twind/core': ^1.1.0
+      typescript: ^4.8.4
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -3672,6 +3766,9 @@ packages:
   style-to-object@1.0.9:
     resolution: {integrity: sha512-G4qppLgKu/k6FwRpHiGiKPaPTFcG3g4wNVX/Qsfu+RqQM30E7Tyu/TEgxcL9PNLF5pdRLwQdE3YKKf+KF2Dzlw==}
 
+  style-vendorizer@2.2.3:
+    resolution: {integrity: sha512-/VDRsWvQAgspVy9eATN3z6itKTuyg+jW1q6UoTCQCFRqPDw8bi3E1hXIKnGw5LvXS2AQPuJ7Af4auTLYeBOLEg==}
+
   styled-jsx@5.1.6:
     resolution: {integrity: sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==}
     engines: {node: '>= 12.0.0'}
@@ -5259,6 +5356,44 @@ snapshots:
       '@tailwindcss/oxide': 4.1.11
       postcss: 8.5.6
       tailwindcss: 4.1.11
+
+  '@twind/core@1.1.3(typescript@5.8.3)':
+    dependencies:
+      csstype: 3.1.3
+    optionalDependencies:
+      typescript: 5.8.3
+
+  '@twind/preset-autoprefix@1.0.7(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@5.8.3)
+      style-vendorizer: 2.2.3
+    optionalDependencies:
+      typescript: 5.8.3
+
+  '@twind/preset-ext@1.0.7(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@5.8.3)
+    optionalDependencies:
+      typescript: 5.8.3
+
+  '@twind/preset-line-clamp@1.0.7(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@5.8.3)
+    optionalDependencies:
+      typescript: 5.8.3
+
+  '@twind/preset-tailwind-forms@1.1.2(@twind/core@1.1.3(typescript@5.8.3))(@twind/preset-tailwind@1.1.4(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3))(typescript@5.8.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@5.8.3)
+      '@twind/preset-tailwind': 1.1.4(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)
+    optionalDependencies:
+      typescript: 5.8.3
+
+  '@twind/preset-tailwind@1.1.4(@twind/core@1.1.3(typescript@5.8.3))(typescript@5.8.3)':
+    dependencies:
+      '@twind/core': 1.1.3(typescript@5.8.3)
+    optionalDependencies:
+      typescript: 5.8.3
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -8044,6 +8179,8 @@ snapshots:
   style-to-object@1.0.9:
     dependencies:
       inline-style-parser: 0.2.4
+
+  style-vendorizer@2.2.3: {}
 
   styled-jsx@5.1.6(react@19.1.0):
     dependencies:

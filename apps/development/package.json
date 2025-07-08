@@ -12,6 +12,8 @@
   "dependencies": {
     "@modpack/core": "workspace:*",
     "@modpack/swc": "workspace:*",
+    "@modpack/react": "workspace:*",
+    "@modpack/twind": "workspace:*",
     "@modpack/plugins": "workspace:*"
   },
   "devDependencies": {

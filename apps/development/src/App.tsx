@@ -2,6 +2,7 @@ import { useState } from "react";
 import BasicModule from "./components/demos/basic-module";
 import BasicReact from "./components/demos/basic-react";
 import BasicResolver from "./components/demos/basic-resolver";
+import BasicTwind from "./components/demos/basic-twind";
 import DemoAlias from "./components/demos/demo-alias";
 import DemoTransformer from "./components/demos/demo-transformer";
 
@@ -27,6 +28,10 @@ export default function App() {
 		{
 			label: "React",
 			render: <BasicReact />,
+		},
+		{
+			label: "Twind",
+			render: <BasicTwind />,
 		},
 	];
 

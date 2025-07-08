@@ -8,6 +8,7 @@
       "@modpack/utils",
       "@modpack/swc",
       "@modpack/plugins",
+      "@modpack/twind",
       "@modpack/react"
     ]
   ],
