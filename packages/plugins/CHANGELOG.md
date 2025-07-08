@@ -1,5 +1,13 @@
 # @modpack/plugins
 
+## 0.2.1-canary.14
+
+### Patch Changes
+
+- ee1f1f4: Sync react version
+- Updated dependencies [ee1f1f4]
+  - @modpack/utils@0.2.1-canary.14
+
 ## 0.2.1-canary.13
 
 ### Patch Changes
