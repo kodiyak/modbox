@@ -103,6 +103,8 @@ describe("esmSh plugin", () => {
 	});
 
 	it("should resolve relative path with parent URL 2", () => {
+		// const parent =
+		// 	"https://esm.sh/date-fns@4.1.0/X-ZWNsYXNzLXZhcmlhbmNlLWF1dGhvcml0eSxjbHN4LG1vdGlvbixtb3Rpb24vcmVhY3QsbW90aW9uL3JlYWN0LWNsaWVudCxtb3Rpb24vcmVhY3QtbSxtb3Rpb24vcmVhY3QtbWluaSxyZWFjdCxyZWFjdC1kb20scmVhY3QvanN4LWRldi1ydW50aW1lLHJlYWN0L2pzeC1ydW50aW1lLHRhaWx3aW5kLW1lcmdl/es2022";
 		const parent =
 			"https://esm.sh/date-fns@4.1.0/X-ZWNsYXNzLXZhcmlhbmNlLWF1dGhvcml0eSxjbHN4LG1vdGlvbixtb3Rpb24vcmVhY3QsbW90aW9uL3JlYWN0LWNsaWVudCxtb3Rpb24vcmVhY3QtbSxtb3Rpb24vcmVhY3QtbWluaSxyZWFjdCxyZWFjdC1kb20scmVhY3QvanN4LWRldi1ydW50aW1lLHJlYWN0L2pzeC1ydW50aW1lLHRhaWx3aW5kLW1lcmdl/es2022";
 		const external = [

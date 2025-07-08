@@ -39,7 +39,7 @@ export function esmSh(options: EsmShOptions = {}) {
 
 							const resolved = new URL(
 								[...stack, ...parts].filter(Boolean).join("/"),
-								`${parentUrl.origin}`,
+								`${registryBase}`,
 							);
 
 							if (external.length > 0) {
