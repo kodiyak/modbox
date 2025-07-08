@@ -3,15 +3,19 @@ import { definePlugin } from "@modpack/utils";
 interface InjectProps {
 	modules: Record<string, any>;
 	globalKey?: string;
+	self?: any;
 }
 
 export function inject(props: InjectProps) {
-	const { modules, globalKey = "__MODPACK_INJECT__" } = props;
+	const {
+		modules,
+		globalKey = "__MODPACK_INJECT__",
+		self = globalThis,
+	} = props;
 	return definePlugin({
 		name: "@modpack/plugin-inject",
 		onBoot: async () => {
-			if (typeof self !== "undefined") {
-				// @ts-ignore
+			if (typeof self !== "undefined" && self !== null) {
 				self[globalKey] = modules;
 			} else {
 				throw new Error(
