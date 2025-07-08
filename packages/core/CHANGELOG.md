@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.18
+
+### Patch Changes
+
+- 3a18c4f: Esm.sh plugin fix
+
 ## 0.2.1-canary.17
 
 ### Patch Changes
