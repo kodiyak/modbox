@@ -2,7 +2,7 @@ import { definePlugin, isUrl } from "@modpack/utils";
 import { removeVersionQueryParam } from "./utils";
 
 interface ResolveOptions {
-	extensions: string[];
+	extensions?: string[];
 	index?: boolean;
 	alias?: Record<string, string>;
 }
@@ -37,8 +37,8 @@ export function resolver(props?: ResolveOptions) {
 				},
 			},
 			resolver: {
-				resolve: ({ next, path: currentPath, parent, fs }) => {
-					let path = currentPath;
+				resolve: ({ next, path: inputPath, parent, fs, logger }) => {
+					let path = inputPath;
 					if (isUrl(path)) {
 						return next({ path, parent });
 					}
@@ -52,38 +52,64 @@ export function resolver(props?: ResolveOptions) {
 					}
 
 					path = removeVersionQueryParam(path);
-					const potentialPaths: string[] = [path];
-					if (!path.startsWith("/")) {
-						// If the path is not absolute, prepend the parent directory
-						const parentDir = parent ? parent.replace(/\/[^/]+$/, "") : "";
-						path = `${parentDir}/${path}`;
+
+					if (path.startsWith("./") || path.startsWith("../")) {
+						if (!parent) return next({ path, parent });
+						path = resolveRelativePath(parent, path);
 					}
-					const hasExtension = extensions.some((ext) => path.endsWith(ext));
-					if (!hasExtension) {
-						// If no extension, try all extensions
+
+					const potentialPaths = new Set<string>();
+					const hasKnownExtension = extensions.some((ext) =>
+						path.endsWith(ext),
+					);
+
+					if (hasKnownExtension) {
+						potentialPaths.add(path);
+					} else {
 						for (const ext of extensions) {
-							potentialPaths.push(`${path}${ext}`);
+							potentialPaths.add(`${path}${ext}`);
 						}
 					}
 
 					if (resolveIndex) {
-						// If index is enabled, try appending "/index" to the path
-						potentialPaths.push(`${path}/index`);
+						potentialPaths.add(`${path}/index`);
 						for (const ext of extensions) {
-							potentialPaths.push(`${path}/index${ext}`);
+							potentialPaths.add(`${path}/index${ext}`);
 						}
 					}
 
-					for (const p of potentialPaths) {
-						if (fs.readFile(p)) {
-							return next({ path: `file://${p}` });
+					// 6. Testa caminhos possíveis até encontrar um arquivo existente
+					for (const candidatePath of potentialPaths) {
+						try {
+							if (fs.readFile(candidatePath)) {
+								logger.debug?.(`Resolved: ${candidatePath}`);
+								return next({ path: `file://${candidatePath}`, parent });
+							}
+						} catch (err) {
+							logger.warn?.(`Error reading ${candidatePath}: ${err}`);
 						}
 					}
 
 					// Fallback to next resolver
-					return next();
+					return next({ path, parent });
 				},
 			},
 		},
 	});
+}
+
+function resolveRelativePath(base: string, relative: string): string {
+	const baseParts = base.split("/").slice(0, -1);
+	const relativeParts = relative.split("/");
+
+	for (const part of relativeParts) {
+		if (part === "." || part === "") continue;
+		if (part === "..") {
+			baseParts.pop();
+		} else {
+			baseParts.push(part);
+		}
+	}
+
+	return `/${baseParts.join("/").split("/").filter(Boolean).join("/")}`;
 }
