@@ -26,7 +26,12 @@ export function esmSh(options: EsmShOptions = {}) {
 
 					if (path.startsWith("./") || path.startsWith("../")) {
 						if (parent && isUrl(parent)) {
-							const resolved = new URL(path, parent);
+							const parentPackage = extractPackageFromUrl(parent);
+							if (!parentPackage) return next();
+							const resolved = new URL(
+								[parentPackage, path].join("/"),
+								`${registryBase}`,
+							);
 							return next({ path: resolved.toString(), parent });
 						}
 						return next();
@@ -51,4 +56,13 @@ export function esmSh(options: EsmShOptions = {}) {
 			},
 		},
 	});
+}
+
+function extractPackageFromUrl(url: string): string | null {
+	const urlObj = new URL(url);
+	const pathParts = urlObj.pathname.split("/");
+	if (pathParts.length > 1 && pathParts[1]) {
+		return pathParts[1];
+	}
+	return null;
 }
