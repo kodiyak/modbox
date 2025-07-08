@@ -1,5 +1,16 @@
 # development
 
+## 0.0.4-canary.18
+
+### Patch Changes
+
+- Updated dependencies [c0d42da]
+  - @modpack/react@0.2.1-canary.19
+  - @modpack/twind@0.2.1-canary.19
+  - @modpack/swc@0.2.1-canary.19
+  - @modpack/plugins@0.2.1-canary.19
+  - @modpack/core@0.2.1-canary.19
+
 ## 0.0.4-canary.17
 
 ### Patch Changes
