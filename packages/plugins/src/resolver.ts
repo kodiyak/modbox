@@ -1,13 +1,13 @@
 import { definePlugin, isUrl } from "@modpack/utils";
 import { removeVersionQueryParam } from "./utils";
 
-interface ResolveOptions {
+export interface ResolverOptions {
 	extensions?: string[];
 	index?: boolean;
 	alias?: Record<string, string>;
 }
 
-export function resolver(props?: ResolveOptions) {
+export function resolver(props?: ResolverOptions) {
 	const { extensions, index, alias } = {
 		extensions: [".js", ".json", ".mjs", ".cjs", ".ts", ".jsx", ".tsx"],
 		index: true,
