@@ -1,5 +1,13 @@
 # @modpack/utils
 
+## 0.2.1-canary.15
+
+### Patch Changes
+
+- 7d092d8: Releasing Packages Registry
+- Updated dependencies [7d092d8]
+  - @modpack/core@0.2.1-canary.15
+
 ## 0.2.1-canary.14
 
 ### Patch Changes
