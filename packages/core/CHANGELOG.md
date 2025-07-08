@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.16
+
+### Patch Changes
+
+- bd29e72: Release Packages
+
 ## 0.2.1-canary.15
 
 ### Patch Changes
