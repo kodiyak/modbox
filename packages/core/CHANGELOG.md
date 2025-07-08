@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.20
+
+### Patch Changes
+
+- d002106: Release esm.sh resolution fix
+
 ## 0.2.1-canary.19
 
 ### Patch Changes

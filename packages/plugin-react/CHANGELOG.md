@@ -1,5 +1,13 @@
 # @modpack/react
 
+## 0.2.1-canary.20
+
+### Patch Changes
+
+- d002106: Release esm.sh resolution fix
+- Updated dependencies [d002106]
+  - @modpack/utils@0.2.1-canary.20
+
 ## 0.2.1-canary.19
 
 ### Patch Changes
