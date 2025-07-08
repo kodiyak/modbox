@@ -6,8 +6,7 @@
   "scripts": {
     "test": "vitest",
     "dev": "vitest -w",
-    "lint": "biome lint",
-    "pub:canary": "pnpm build && pnpm publish --no-git-checks --access public --tag canary"
+    "lint": "biome lint"
   },
   "exports": {
     ".": {
