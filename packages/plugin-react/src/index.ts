@@ -16,7 +16,7 @@ export function react({
 	extensions = [".tsx", ".jsx"],
 }: ReactOptions) {
 	return definePlugin({
-		name: "react",
+		name: "@modpack/plugin-react",
 		onBoot: async () => {
 			injectIntoGlobalHook(self);
 			Object.assign(self, {
