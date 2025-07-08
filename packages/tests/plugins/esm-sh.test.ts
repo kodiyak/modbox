@@ -104,12 +104,31 @@ describe("esmSh plugin", () => {
 
 	it("should resolve relative path with parent URL 2", () => {
 		const parent =
-			"https://esm.sh/date-fns@4.1.0/X-ZWNsYXNzLXZhcmlhbmNlLWF1dGhvcml0eSxjbHN4LG1vdGlvbixtb3Rpb24vcmVhY3QsbW90aW9uL3JlYWN0LWNsaWVudCxtb3Rpb24vcmVhY3QtbSxtb3Rpb24vcmVhY3QtbWluaSxyZWFjdCxyZWFjdC1kb20scmVhY3QvanN4LWRldi1ydW50aW1lLHJlYWN0L2pzeC1ydW50aW1lLHRhaWx3aW5kLW1lcmdl/es2022/add.mjs?external=react%2Creact-dom%2Creact%2Fjsx-dev-runtime%2Creact%2Fjsx-runtime%2Cmotion%2Cmotion%2Freact%2Cmotion%2Freact-client%2Cmotion%2Freact-m%2Cmotion%2Freact-mini%2Cclsx%2Cclass-variance-authority%2Ctailwind-merge";
-		runPlugin({}, "./addDays.mjs", parent);
+			"https://esm.sh/date-fns@4.1.0/X-ZWNsYXNzLXZhcmlhbmNlLWF1dGhvcml0eSxjbHN4LG1vdGlvbixtb3Rpb24vcmVhY3QsbW90aW9uL3JlYWN0LWNsaWVudCxtb3Rpb24vcmVhY3QtbSxtb3Rpb24vcmVhY3QtbWluaSxyZWFjdCxyZWFjdC1kb20scmVhY3QvanN4LWRldi1ydW50aW1lLHJlYWN0L2pzeC1ydW50aW1lLHRhaWx3aW5kLW1lcmdl/es2022";
+		const external = [
+			"react",
+			"react-dom",
+			"react/jsx-dev-runtime",
+			"react/jsx-runtime",
+			"motion",
+			"motion/react",
+			"motion/react-client",
+			"motion/react-m",
+			"motion/react-mini",
+			"clsx",
+			"class-variance-authority",
+			"tailwind-merge",
+		];
+		const parentUrl = new URL(`${parent}/add.mjs`);
+		parentUrl.searchParams.set("external", external.join(","));
+		runPlugin({ external }, "./addDays.mjs", parentUrl.toString());
+
+		const expectedPath = new URL(`${parent}/addDays.mjs`);
+		expectedPath.searchParams.set("external", external.join(","));
 
 		expect(next).toHaveBeenCalledWith({
-			path: "https://esm.sh/date-fns@4.1.0/addDays.mjs",
-			parent,
+			path: expectedPath.toString(),
+			parent: parentUrl.toString(),
 		});
 	});
 

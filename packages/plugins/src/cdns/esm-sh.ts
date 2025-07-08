@@ -26,22 +26,32 @@ export function esmSh(options: EsmShOptions = {}) {
 
 					if (path.startsWith("./") || path.startsWith("../")) {
 						if (parent && isUrl(parent)) {
-							const parentPackage = extractPackageFromUrl(parent);
-							if (!parentPackage) return next();
+							const parentUrl = new URL(parent);
+							const stack = parentUrl.pathname.split("/").slice(0, -1);
+							const parts = path.split("/");
+							for (const segmentKey in parts) {
+								const segment = parts[segmentKey];
+								if (segment === "..") {
+									stack.pop();
+									parts[segmentKey] = "";
+								}
+							}
+
 							const resolved = new URL(
-								[parentPackage, path].join("/"),
-								`${registryBase}`,
+								[...stack, ...parts].filter(Boolean).join("/"),
+								`${parentUrl.origin}`,
 							);
+
+							if (external.length > 0) {
+								resolved.searchParams.set("external", external.join(","));
+							}
+
 							return next({ path: resolved.toString(), parent });
 						}
 						return next();
 					}
 
 					path = path.replace(/^\/+/, "");
-
-					if (path.startsWith("./")) {
-						return next();
-					}
 
 					const url = new URL(path, registryBase);
 					if (external.length > 0) {
@@ -56,13 +66,4 @@ export function esmSh(options: EsmShOptions = {}) {
 			},
 		},
 	});
-}
-
-function extractPackageFromUrl(url: string): string | null {
-	const urlObj = new URL(url);
-	const pathParts = urlObj.pathname.split("/");
-	if (pathParts.length > 1 && pathParts[1]) {
-		return pathParts[1];
-	}
-	return null;
 }
