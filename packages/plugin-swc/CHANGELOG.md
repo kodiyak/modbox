@@ -1,5 +1,13 @@
 # @modpack/swc
 
+## 0.2.1-canary.18
+
+### Patch Changes
+
+- 3a18c4f: Esm.sh plugin fix
+- Updated dependencies [3a18c4f]
+  - @modpack/utils@0.2.1-canary.18
+
 ## 0.2.1-canary.17
 
 ### Patch Changes
