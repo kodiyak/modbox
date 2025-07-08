@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.17
+
+### Patch Changes
+
+- b950d93: Hotfix
+
 ## 0.2.1-canary.16
 
 ### Patch Changes

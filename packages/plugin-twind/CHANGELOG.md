@@ -1,5 +1,13 @@
 # @modpack/twind
 
+## 0.2.1-canary.17
+
+### Patch Changes
+
+- b950d93: Hotfix
+- Updated dependencies [b950d93]
+  - @modpack/utils@0.2.1-canary.17
+
 ## 0.2.1-canary.16
 
 ### Patch Changes
