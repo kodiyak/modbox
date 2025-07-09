@@ -16,6 +16,7 @@
     "@modpack/tests": "0.2.1-canary.13"
   },
   "changesets": [
+    "afraid-eyes-sip",
     "bumpy-cougars-sip",
     "chilly-books-camp",
     "cruel-melons-refuse",
