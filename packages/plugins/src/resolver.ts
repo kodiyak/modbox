@@ -53,9 +53,14 @@ export function resolver(props?: ResolverOptions) {
 
 					path = removeVersionQueryParam(path);
 
-					if (path.startsWith("./") || path.startsWith("../")) {
+					if (
+						path.startsWith("./") ||
+						path.startsWith("../") ||
+						path === ".."
+					) {
 						if (!parent) return next({ path, parent });
 						path = resolveRelativePath(parent, path);
+						if (path === "/") path = "";
 					}
 
 					const potentialPaths = new Set<string>();
@@ -72,9 +77,11 @@ export function resolver(props?: ResolverOptions) {
 					}
 
 					if (resolveIndex) {
-						potentialPaths.add(`${path}/index`);
+						potentialPaths.add(`${[path, "index"].join("/")}`);
 						for (const ext of extensions) {
-							potentialPaths.add(`${path}/index${ext}`);
+							potentialPaths.add(
+								`${[path, ["index", ext].join("")].join("/")}`,
+							);
 						}
 					}
 
@@ -101,6 +108,8 @@ function resolveRelativePath(base: string, relative: string): string {
 	const baseParts = base.split("/").slice(0, -1);
 	const relativeParts = relative.split("/");
 
+	if (relative === "..") baseParts.pop();
+
 	for (const part of relativeParts) {
 		if (part === "." || part === "") continue;
 		if (part === "..") {
@@ -110,5 +119,6 @@ function resolveRelativePath(base: string, relative: string): string {
 		}
 	}
 
-	return `/${baseParts.join("/").split("/").filter(Boolean).join("/")}`;
+	const output = `${baseParts.join("/").split("/").filter(Boolean).join("/")}`;
+	return `/${output.split("/").filter(Boolean).join("/")}`;
 }

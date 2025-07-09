@@ -119,6 +119,51 @@ describe("resolver plugin", () => {
 		});
 	});
 
+	it('should resolve relative paths with leading "../"', () => {
+		modpack.fs.writeFile(
+			"/shared/utils/helper.ts",
+			"export const helper = true;",
+		);
+		runPlugin(
+			{ extensions: [".ts"] },
+			"../../shared/utils/helper",
+			"/src/components/button.ts",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///shared/utils/helper.ts",
+			parent: "/src/components/button.ts",
+		});
+	});
+
+	it("should resolve relative paths to 'index.tsx' file with leading '../'", () => {
+		modpack.fs.writeFile("/index.tsx", "export const Button = true;");
+		runPlugin(
+			{ extensions: [".tsx"], index: true },
+			"../",
+			"/previews/main.tsx",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///index.tsx",
+			parent: "/previews/main.tsx",
+		});
+	});
+
+	it("should resolve relative paths to 'index.tsx' file with leading '..'", () => {
+		modpack.fs.writeFile("/index.tsx", "export const Button = true;");
+		runPlugin(
+			{ extensions: [".tsx"], index: true },
+			"..",
+			"/components/previews/main.tsx",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///index.tsx",
+			parent: "/components/previews/main.tsx",
+		});
+	});
+
 	it("should prioritize extensions based on provided order", () => {
 		modpack.fs.writeFile("/entry.ts", "console.log('ts');");
 		modpack.fs.writeFile("/entry.js", "console.log('js');");
