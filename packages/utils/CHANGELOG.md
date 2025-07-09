@@ -1,5 +1,13 @@
 # @modpack/utils
 
+## 0.2.1-canary.24
+
+### Patch Changes
+
+- 5a13bc4: Improve SWC Plugin with "onTransform" and "onParse" hooks
+- Updated dependencies [5a13bc4]
+  - @modpack/core@0.2.1-canary.24
+
 ## 0.2.1-canary.23
 
 ### Patch Changes
