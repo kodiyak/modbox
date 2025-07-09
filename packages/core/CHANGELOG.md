@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.23
+
+### Patch Changes
+
+- ec24aa5: Add file:// or any URL to paths resolver
+
 ## 0.2.1-canary.22
 
 ### Patch Changes
