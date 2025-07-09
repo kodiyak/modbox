@@ -1,6 +1,6 @@
 {
   "name": "@modpack/twind",
-  "version": "0.2.1-canary.20",
+  "version": "0.2.1-canary.21",
   "type": "module",
   "private": false,
   "exports": {

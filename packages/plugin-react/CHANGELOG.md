@@ -1,5 +1,13 @@
 # @modpack/react
 
+## 0.2.1-canary.21
+
+### Patch Changes
+
+- c74e09e: Fix Virtual File System Resolver
+- Updated dependencies [c74e09e]
+  - @modpack/utils@0.2.1-canary.21
+
 ## 0.2.1-canary.20
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.21
+
+### Patch Changes
+
+- c74e09e: Fix Virtual File System Resolver
+
 ## 0.2.1-canary.20
 
 ### Patch Changes
