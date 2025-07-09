@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.22
+
+### Patch Changes
+
+- d477053: Resolve relative paths with leading "../" and ".."
+
 ## 0.2.1-canary.21
 
 ### Patch Changes
