@@ -1,4 +1,6 @@
 import { useState } from "react";
+import BasicExternal from "./components/demos/basic-external";
+import BasicGraph from "./components/demos/basic-graph";
 import BasicModule from "./components/demos/basic-module";
 import BasicReact from "./components/demos/basic-react";
 import BasicResolver from "./components/demos/basic-resolver";
@@ -16,6 +18,14 @@ export default function App() {
 		{
 			label: "Resolver",
 			render: <BasicResolver />,
+		},
+		{
+			label: "External",
+			render: <BasicExternal />,
+		},
+		{
+			label: "Graph",
+			render: <BasicGraph />,
 		},
 		{
 			label: "Alias",

@@ -4,15 +4,18 @@ export function virtual() {
 	return definePlugin({
 		name: "@modpack/plugin-virtual",
 		pipeline: {
-			sourcer: {
-				source: async ({ url, next, fs }) => {
+			fetcher: {
+				fetch: async ({ url, next, fs }) => {
 					if (isUrl(url) && url.startsWith("file://")) {
 						const filePath = url.replace("file://", "");
 						if (fs.readFile(filePath)) {
-							return {
-								source: fs.readFile(filePath)!,
-								type: filePath.split(".").pop()!,
-							};
+							const content = fs.readFile(filePath)!;
+							return new Response(content, {
+								headers: {
+									"Content-Type": "application/javascript",
+									"Content-Length": content.length.toString(),
+								},
+							});
 						}
 					}
 

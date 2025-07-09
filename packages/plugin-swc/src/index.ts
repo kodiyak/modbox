@@ -1,43 +1,102 @@
-import { definePlugin, isUrl, removeVersionQueryParam } from "@modpack/utils";
-import { type Options, transformSync } from "@swc/wasm-web";
+import { definePlugin, removeVersionQueryParam } from "@modpack/utils";
+import {
+	type Module,
+	type Options,
+	type Output,
+	parse,
+	transform,
+} from "@swc/wasm-web";
 
-interface SwcOptions extends Options {
+interface HookProps {
+	url: string;
+	originalContent: string;
+}
+
+type TransformResult = {
+	parseContent?: string;
+	parseOptions?: Options;
+} | void;
+type OnTransform = (
+	props: HookProps & { transformed: Output },
+) => TransformResult | Promise<TransformResult>;
+type OnParse = (
+	props: HookProps & { parsed: Module; transformed: Output },
+) => void | Promise<void>;
+
+export interface SwcOptions extends Options {
 	extensions?: string[];
+	contentTypes?: string[];
+	onTransform?: OnTransform;
+	onParse?: OnParse;
 }
 
 export function swc(options: SwcOptions = {}) {
-	const { extensions = [".ts", ".tsx", ".js", ".jsx"], ...swcOptions } =
-		options;
+	const {
+		extensions = [],
+		contentTypes = [],
+		onTransform,
+		onParse,
+		...swcOptions
+	} = options;
 	return definePlugin({
 		name: "@modpack/plugin-swc",
 		pipeline: {
-			sourcer: {
-				source: async ({ url: currentUrl, next, fs, reporter }) => {
-					const url = removeVersionQueryParam(currentUrl);
-					try {
-						if (
-							isUrl(url) &&
-							url.startsWith("file://") &&
-							extensions.some((ext) => url.endsWith(ext))
-						) {
-							const filePath = url.replace("file://", "");
-							const content = fs.readFile(filePath);
-							if (content) {
-								reporter.log("info", `Transforming ${filePath}`);
-								return {
-									source: transformSync(content, {
-										...swcOptions,
-										filename: filePath,
-									}).code,
-									type: filePath.split(".").pop()!,
-								};
+			fetcher: {
+				fetch: async ({ url, next, logger }) => {
+					const result = await next();
+					if (!result || !(result instanceof Response)) {
+						return result;
+					}
+					const contentType = result.headers.get("Content-Type");
+
+					const isTransformable = [
+						contentTypes.some((type) => contentType?.includes(type)),
+						extensions.some((ext) => url.endsWith(ext)),
+					].some(Boolean);
+
+					if (isTransformable) {
+						try {
+							const originalContent = await result.text();
+							const transformed = await transform(originalContent, {
+								...swcOptions,
+								filename: removeVersionQueryParam(url),
+							});
+
+							const transformedResult = await onTransform?.({
+								url,
+								originalContent,
+								transformed,
+							});
+
+							const transformedCode =
+								transformedResult?.parseContent || transformed.code;
+
+							const parsed = await parse(transformedCode, {
+								syntax: "ecmascript",
+								...swcOptions,
+								...transformedResult?.parseOptions,
+							});
+
+							await onParse?.({
+								url,
+								originalContent,
+								transformed: { ...transformed, code: transformedCode },
+								parsed,
+							});
+
+							if (transformedCode) {
+								return new Response(transformedCode, {
+									headers: {
+										"Content-Type": contentType || "application/javascript",
+									},
+								});
 							}
+						} catch (error) {
+							logger.error(`Error transforming ${url}:`, error);
 						}
-					} catch (error) {
-						reporter.log("error", String(error));
 					}
 
-					return next();
+					return result;
 				},
 			},
 		},
