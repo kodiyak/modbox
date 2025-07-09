@@ -155,12 +155,29 @@ describe("resolver plugin", () => {
 		runPlugin(
 			{ extensions: [".tsx"], index: true },
 			"..",
-			"/components/previews/main.tsx",
+			"/previews/motion-button.tsx",
 		);
 
 		expect(next).toHaveBeenCalledWith({
 			path: "file:///index.tsx",
-			parent: "/components/previews/main.tsx",
+			parent: "/previews/motion-button.tsx",
+		});
+	});
+
+	it("should resolve from parent URL", () => {
+		modpack.fs.writeFile(
+			"/src/shared/utils/helper.ts",
+			"export const helper = true;",
+		);
+		runPlugin(
+			{ extensions: [".ts"] },
+			"../shared/utils/helper",
+			"file:///src/components/button.ts",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///src/shared/utils/helper.ts",
+			parent: "file:///src/components/button.ts",
 		});
 	});
 

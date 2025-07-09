@@ -105,7 +105,7 @@ export function resolver(props?: ResolverOptions) {
 }
 
 function resolveRelativePath(base: string, relative: string): string {
-	const baseParts = base.split("/").slice(0, -1);
+	const baseParts = new URL(base, "file://").pathname.split("/").slice(0, -1);
 	const relativeParts = relative.split("/");
 
 	if (relative === "..") baseParts.pop();
@@ -119,6 +119,6 @@ function resolveRelativePath(base: string, relative: string): string {
 		}
 	}
 
-	const output = `${baseParts.join("/").split("/").filter(Boolean).join("/")}`;
-	return `/${output.split("/").filter(Boolean).join("/")}`;
+	const output = `/${baseParts.join("/").split("/").filter(Boolean).join("/")}`;
+	return output;
 }
