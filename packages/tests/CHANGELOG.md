@@ -1,5 +1,14 @@
 # @modpack/tests
 
+## 0.2.1-canary.21
+
+### Patch Changes
+
+- Updated dependencies [d477053]
+  - @modpack/plugins@0.2.1-canary.22
+  - @modpack/utils@0.2.1-canary.22
+  - @modpack/core@0.2.1-canary.22
+
 ## 0.2.1-canary.20
 
 ### Patch Changes
