@@ -86,16 +86,13 @@ describe("resolver plugin", () => {
 		runPlugin({ extensions: [".js"] }, "/not/found");
 
 		expect(next).toHaveBeenCalledTimes(1);
-		expect(next).toHaveBeenCalledWith({ path: "/not/found", parent: "" });
+		expect(next).toHaveBeenCalledWith();
 	});
 
 	it("should skip resolution if path is a full URL", () => {
 		runPlugin({}, "https://cdn.com/module.js");
 
-		expect(next).toHaveBeenCalledWith({
-			path: "https://cdn.com/module.js",
-			parent: "",
-		});
+		expect(next).toHaveBeenCalledWith();
 	});
 
 	it("should resolve relative path using '..' to move up directories", () => {
@@ -166,9 +163,6 @@ describe("resolver plugin", () => {
 	it("should fallback to next with original path if not resolvable", () => {
 		runPlugin({ extensions: [".ts"] }, "/unknown/module", "/main.ts");
 
-		expect(next).toHaveBeenCalledWith({
-			path: "/unknown/module",
-			parent: "/main.ts",
-		});
+		expect(next).toHaveBeenCalledWith();
 	});
 });

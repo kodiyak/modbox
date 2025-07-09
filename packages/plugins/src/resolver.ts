@@ -40,7 +40,7 @@ export function resolver(props?: ResolverOptions) {
 				resolve: ({ next, path: inputPath, parent, fs, logger }) => {
 					let path = inputPath;
 					if (isUrl(path)) {
-						return next({ path, parent });
+						return next();
 					}
 
 					// Resolve aliases
@@ -78,7 +78,6 @@ export function resolver(props?: ResolverOptions) {
 						}
 					}
 
-					// 6. Testa caminhos possíveis até encontrar um arquivo existente
 					for (const candidatePath of potentialPaths) {
 						try {
 							if (fs.readFile(candidatePath)) {
@@ -91,7 +90,7 @@ export function resolver(props?: ResolverOptions) {
 					}
 
 					// Fallback to next resolver
-					return next({ path, parent });
+					return next();
 				},
 			},
 		},

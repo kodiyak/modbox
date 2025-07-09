@@ -37,10 +37,8 @@ export function esmSh(options: EsmShOptions = {}) {
 								}
 							}
 
-							const resolved = new URL(
-								[...stack, ...parts].filter(Boolean).join("/"),
-								`${registryBase}`,
-							);
+							const finalPath = [...stack, ...parts].filter(Boolean).join("/");
+							const resolved = new URL(finalPath, `${registryBase}`);
 
 							if (external.length > 0) {
 								resolved.searchParams.set("external", external.join(","));
