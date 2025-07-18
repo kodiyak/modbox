@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.25
+
+### Patch Changes
+
+- 51d428c: Publish Package
+
 ## 0.2.1-canary.24
 
 ### Patch Changes

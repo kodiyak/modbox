@@ -1,5 +1,14 @@
 # @modpack/twind
 
+## 0.2.1-canary.25
+
+### Patch Changes
+
+- 51d428c: Publish Package
+- 51d428c: Add unocss plugin
+- Updated dependencies [51d428c]
+  - @modpack/utils@0.2.1-canary.25
+
 ## 0.2.1-canary.24
 
 ### Patch Changes
