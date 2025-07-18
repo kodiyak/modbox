@@ -13,7 +13,8 @@
     "@modpack/swc": "0.2.0",
     "@modpack/react": "0.2.0",
     "@modpack/twind": "0.2.1-canary.14",
-    "@modpack/tests": "0.2.1-canary.13"
+    "@modpack/tests": "0.2.1-canary.13",
+    "@modpack/unocss": "0.2.1-canary.24"
   },
   "changesets": [
     "afraid-eyes-sip",
@@ -25,6 +26,7 @@
     "dark-yaks-open",
     "deep-baboons-invite",
     "deep-numbers-create",
+    "dull-experts-wave",
     "early-sites-work",
     "eight-ways-design",
     "evil-camels-work",
@@ -47,6 +49,7 @@
     "ripe-crabs-begin",
     "ripe-hands-retire",
     "rotten-bikes-pump",
+    "rotten-rats-occur",
     "salty-snails-call",
     "shaggy-foxes-cheer",
     "short-bugs-repair",

@@ -1,6 +1,6 @@
 {
   "name": "@modpack/swc",
-  "version": "0.2.1-canary.24",
+  "version": "0.2.1-canary.25",
   "type": "module",
   "private": false,
   "exports": {
