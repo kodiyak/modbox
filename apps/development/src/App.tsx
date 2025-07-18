@@ -5,6 +5,7 @@ import BasicModule from "./components/demos/basic-module";
 import BasicReact from "./components/demos/basic-react";
 import BasicResolver from "./components/demos/basic-resolver";
 import BasicTwind from "./components/demos/basic-twind";
+import BasicUnocss from "./components/demos/basic-unocss";
 import DemoAlias from "./components/demos/demo-alias";
 import DemoTransformer from "./components/demos/demo-transformer";
 
@@ -42,6 +43,10 @@ export default function App() {
 		{
 			label: "Twind",
 			render: <BasicTwind />,
+		},
+		{
+			label: "Unocss",
+			render: <BasicUnocss />,
 		},
 	];
 

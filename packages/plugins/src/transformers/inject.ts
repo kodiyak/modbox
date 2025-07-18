@@ -36,11 +36,7 @@ export function inject(props: InjectProps) {
 										(m) => `export const ${m} = mod['${m}']`,
 									),
 								].join("\n"),
-								{
-									headers: {
-										"Content-Type": "application/javascript",
-									},
-								},
+								{ headers: { "Content-Type": "application/javascript" } },
 							);
 						}
 					}

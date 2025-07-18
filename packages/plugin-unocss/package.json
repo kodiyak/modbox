@@ -1,0 +1,29 @@
+{
+  "name": "@modpack/unocss",
+  "version": "0.2.1-canary.24",
+  "type": "module",
+  "private": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "dev": "tsup src/index.ts --dts --format esm,cjs --out-dir dist --watch",
+    "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
+    "pub:canary": "pnpm build && pnpm publish --no-git-checks --access public --tag canary",
+    "lint": "biome lint"
+  },
+  "dependencies": {
+    "@modpack/utils": "workspace:*",
+    "unocss": "66.3.3",
+    "@unocss/runtime": "66.3.3",
+    "@unocss/preset-wind3": "66.3.3"
+  },
+  "devDependencies": {
+    "@modpack/typescript-config": "workspace:*"
+  }
+}
