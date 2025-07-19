@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.30
+
+### Patch Changes
+
+- aba92ec: Improve resolver to multiples orchestrators
+
 ## 0.2.1-canary.29
 
 ### Patch Changes
