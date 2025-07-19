@@ -1,3 +1,4 @@
+import { isUrl } from "../utils/is-url";
 import type { Orchestrator } from "./orchestrator";
 import type { EsmsInitOptions, IImportShim, ModpackShimsInit } from "./types";
 
@@ -80,7 +81,10 @@ export class ModpackShims {
 						const resolved = orchestrator.bundler.resolver.resolve(
 							id,
 							parentUrl,
-							defaultResolve,
+							(path, parent) => {
+								if (!isUrl(path)) return undefined;
+								return defaultResolve(path, parent);
+							},
 						);
 						if (resolved) {
 							return resolved;

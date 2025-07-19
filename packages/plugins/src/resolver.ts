@@ -122,23 +122,13 @@ export function resolver(props?: ResolverOptions) {
 						}
 					});
 
-					console.log(`Searching for: ${path} in ${potentialPaths.size} paths`);
-
 					for (const candidatePath of potentialPaths) {
-						console.warn(`Searching for [${path} => ${candidatePath}]`);
-						try {
-							if (fs.readFile(candidatePath)) {
-								logger.debug?.(`Resolved: ${candidatePath}`);
-								return next({ path: `file://${candidatePath}`, parent });
-							} else {
-								// console.warn(`File not found: ${candidatePath}`);
-							}
-						} catch (err) {
-							logger.warn?.(`Error reading ${candidatePath}: ${err}`);
+						if (fs.readFile(candidatePath)) {
+							logger.debug?.(`Resolved: ${candidatePath}`);
+							return next({ path: `file://${candidatePath}`, parent });
 						}
 					}
 
-					// Fallback to next resolver
 					return next();
 				},
 			},
@@ -183,15 +173,14 @@ function resolveFromAlias(
 }
 
 function resolveFromBaseUrl(path: string, baseUrl: string): string {
-	if (!baseUrl) return path;
+	if (baseUrl === "/") return `/${path}`;
+	const baseParts = baseUrl.split("/");
+	const pathParts = path.split("/").filter((part, keyPart) => {
+		return baseParts[keyPart] !== part && part !== "";
+	});
 
-	if (baseUrl.endsWith("/")) {
-		return `${baseUrl}${path.startsWith("/") ? path.slice(1) : path}`;
-	} else if (baseUrl === "/") {
-		return `/${path}`;
-	} else {
-		return `${baseUrl}/${path}`;
-	}
+	const result = `/${[...baseParts.filter(Boolean), ...pathParts].join("/")}`;
+	return result;
 }
 
 function resolveRelativePath(base: string, relative: string): string {

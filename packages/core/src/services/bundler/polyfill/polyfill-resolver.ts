@@ -10,10 +10,9 @@ import type {
 	ResolveMiddlewareProps,
 	ResolverHook,
 	ResolverHooks,
-	ResolverResult,
 } from "./types";
 
-type DefaultResolver = (path: string, parent: string) => ResolverResult;
+type DefaultResolver = (path: string, parent: string) => string | undefined;
 type PolyfillResolverHook = ResolverHook & { name: string };
 
 export class PolyfillResolver {
@@ -43,7 +42,7 @@ export class PolyfillResolver {
 		path: string,
 		parent: string,
 		defaultResolve: DefaultResolver,
-	): string {
+	): string | undefined {
 		return this.runHooks(path, parent, defaultResolve);
 	}
 
@@ -51,14 +50,14 @@ export class PolyfillResolver {
 		path: string,
 		parent: string,
 		defaultResolve: DefaultResolver,
-	): string {
+	): string | undefined {
 		const executeHook = ({
 			index,
 			path: currentPath,
 			parent: currentParent,
 		}: Omit<ResolveMiddlewareProps, "next" | "reporter"> & {
 			index: number;
-		}): string => {
+		}): string | undefined => {
 			const hook = this.handlers[index];
 			if (!hook) {
 				return defaultResolve(currentPath, currentParent);
@@ -132,10 +131,6 @@ export class PolyfillResolver {
 				logger: this.logger,
 				reporter: this.reporter,
 			});
-		}
-
-		if (!result) {
-			throw new Error(`No resolver found for "${path}" (parent: "${parent}").`);
 		}
 
 		return result;

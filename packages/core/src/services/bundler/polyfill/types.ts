@@ -40,7 +40,7 @@ export interface FetcherHooks {
 }
 
 // Resolver [Internal]
-export type ResolverResult = string;
+export type ResolverResult = string | undefined;
 export interface ResolveMiddlewareProps {
 	path: string;
 	parent: string;
