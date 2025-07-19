@@ -12,6 +12,7 @@ export default function BasicUnocss() {
 	const load = async () => {
 		const modpack = await Modpack.boot({
 			debug: true,
+
 			plugins: [
 				http(),
 				inject({
@@ -96,7 +97,7 @@ export default function BasicUnocss() {
       )`,
 		);
 
-		await modpack.mount("/main.js");
+		await modpack.mount("file:///main.js");
 		modpackRef.current = modpack;
 		console.log("Modpack loaded successfully");
 	};
@@ -112,7 +113,9 @@ export default function BasicUnocss() {
 				return (
 					<div>
 						<h1>Count: {count}</h1>
-						<h2 className={'bg-background text-foreground p-8'}>This is a basic React Demo Application</h2>
+						<h2 className={'bg-background text-foreground p-8'}>
+							{'This is a basic React Demo Application'}
+						</h2>
 						<button onClick={() => setCount(count + 1)}>Increment</button>
 						<button onClick={() => setCount(count - 1)}>Decrement</button>
 

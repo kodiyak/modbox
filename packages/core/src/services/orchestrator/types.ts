@@ -1,5 +1,4 @@
 import type { Logger } from "../../shared";
-import type { BundlerBuildOptions } from "../bundler";
 import type { IPluginReporter, IReportLevel } from "../plugins";
 import type { VirtualFiles } from "../types";
 
@@ -53,4 +52,4 @@ export interface OrchestratorOptions extends OrchestratorHooks {
 	debug?: boolean;
 }
 
-export interface OrchestratorMountOptions extends BundlerBuildOptions {}
+export type OrchestratorMountOptions = {};

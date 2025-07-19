@@ -1,7 +1,7 @@
 import type { Logger } from "../../shared";
 import type { VirtualFiles } from "../../shared/virtual-files";
-import type { GraphBuilderOptions } from "../graph";
 import type { BundlerRegistry } from "./bundler-registry";
+import type { SourceResult } from "./polyfill";
 
 // Plugin [Internal]
 export interface PluginMiddlewareContext {
@@ -11,9 +11,7 @@ export interface PluginMiddlewareContext {
 }
 
 // Bundler [Internal]
-export interface BundlerBuildOptions extends GraphBuilderOptions {
-	inject?: Record<string, any>;
-}
+export type BundlerBuildOptions = {};
 
 export interface TransformMiddlewareProps {
 	source: string;
@@ -31,9 +29,7 @@ export type TransformerHook = {
 };
 
 // Polyfill [Internal]
-export interface PolyfillInitOptions {
-	esmsInitOptions: EsmsInitOptions;
-}
+export type PolyfillInitOptions = {};
 
 // Graph [Internal]
 export interface ModuleGraph {
@@ -53,24 +49,25 @@ export interface ImportMap {
 	scopes?: { [key: string]: { [key: string]: string } };
 }
 
-type EsmsResolve = (
-	specifier: string,
+export type EsmsResolve = (
+	id: string,
 	parentUrl: string,
-	resolve: Omit<EsmsResolve, "resolve">,
-) => Promise<string | null>;
-type EsmsFetch = (
+	defaultResolve: (id: string, parentUrl: string) => string,
+) => Promise<string | null> | string | null;
+export type EsmsFetch = (
 	url: string,
-	options: RequestInit,
+	options: RequestInit | undefined,
 ) => Promise<Response | null>;
-type EsmsSource = {
-	type: "js" | "css" | "json";
-	source: string;
-};
+export type EsmsSource = SourceResult;
 type EsmsSourceHook = (
 	url: string,
-	options: RequestInit,
+	options: RequestInit | undefined,
 	parentUrl: string,
-	defaultSourceHook: (url: string, options: RequestInit) => EsmsSource,
+	defaultSourceHook: (
+		url: string,
+		options: RequestInit | undefined,
+		parentUrl: string,
+	) => EsmsSource | Promise<EsmsSource>,
 ) => EsmsSource | Promise<EsmsSource>;
 export interface EsmsInitOptions {
 	shimMode?: boolean;
@@ -99,8 +96,8 @@ export interface EsmsInitOptions {
 	) => void;
 }
 
-export interface IImportShim {
+export type IImportShim = {
 	addImportMap(map: ImportMap): void;
 	importShim(specifier: string): Promise<any>;
 	hotReload(url: string): Promise<boolean>;
-}
+} & ((path: string) => Promise<any>);

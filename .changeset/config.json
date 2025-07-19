@@ -9,7 +9,8 @@
       "@modpack/swc",
       "@modpack/plugins",
       "@modpack/twind",
-      "@modpack/react"
+      "@modpack/react",
+      "@modpack/unocss"
     ]
   ],
   "linked": [],

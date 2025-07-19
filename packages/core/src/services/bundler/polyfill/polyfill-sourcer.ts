@@ -15,9 +15,9 @@ import type {
 
 type DefaultSourcer = (
 	url: string,
-	parent: string,
 	options: RequestInit | undefined,
-) => Promise<SourceResult>;
+	parent: string,
+) => Promise<SourceResult> | SourceResult;
 
 type SourcePluginHandler = SourcerHook & { name: string };
 
@@ -69,7 +69,7 @@ export class PolyfillSourcer {
 		}): Promise<SourceResult> => {
 			const hook = this.handlers[index];
 			if (!hook) {
-				return defaultSource(currentUrl, currentParent, currentOptions);
+				return defaultSource(currentUrl, currentOptions, currentParent);
 			}
 
 			const next = (props?: Partial<Omit<SourceMiddlewareProps, "next">>) => {

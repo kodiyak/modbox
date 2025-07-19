@@ -15,12 +15,12 @@ import type {
 export class Orchestrator {
 	private readonly logger: Logger;
 	private readonly reporter: PluginReporter;
-	private readonly bundler: Bundler;
+	public readonly bundler: Bundler;
 	public readonly fs: VirtualFiles;
 	private readonly hooks: OrchestratorHooks;
 
 	constructor(
-		options: OrchestratorOptions & OrchestratorHooks = {},
+		options: OrchestratorOptions & OrchestratorHooks,
 		logger: Logger,
 		bundler: Bundler,
 		fs: VirtualFiles,
@@ -34,7 +34,7 @@ export class Orchestrator {
 		this.hooks = hooks;
 
 		this.fs.events.on("file:updated", async (data) => {
-			await this.refresh(data.path, data.content);
+			await this.refresh(`file://${data.path}`, data.content);
 		});
 	}
 
@@ -74,9 +74,7 @@ export class Orchestrator {
 		let result: any;
 		let error: Error | null = null;
 		try {
-			const { module, updated: hotReloaded } = await this.bundler.refresh(
-				`file://${path}`,
-			);
+			const { module, updated: hotReloaded } = await this.bundler.refresh(path);
 			result = module;
 			updated = hotReloaded;
 		} catch (err) {

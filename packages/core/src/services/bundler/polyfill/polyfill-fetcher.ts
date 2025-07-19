@@ -43,7 +43,11 @@ export class PolyfillFetcher {
 		this.reporter = PluginReporter.create("fetcher");
 	}
 
-	async fetch(url: string, opts: RequestInit, defaultFetch: DefaultFetcher) {
+	async fetch(
+		url: string,
+		opts: RequestInit | undefined,
+		defaultFetch: DefaultFetcher,
+	) {
 		return this.runHooks(url, opts, defaultFetch);
 	}
 

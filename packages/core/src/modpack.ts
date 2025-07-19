@@ -5,6 +5,7 @@ import {
 	ExternalRegistry,
 	getPluginLogger,
 	getPluginReporter,
+	ModpackShims,
 	ModulesExtractor,
 	ModulesRegistry,
 	Orchestrator,
@@ -15,10 +16,16 @@ import {
 	VirtualFiles,
 } from "./services";
 import { Logger } from "./shared";
-import type { ModpackBootOptions } from "./types";
+import type { ModpackBootOptions, ModpackInitOptions } from "./types";
 import { getModpackPlugin } from "./utils";
 
 export class Modpack {
+	static async init(options: ModpackInitOptions) {
+		await ModpackShims.init({
+			...options,
+		});
+	}
+
 	static async boot({ debug, plugins = [], ...rest }: ModpackBootOptions) {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles(Logger.create("virtual-files"));
@@ -193,6 +200,8 @@ export class Modpack {
 			// Bootstrap plugins
 			plugins.map(async (plugin) => orchestrator.addPlugin(plugin)),
 		);
+
+		ModpackShims.getInstance().addOrchestrator(orchestrator);
 
 		return orchestrator;
 	}

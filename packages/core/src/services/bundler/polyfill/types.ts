@@ -79,7 +79,7 @@ export interface ResolverHooks {
 
 // Sourcer [Internal]
 export interface SourceResult {
-	type: string;
+	type: "js" | "css" | "json";
 	source: string;
 }
 export interface SourceMiddlewareProps {
