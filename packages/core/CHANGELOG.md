@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.27
+
+### Patch Changes
+
+- e6afc55: Fix: Multiple Modpack Fetcher Fallback
+
 ## 0.2.1-canary.26
 
 ### Patch Changes
