@@ -1,5 +1,13 @@
 # @modpack/twind
 
+## 0.2.1-canary.28
+
+### Patch Changes
+
+- 1d18a9b: Enhance resolver with `baseUrl` and `wildcard` alias support.
+- Updated dependencies [1d18a9b]
+  - @modpack/utils@0.2.1-canary.28
+
 ## 0.2.1-canary.27
 
 ### Patch Changes
