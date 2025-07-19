@@ -195,7 +195,7 @@ describe("resolver plugin", () => {
 	it("should resolve alias without trailing slash", () => {
 		modpack.fs.writeFile("/shared/utils/file.ts", "ok");
 		runPlugin(
-			{ alias: { "@utils": "/shared/utils" }, extensions: [".ts"] },
+			{ alias: { "@utils": ["/shared/utils"] }, extensions: [".ts"] },
 			"@utils/file",
 		);
 
@@ -226,5 +226,132 @@ describe("resolver plugin", () => {
 		runPlugin({ extensions: [".ts"] }, "/unknown/module", "/main.ts");
 
 		expect(next).toHaveBeenCalledWith();
+	});
+
+	it("should resolve with baseUrl and paths alias", () => {
+		modpack.fs.writeFile("/components/Button.tsx", "ok");
+
+		runPlugin(
+			{
+				baseUrl: "/components",
+				alias: { "@components/": ["/components/", "shared/"] },
+				extensions: [".tsx"],
+			},
+			"@components/Button",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///components/Button.tsx",
+			parent: "",
+		});
+	});
+
+	it("should resolve alias with wildcard", () => {
+		modpack.fs.writeFile(
+			"/shared/utils/helper.ts",
+			"export const helper = true;",
+		);
+		runPlugin(
+			{
+				alias: { "@shared/*": "/shared/utils/*" },
+				extensions: [".ts"],
+			},
+			"@shared/helper",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///shared/utils/helper.ts",
+			parent: "",
+		});
+	});
+
+	it("should resolve with baseUrl", () => {
+		modpack.fs.writeFile("/base/foo/bar.ts", "export default 'base';");
+		runPlugin(
+			{
+				baseUrl: "/base",
+				extensions: [".ts"],
+			},
+			"foo/bar",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///base/foo/bar.ts",
+			parent: "",
+		});
+	});
+
+	it("should resolve with baseUrl and paths with wildcard", () => {
+		modpack.fs.writeFile(
+			"/base/components/Button.tsx",
+			"export default () => <button />",
+		);
+		runPlugin(
+			{
+				baseUrl: "/base",
+				alias: {
+					"@components/*": ["components/*"],
+				},
+				extensions: [".tsx"],
+			},
+			"@components/Button",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///base/components/Button.tsx",
+			parent: "",
+		});
+	});
+
+	it("should resolve wildcard alias with multiple fallback targets", () => {
+		modpack.fs.writeFile("/fallback/utils/helper.ts", "ok");
+		runPlugin(
+			{
+				alias: {
+					"@shared/*": ["/not/exist/*", "/fallback/utils/*"],
+				},
+				extensions: [".ts"],
+			},
+			"@shared/helper",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///fallback/utils/helper.ts",
+			parent: "",
+		});
+	});
+
+	it("should resolve exact alias prefix without wildcard", () => {
+		modpack.fs.writeFile("/lib/file.ts", "ok");
+		runPlugin(
+			{
+				alias: { "@lib/": "/lib/" },
+				extensions: [".ts"],
+			},
+			"@lib/file",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///lib/file.ts",
+			parent: "",
+		});
+	});
+
+	it("should resolve relative to parent path", () => {
+		modpack.fs.writeFile("/src/a.ts", "import './b';");
+		modpack.fs.writeFile("/src/b.ts", "ok");
+
+		runPlugin(
+			{
+				extensions: [".ts"],
+			},
+			"./b",
+			"/src/a.ts",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///src/b.ts",
+			parent: "/src/a.ts",
+		});
 	});
 });

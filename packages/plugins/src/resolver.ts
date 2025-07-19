@@ -4,14 +4,16 @@ import { removeVersionQueryParam } from "./utils";
 export interface ResolverOptions {
 	extensions?: string[];
 	index?: boolean;
-	alias?: Record<string, string>;
+	alias?: Record<string, string | string[]>;
+	baseUrl?: string;
 }
 
 export function resolver(props?: ResolverOptions) {
-	const { extensions, index, alias } = {
+	const { extensions, index, alias, baseUrl } = {
 		extensions: [".js", ".json", ".mjs", ".cjs", ".ts", ".jsx", ".tsx"],
 		index: true,
 		alias: {},
+		baseUrl: "/",
 		...props,
 	};
 	const resolveIndex = index !== false;
@@ -43,15 +45,14 @@ export function resolver(props?: ResolverOptions) {
 						return next();
 					}
 
-					// Resolve aliases
-					for (const [aliasKey, aliasValue] of Object.entries(alias)) {
-						if (path.startsWith(aliasKey)) {
-							path = path.replace(aliasKey, aliasValue);
-							break;
-						}
-					}
-
 					path = removeVersionQueryParam(path);
+					const potentialPaths = new Set<string>();
+
+					potentialPaths.add(resolveFromBaseUrl(path, baseUrl));
+					[...resolveFromAlias(path, alias)].forEach((resolvedPath) => {
+						potentialPaths.add(resolvedPath);
+						potentialPaths.add(resolveFromBaseUrl(resolvedPath, baseUrl));
+					});
 
 					if (
 						path.startsWith("./") ||
@@ -63,33 +64,35 @@ export function resolver(props?: ResolverOptions) {
 						if (path === "/") path = "";
 					}
 
-					const potentialPaths = new Set<string>();
 					const hasKnownExtension = extensions.some((ext) =>
 						path.endsWith(ext),
 					);
 
 					if (hasKnownExtension) {
 						potentialPaths.add(path);
-					} else {
-						for (const ext of extensions) {
-							potentialPaths.add(`${path}${ext}`);
-						}
 					}
 
 					if (resolveIndex) {
 						potentialPaths.add(`${[path, "index"].join("/")}`);
-						for (const ext of extensions) {
-							potentialPaths.add(
-								`${[path, ["index", ext].join("")].join("/")}`,
-							);
-						}
 					}
 
+					for (const ext of extensions) {
+						for (const candidatePath of potentialPaths) {
+							if (candidatePath.endsWith(ext)) continue;
+							potentialPaths.add(`${candidatePath}${ext}`);
+						}
+						potentialPaths.add(`${path}${ext}`);
+					}
+
+					console.log(`Searching for: ${path} in ${potentialPaths.size} paths`);
 					for (const candidatePath of potentialPaths) {
+						// console.warn(`Searching for [${path} => ${candidatePath}]`);
 						try {
 							if (fs.readFile(candidatePath)) {
 								logger.debug?.(`Resolved: ${candidatePath}`);
 								return next({ path: `file://${candidatePath}`, parent });
+							} else {
+								// console.warn(`File not found: ${candidatePath}`);
 							}
 						} catch (err) {
 							logger.warn?.(`Error reading ${candidatePath}: ${err}`);
@@ -102,6 +105,54 @@ export function resolver(props?: ResolverOptions) {
 			},
 		},
 	});
+}
+
+function resolveFromAlias(
+	path: string,
+	alias: NonNullable<ResolverOptions["alias"]>,
+): string[] {
+	const potentialPaths = new Set<string>();
+
+	for (const [aliasKey, aliasValues] of Object.entries(alias)) {
+		const values = Array.isArray(aliasValues) ? aliasValues : [aliasValues];
+
+		if (aliasKey.includes("*")) {
+			const escapedKey = aliasKey
+				.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+				.replace("\\*", "(.*)");
+			const regex = new RegExp(`^${escapedKey}$`);
+
+			const match = path.match(regex);
+			if (match) {
+				const wildcardMatch = match[1] ?? "";
+
+				for (const value of values) {
+					if (value.includes("*")) {
+						potentialPaths.add(value.replace("*", wildcardMatch));
+					}
+				}
+			}
+		} else if (path.startsWith(aliasKey)) {
+			const suffix = path.slice(aliasKey.length);
+			for (const value of values) {
+				potentialPaths.add(value + suffix);
+			}
+		}
+	}
+
+	return Array.from(potentialPaths);
+}
+
+function resolveFromBaseUrl(path: string, baseUrl: string): string {
+	if (!baseUrl) return path;
+
+	if (baseUrl.endsWith("/")) {
+		return `${baseUrl}${path}`;
+	} else if (baseUrl === "/") {
+		return `/${path}`;
+	} else {
+		return `${baseUrl}/${path}`;
+	}
 }
 
 function resolveRelativePath(base: string, relative: string): string {
