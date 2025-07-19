@@ -1,5 +1,15 @@
 # @modpack/utils
 
+## 0.2.1-canary.26
+
+### Patch Changes
+
+- 7f35346: Add .npmignore to all plugins
+- 7a30db2: Feat: Multiple Modpack Instances. `Modpack.init({})` implemented for enhanced module loading and inicialization.
+- Updated dependencies [7f35346]
+- Updated dependencies [7a30db2]
+  - @modpack/core@0.2.1-canary.26
+
 ## 0.2.1-canary.25
 
 ### Patch Changes
