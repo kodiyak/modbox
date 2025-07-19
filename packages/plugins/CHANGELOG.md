@@ -1,5 +1,13 @@
 # @modpack/plugins
 
+## 0.2.1-canary.29
+
+### Patch Changes
+
+- f6c96e9: Fix: Resolve if parent is present only if starts with baseUrl for scope segmentation
+- Updated dependencies [f6c96e9]
+  - @modpack/utils@0.2.1-canary.29
+
 ## 0.2.1-canary.28
 
 ### Patch Changes
