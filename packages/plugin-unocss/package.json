@@ -1,6 +1,6 @@
 {
   "name": "@modpack/unocss",
-  "version": "0.2.1-canary.27",
+  "version": "0.2.1-canary.28",
   "type": "module",
   "private": false,
   "exports": {
