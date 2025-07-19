@@ -354,4 +354,38 @@ describe("resolver plugin", () => {
 			parent: "/src/a.ts",
 		});
 	});
+
+	it("should resolve when parent is inside baseUrl", () => {
+		modpack.fs.writeFile("/project/utils/helper.ts", "export const h = 1");
+
+		runPlugin(
+			{
+				baseUrl: "/project",
+				extensions: [".ts"],
+			},
+			"utils/helper",
+			"file:///project/main.ts",
+		);
+
+		expect(next).toHaveBeenCalledWith({
+			path: "file:///project/utils/helper.ts",
+			parent: "file:///project/main.ts",
+		});
+	});
+
+	it("should skip resolution when parent is outside baseUrl", () => {
+		modpack.fs.writeFile("/project/utils/helper.ts", "export const h = 1");
+
+		runPlugin(
+			{
+				baseUrl: "/project",
+				extensions: [".ts"],
+			},
+			"utils/helper",
+			"file:///outside/main.ts",
+		);
+
+		expect(next).toHaveBeenCalledTimes(1);
+		expect(next).toHaveBeenCalledWith();
+	});
 });

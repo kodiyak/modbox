@@ -48,20 +48,35 @@ export function resolver(props?: ResolverOptions) {
 					path = removeVersionQueryParam(path);
 					const potentialPaths = new Set<string>();
 
-					potentialPaths.add(resolveFromBaseUrl(path, baseUrl));
-					[...resolveFromAlias(path, alias)].forEach((resolvedPath) => {
-						potentialPaths.add(resolvedPath);
-						potentialPaths.add(resolveFromBaseUrl(resolvedPath, baseUrl));
-					});
+					if (baseUrl !== "/" && parent?.startsWith("file://")) {
+						if (!parent.replace("file://", "").startsWith(baseUrl)) {
+							return next();
+						}
+					}
 
-					if (
-						path.startsWith("./") ||
-						path.startsWith("../") ||
-						path === ".."
-					) {
-						if (!parent) return next({ path, parent });
-						path = resolveRelativePath(parent, path);
-						if (path === "/") path = "";
+					const aliasPaths = resolveFromAlias(path, alias);
+					if (aliasPaths.length > 0) {
+						aliasPaths.forEach((resolvedPath) => {
+							const basedUrl = resolveFromBaseUrl(resolvedPath, baseUrl);
+							if (resolvedPath.startsWith("/")) {
+								potentialPaths.add(resolvedPath);
+							} else {
+								potentialPaths.add(basedUrl);
+							}
+						});
+					} else {
+						if (
+							path.startsWith("./") ||
+							path.startsWith("../") ||
+							path === ".."
+						) {
+							if (!parent) return next({ path, parent });
+							path = resolveRelativePath(parent, path);
+							if (path === "/") path = "";
+						}
+
+						potentialPaths.add(path);
+						potentialPaths.add(resolveFromBaseUrl(path, baseUrl));
 					}
 
 					const hasKnownExtension = extensions.some((ext) =>
@@ -78,15 +93,39 @@ export function resolver(props?: ResolverOptions) {
 
 					for (const ext of extensions) {
 						for (const candidatePath of potentialPaths) {
-							if (candidatePath.endsWith(ext)) continue;
-							potentialPaths.add(`${candidatePath}${ext}`);
+							const extension = candidatePath.split(".").pop();
+							if (`.${extension}` === ext) continue;
+							potentialPaths.add(
+								`${candidatePath.replace(`.${extension}`, "")}${ext}`,
+							);
 						}
 						potentialPaths.add(`${path}${ext}`);
 					}
 
+					potentialPaths.forEach((candidatePath) => {
+						// Skip paths that are not valid or do not end with a known extension
+						if (!extensions.some((ext) => candidatePath.endsWith(ext))) {
+							potentialPaths.delete(candidatePath);
+							return;
+						}
+
+						const filename = candidatePath.split("/").pop();
+						// Remove paths that are exactly the same as extensions (e.g., "/.ts")
+						if (extensions.some((ext) => filename === ext)) {
+							potentialPaths.delete(candidatePath);
+							return;
+						}
+
+						// Remove paths that have empty segments (e.g., "//components")
+						if (candidatePath.split("/").some((v, k) => v === "" && k > 0)) {
+							potentialPaths.delete(candidatePath);
+						}
+					});
+
 					console.log(`Searching for: ${path} in ${potentialPaths.size} paths`);
+
 					for (const candidatePath of potentialPaths) {
-						// console.warn(`Searching for [${path} => ${candidatePath}]`);
+						console.warn(`Searching for [${path} => ${candidatePath}]`);
 						try {
 							if (fs.readFile(candidatePath)) {
 								logger.debug?.(`Resolved: ${candidatePath}`);
@@ -147,7 +186,7 @@ function resolveFromBaseUrl(path: string, baseUrl: string): string {
 	if (!baseUrl) return path;
 
 	if (baseUrl.endsWith("/")) {
-		return `${baseUrl}${path}`;
+		return `${baseUrl}${path.startsWith("/") ? path.slice(1) : path}`;
 	} else if (baseUrl === "/") {
 		return `/${path}`;
 	} else {

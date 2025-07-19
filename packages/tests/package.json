@@ -5,6 +5,7 @@
   "private": false,
   "scripts": {
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "dev": "vitest -w",
     "lint": "biome lint"
   },
@@ -17,10 +18,11 @@
   },
   "dependencies": {
     "@modpack/core": "workspace:*",
-    "@modpack/utils": "workspace:*",
-    "@modpack/plugins": "workspace:*"
+    "@modpack/plugins": "workspace:*",
+    "@modpack/utils": "workspace:*"
   },
   "devDependencies": {
-    "@modpack/typescript-config": "workspace:*"
+    "@modpack/typescript-config": "workspace:*",
+    "@vitest/coverage-istanbul": "3.2.4"
   }
 }
