@@ -13,12 +13,6 @@ import type {
 	SourcerHooks,
 } from "./types";
 
-type DefaultSourcer = (
-	url: string,
-	options: RequestInit | undefined,
-	parent: string,
-) => Promise<SourceResult> | SourceResult;
-
 type SourcePluginHandler = SourcerHook & { name: string };
 
 export class PolyfillSourcer {
@@ -48,16 +42,14 @@ export class PolyfillSourcer {
 		url: string,
 		options: RequestInit | undefined,
 		parent: string,
-		defaultSource: DefaultSourcer,
 	): Promise<SourceResult> {
-		return this.runHooks(url, parent, options, defaultSource);
+		return this.runHooks(url, parent, options);
 	}
 
 	private async runHooks(
 		url: string,
 		parent: string,
 		options: RequestInit | undefined,
-		defaultSource: DefaultSourcer,
 	): Promise<SourceResult> {
 		const executeHook = async ({
 			index,
@@ -69,7 +61,11 @@ export class PolyfillSourcer {
 		}): Promise<SourceResult> => {
 			const hook = this.handlers[index];
 			if (!hook) {
-				return defaultSource(currentUrl, currentOptions, currentParent);
+				return {
+					url: currentUrl,
+					parent: currentParent,
+					options: currentOptions,
+				};
 			}
 
 			const next = (props?: Partial<Omit<SourceMiddlewareProps, "next">>) => {
@@ -93,7 +89,7 @@ export class PolyfillSourcer {
 			};
 			const result = await Promise.resolve(hook.source(props));
 			this.logger.info(
-				`Sourcer "${hook.name}" [${currentUrl} => ${result?.type}]`,
+				`Sourcer "${hook.name}" [${currentUrl} => ${result?.url}]`,
 			);
 
 			if (result !== undefined) {
@@ -135,12 +131,6 @@ export class PolyfillSourcer {
 			logger: this.logger,
 			reporter: this.reporter,
 		});
-
-		if (!result) {
-			throw new Error(
-				`Failed to source "${url}" from "${parent}". No source returned.`,
-			);
-		}
 
 		return result;
 	}

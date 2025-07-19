@@ -3,6 +3,7 @@ import BasicExternal from "./components/demos/basic-external";
 import BasicGraph from "./components/demos/basic-graph";
 import BasicModule from "./components/demos/basic-module";
 import BasicMultipleInstances from "./components/demos/basic-multiple-instances";
+import BasicMultipleProjects from "./components/demos/basic-multiple-projects";
 import BasicReact from "./components/demos/basic-react";
 import BasicResolver from "./components/demos/basic-resolver";
 import BasicTwind from "./components/demos/basic-twind";
@@ -19,8 +20,12 @@ export default function App() {
 			render: <BasicModule />,
 		},
 		{
-			label: "Basic Multiple Modpacks",
+			label: "Multiple Modpacks",
 			render: <BasicMultipleInstances />,
+		},
+		{
+			label: "Projects",
+			render: <BasicMultipleProjects />,
 		},
 		{
 			label: "Resolver",

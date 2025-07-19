@@ -1,5 +1,5 @@
 import { Modpack } from "@modpack/core";
-import { esmSh, http, inject, resolver, virtual } from "@modpack/plugins";
+import { esmSh, http, inject, resolver } from "@modpack/plugins";
 import { swc } from "@modpack/swc";
 import * as React from "react";
 import * as DevJSXRuntime from "react/jsx-dev-runtime";
@@ -52,7 +52,6 @@ export default function BasicReact() {
 					alias: { "@/": "/src/" },
 					index: true,
 				}),
-				virtual(),
 				esmSh({
 					registry: "npm",
 					external: [

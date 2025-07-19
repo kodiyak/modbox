@@ -78,17 +78,20 @@ export interface ResolverHooks {
 }
 
 // Sourcer [Internal]
-export interface SourceResult {
-	type: "js" | "css" | "json";
-	source: string;
-}
+export type SourceResult =
+	| {
+			options: RequestInit | undefined;
+			url: string;
+			parent: string;
+	  }
+	| undefined;
 export interface SourceMiddlewareProps {
 	url: string;
 	parent: string;
 	options: RequestInit | undefined;
 	reporter: IPluginReporter;
 	next: (
-		props?: Partial<Omit<SourceMiddlewareProps, "next">>,
+		props?: Partial<Omit<SourceMiddlewareProps, "next" | "reporter">>,
 	) => SourceResult | Promise<SourceResult>;
 }
 export type SourceMiddleware = (

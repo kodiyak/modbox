@@ -42,16 +42,17 @@ export function swc(options: SwcOptions = {}) {
 		name: "@modpack/plugin-swc",
 		pipeline: {
 			fetcher: {
-				fetch: async ({ url, next, logger }) => {
+				fetch: async ({ url, next, options, logger }) => {
 					const result = await next();
 					if (!result || !(result instanceof Response)) {
 						return result;
 					}
 					const contentType = result.headers.get("Content-Type");
+					const filename = removeVersionQueryParam(new URL(url).pathname);
 
 					const isTransformable = [
 						contentTypes.some((type) => contentType?.includes(type)),
-						extensions.some((ext) => url.endsWith(ext)),
+						extensions.some((ext) => filename.endsWith(ext)),
 					].some(Boolean);
 
 					if (isTransformable) {
@@ -59,7 +60,7 @@ export function swc(options: SwcOptions = {}) {
 							const originalContent = await result.text();
 							const transformed = await transform(originalContent, {
 								...swcOptions,
-								filename: removeVersionQueryParam(url),
+								filename,
 							});
 
 							const transformedResult = await onTransform?.({
@@ -86,8 +87,11 @@ export function swc(options: SwcOptions = {}) {
 
 							if (transformedCode) {
 								return new Response(transformedCode, {
+									...options,
 									headers: {
+										...options?.headers,
 										"Content-Type": contentType || "application/javascript",
+										"Content-Length": transformedCode.length.toString(),
 									},
 								});
 							}

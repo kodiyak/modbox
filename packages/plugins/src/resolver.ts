@@ -8,6 +8,16 @@ export interface ResolverOptions {
 	baseUrl?: string;
 }
 
+const contentTypes = {
+	js: "application/javascript" as const,
+	json: "application/json" as const,
+	mjs: "application/javascript" as const,
+	cjs: "application/javascript" as const,
+	ts: "application/javascript" as const,
+	jsx: "application/javascript" as const,
+	tsx: "application/javascript" as const,
+};
+
 export function resolver(props?: ResolverOptions) {
 	const { extensions, index, alias, baseUrl } = {
 		extensions: [".js", ".json", ".mjs", ".cjs", ".ts", ".jsx", ".tsx"],
@@ -21,34 +31,24 @@ export function resolver(props?: ResolverOptions) {
 		name: "@modpack/plugin-resolver",
 		pipeline: {
 			fetcher: {
-				fetch: async ({ url, next, fs }) => {
+				fetch: async ({ url, next, options, fs }) => {
 					if (isUrl(url) && url.startsWith("file://")) {
-						const filePath = url.replace("file://", "");
-						if (fs.readFile(filePath)) {
-							const content = fs.readFile(filePath)!;
+						const filePath = removeVersionQueryParam(
+							url.replace("file://", ""),
+						);
+						const content = fs.readFile(filePath);
+						if (content) {
+							const ext = filePath
+								.split(".")
+								.pop() as keyof typeof contentTypes;
+							const contentType = contentTypes[ext];
 							return new Response(content, {
+								...options,
 								headers: {
-									"Content-Type": "application/javascript",
+									...options?.headers,
+									"Content-Type": contentType || "application/javascript",
 									"Content-Length": content.length.toString(),
 								},
-							});
-						}
-					}
-
-					return next();
-				},
-			},
-			sourcer: {
-				source: async ({ url, next, parent, options, logger, fs }) => {
-					if (isUrl(url) && url.startsWith("file://")) {
-						const path = removeVersionQueryParam(url.replace("file://", ""));
-						logger.debug(`Virtual FS: [${url} => ${path} from ${parent}]`);
-						if (fs.readFile(path)) {
-							logger.debug(`Resolved at: ${path}`);
-							return next({
-								url: `file://${path}`,
-								parent,
-								options,
 							});
 						}
 					}
@@ -97,16 +97,14 @@ export function resolver(props?: ResolverOptions) {
 						potentialPaths.add(resolveFromBaseUrl(path, baseUrl));
 					}
 
-					const hasKnownExtension = extensions.some((ext) =>
-						path.endsWith(ext),
-					);
-
-					if (hasKnownExtension) {
-						potentialPaths.add(path);
-					}
-
 					if (resolveIndex) {
-						potentialPaths.add(`${[path, "index"].join("/")}`);
+						for (const candidatePath of Array.from(potentialPaths)) {
+							const parts = candidatePath.split("/");
+							if (parts.length > 0 && parts[parts.length - 1] === "") {
+								parts.pop();
+							}
+							potentialPaths.add(`${parts.join("/")}/index`);
+						}
 					}
 
 					for (const ext of extensions) {

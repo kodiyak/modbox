@@ -1,5 +1,5 @@
 import { Modpack } from "@modpack/core";
-import { resolver, virtual } from "@modpack/plugins";
+import { resolver } from "@modpack/plugins";
 
 export default function BasicResolver() {
 	const loadModules = async () => {
@@ -15,7 +15,6 @@ export default function BasicResolver() {
 						"~": "/src/utils",
 					},
 				}),
-				virtual(),
 			],
 		});
 

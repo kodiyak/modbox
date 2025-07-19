@@ -48,10 +48,13 @@ export class ModpackShims {
 							url,
 							options,
 							parentUrl,
-							defaultSourceHook,
 						);
 						if (source) {
-							return source;
+							return defaultSourceHook(
+								source.url,
+								source.options,
+								source.parent,
+							);
 						}
 					}
 
