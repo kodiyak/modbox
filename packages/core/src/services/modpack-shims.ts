@@ -61,7 +61,12 @@ export class ModpackShims {
 						const response = await orchestrator.bundler.fetcher.fetch(
 							url,
 							opts,
-							(url, opts) => fetch(url, opts),
+							async (url, opts) => {
+								if (!url.startsWith("http") && !url.startsWith("https")) {
+									return undefined;
+								}
+								return fetch(url, opts).catch(() => undefined);
+							},
 						);
 						if (response) {
 							return response;
@@ -70,16 +75,6 @@ export class ModpackShims {
 
 					return fetch(url, opts);
 				},
-				// onimport: (url, options, parentUrl, source) => {
-				// 	return self.onImport(url, options, parentUrl, source);
-				/**
-				 * - Editar o parent n é o lance
-				 * - Preciso usar o file:///virtual-pkg/**
-				 * - O lance talvez seja manter a estrutura de arquivos com o prefixo
-				 * - E também usar o prefixo aqui pra identificar o orchestrator
-				 * - É ISSO, QUASE CERTO Q RESOLVEREMOS, APENAS COLOCANDO O PREFIXO NOS ARQUIVOS E USANDO O PREFIXO AQUI PRA ACHAR O ORQUESTRADOR APENAS.
-				 */
-				// },
 				resolve: (id, parentUrl, defaultResolve) => {
 					for (const orchestrator of self.orchestrators) {
 						const resolved = orchestrator.bundler.resolver.resolve(

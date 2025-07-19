@@ -16,7 +16,7 @@ import type {
 type DefaultFetcher = (
 	url: string,
 	opts: RequestInit | undefined,
-) => Promise<Response>;
+) => Promise<Response | undefined>;
 
 type FetcherPluginHandler = FetcherHook & { name: string };
 
