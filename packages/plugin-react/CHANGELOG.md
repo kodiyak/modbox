@@ -1,5 +1,13 @@
 # @modpack/react
 
+## 0.2.1-canary.30
+
+### Patch Changes
+
+- aba92ec: Improve resolver to multiples orchestrators
+- Updated dependencies [aba92ec]
+  - @modpack/utils@0.2.1-canary.30
+
 ## 0.2.1-canary.29
 
 ### Patch Changes

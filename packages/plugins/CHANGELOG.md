@@ -1,5 +1,15 @@
 # @modpack/plugins
 
+## 0.2.1-canary.30
+
+### Patch Changes
+
+- aba92ec: Improve resolver to multiples orchestrators
+- 69e94b6: Chore: Optimize path resolution & Refine `Response` Object.
+- e4a1292: Mark `virtual` plugin as deprecated. Use `resolver` instead.
+- Updated dependencies [aba92ec]
+  - @modpack/utils@0.2.1-canary.30
+
 ## 0.2.1-canary.29
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@modpack/core",
-  "version": "0.2.1-canary.29",
+  "version": "0.2.1-canary.30",
   "type": "module",
   "private": false,
   "scripts": {
