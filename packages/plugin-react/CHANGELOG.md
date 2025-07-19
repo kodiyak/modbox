@@ -1,5 +1,13 @@
 # @modpack/react
 
+## 0.2.1-canary.27
+
+### Patch Changes
+
+- e6afc55: Fix: Multiple Modpack Fetcher Fallback
+- Updated dependencies [e6afc55]
+  - @modpack/utils@0.2.1-canary.27
+
 ## 0.2.1-canary.26
 
 ### Patch Changes
