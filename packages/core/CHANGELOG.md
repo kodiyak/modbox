@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.33
+
+### Patch Changes
+
+- 31e6baf: Enhance polyfill resolver with fallback handling.
+
 ## 0.2.1-canary.32
 
 ### Patch Changes
