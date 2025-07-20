@@ -105,7 +105,16 @@ export class Modpack {
 			registry,
 			fs,
 			plugins
-				.filter((plugin) => plugin.pipeline?.resolver)
+				.filter(
+					(plugin) =>
+						plugin.pipeline?.resolver && !plugin.pipeline?.resolver.fallback,
+				)
+				.map((plugin) => ({
+					name: plugin.name,
+					...plugin.pipeline?.resolver!,
+				})),
+			plugins
+				.filter((plugin) => plugin.pipeline?.resolver?.fallback)
 				.map((plugin) => ({
 					name: plugin.name,
 					...plugin.pipeline?.resolver!,

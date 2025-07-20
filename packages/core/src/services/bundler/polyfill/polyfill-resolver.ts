@@ -17,6 +17,7 @@ type PolyfillResolverHook = ResolverHook & { name: string };
 
 export class PolyfillResolver {
 	private readonly handlers: PolyfillResolverHook[] = [];
+	private readonly fallbackHandlers: PolyfillResolverHook[] = [];
 	private readonly logger: Logger;
 	private readonly registry: BundlerRegistry;
 	private readonly fs: VirtualFiles;
@@ -28,9 +29,11 @@ export class PolyfillResolver {
 		registry: BundlerRegistry,
 		fs: VirtualFiles,
 		handlers: PolyfillResolverHook[] = [],
+		postHandlers: PolyfillResolverHook[] = [],
 		hooks: ResolverHooks = {},
 	) {
 		this.handlers = handlers;
+		this.fallbackHandlers = postHandlers;
 		this.logger = logger;
 		this.registry = registry;
 		this.fs = fs;
@@ -43,13 +46,22 @@ export class PolyfillResolver {
 		parent: string,
 		defaultResolve: DefaultResolver,
 	): string | undefined {
-		return this.runHooks(path, parent, defaultResolve);
+		return this.runHooks(path, parent, defaultResolve, this.handlers);
+	}
+
+	fallbackResolve(
+		path: string,
+		parent: string,
+		defaultResolve: DefaultResolver,
+	): string | undefined {
+		return this.runHooks(path, parent, defaultResolve, this.fallbackHandlers);
 	}
 
 	private runHooks(
 		path: string,
 		parent: string,
 		defaultResolve: DefaultResolver,
+		handlers: PolyfillResolverHook[],
 	): string | undefined {
 		const executeHook = ({
 			index,
@@ -58,7 +70,7 @@ export class PolyfillResolver {
 		}: Omit<ResolveMiddlewareProps, "next" | "reporter"> & {
 			index: number;
 		}): string | undefined => {
-			const hook = this.handlers[index];
+			const hook = handlers[index];
 			if (!hook) {
 				return defaultResolve(currentPath, currentParent);
 			}
@@ -95,43 +107,35 @@ export class PolyfillResolver {
 		let result: string | undefined;
 		let error: Error | null = null;
 
+		this.hooks.onResolveStart?.({
+			path,
+			parent,
+			fs: this.fs,
+			// placeholder for plugin reporter and logger
+			logger: this.logger,
+			reporter: this.reporter,
+		});
+
 		try {
-			this.hooks.onResolveStart?.({
-				path,
-				parent,
-				fs: this.fs,
-				// placeholder for plugin reporter and logger
-				logger: this.logger,
-				reporter: this.reporter,
-			});
 			result = executeHook({ index: 0, path, parent });
-			this.hooks.onResolveEnd?.({
-				path,
-				parent,
-				result,
-				error: null,
-				fs: this.fs,
-				// placeholder for plugin reporter and logger
-				logger: this.logger,
-				reporter: this.reporter,
-			});
 		} catch (err) {
 			error = err instanceof Error ? err : new Error(String(err));
 			this.logger.error(
 				`Error resolving "${path}" (parent: "${parent}"):`,
 				error,
 			);
-			this.hooks.onResolveEnd?.({
-				path,
-				parent,
-				result: undefined,
-				error,
-				fs: this.fs,
-				// placeholder for plugin reporter and logger
-				logger: this.logger,
-				reporter: this.reporter,
-			});
 		}
+
+		this.hooks.onResolveEnd?.({
+			path,
+			parent,
+			result,
+			error,
+			fs: this.fs,
+			// placeholder for plugin reporter and logger
+			logger: this.logger,
+			reporter: this.reporter,
+		});
 
 		return result;
 	}

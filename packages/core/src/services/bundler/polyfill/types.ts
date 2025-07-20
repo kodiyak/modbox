@@ -53,6 +53,7 @@ type ResolverMiddleware = (
 	props: ResolveMiddlewareProps & PluginMiddlewareContext,
 ) => ResolverResult;
 export type ResolverHook = {
+	fallback?: boolean;
 	resolve: ResolverMiddleware;
 	cleanup?: (path: string) => void;
 };

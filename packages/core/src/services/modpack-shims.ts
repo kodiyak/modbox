@@ -89,9 +89,19 @@ export class ModpackShims {
 								return defaultResolve(path, parent);
 							},
 						);
-						if (resolved) {
-							return resolved;
-						}
+						if (resolved) return resolved;
+					}
+
+					for (const orchestrator of self.orchestrators) {
+						const resolved = orchestrator.bundler.resolver.fallbackResolve(
+							id,
+							parentUrl,
+							(path, parent) => {
+								if (!isUrl(path)) return undefined;
+								return defaultResolve(path, parent);
+							},
+						);
+						if (resolved) return resolved;
 					}
 
 					return defaultResolve(id, parentUrl);

@@ -18,6 +18,7 @@ export function esmSh(options: EsmShOptions = {}) {
 		name: "@modpack/plugin-esm.sh",
 		pipeline: {
 			resolver: {
+				fallback: true,
 				resolve: ({ next, path: currentPath, parent }) => {
 					const result = next();
 					if (result && isUrl(result)) return result;
