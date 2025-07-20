@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.31
+
+### Patch Changes
+
+- 97ec93f: Fix: `esmSh` plugin resolves next before resolve.
+
 ## 0.2.1-canary.30
 
 ### Patch Changes

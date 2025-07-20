@@ -1,5 +1,13 @@
 # @modpack/react
 
+## 0.2.1-canary.31
+
+### Patch Changes
+
+- 97ec93f: Fix: `esmSh` plugin resolves next before resolve.
+- Updated dependencies [97ec93f]
+  - @modpack/utils@0.2.1-canary.31
+
 ## 0.2.1-canary.30
 
 ### Patch Changes
