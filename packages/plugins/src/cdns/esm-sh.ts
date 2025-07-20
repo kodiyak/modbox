@@ -19,10 +19,9 @@ export function esmSh(options: EsmShOptions = {}) {
 		pipeline: {
 			resolver: {
 				resolve: ({ next, path: currentPath, parent }) => {
-					let path = currentPath;
-					const versionQueryParam = path.match(/\?v=\d+$/);
-					if (versionQueryParam || isUrl(path)) return next();
-					if (external.includes(path)) return next();
+					const result = next();
+					if (result && isUrl(result)) return result;
+					let path = result || currentPath;
 
 					if (path.startsWith("./") || path.startsWith("../")) {
 						if (parent && isUrl(parent)) {
@@ -44,9 +43,11 @@ export function esmSh(options: EsmShOptions = {}) {
 								resolved.searchParams.set("external", external.join(","));
 							}
 
-							return next({ path: resolved.toString(), parent });
+							return next({
+								path: resolved.toString(),
+								parent,
+							});
 						}
-						return next();
 					}
 
 					path = path.replace(/^\/+/, "");
