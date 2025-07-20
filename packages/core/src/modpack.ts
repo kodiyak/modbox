@@ -28,7 +28,7 @@ export class Modpack {
 
 	static async boot({ debug, plugins = [], ...rest }: ModpackBootOptions) {
 		if (debug) Logger.enable("*");
-		const fs = new VirtualFiles(Logger.create("virtual-files"));
+		const fs = VirtualFiles.getInstance(Logger.create("virtual-files"));
 		plugins.push(getModpackPlugin(rest));
 		const extractor = new ModulesExtractor(
 			Logger.create("modules-extractor"),
