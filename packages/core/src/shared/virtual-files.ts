@@ -33,9 +33,7 @@ export class VirtualFiles {
 	private files = new Map<string, VirtualItem>();
 	public readonly events: EventEmitter<typeof VirtualFilesEvents>;
 
-	private static instance: VirtualFiles;
-
-	private constructor(logger: Logger) {
+	constructor(logger: Logger) {
 		this.events = new EventEmitter(VirtualFilesEvents, "VirtualFiles");
 		logger.info("Virtual Files initialized");
 		this.events.on("file:created", (data) =>
@@ -50,13 +48,6 @@ export class VirtualFiles {
 		this.events.on("directory:created", (data) =>
 			logger.info(`Directory created: ${data.path}`),
 		);
-	}
-
-	public static getInstance(logger: Logger): VirtualFiles {
-		if (!VirtualFiles.instance) {
-			VirtualFiles.instance = new VirtualFiles(logger);
-		}
-		return VirtualFiles.instance;
 	}
 
 	private getFile(path: string): VirtualItem | undefined {
