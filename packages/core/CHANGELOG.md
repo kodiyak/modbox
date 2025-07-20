@@ -1,5 +1,11 @@
 # @modpack/core
 
+## 0.2.1-canary.32
+
+### Patch Changes
+
+- 53394c6: Refactor: Share VS Files between all modpack instances.
+
 ## 0.2.1-canary.31
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # development
 
+## 0.0.4-canary.31
+
+### Patch Changes
+
+- Updated dependencies [53394c6]
+  - @modpack/unocss@0.2.1-canary.32
+  - @modpack/react@0.2.1-canary.32
+  - @modpack/twind@0.2.1-canary.32
+  - @modpack/swc@0.2.1-canary.32
+  - @modpack/plugins@0.2.1-canary.32
+  - @modpack/core@0.2.1-canary.32
+
 ## 0.0.4-canary.30
 
 ### Patch Changes
