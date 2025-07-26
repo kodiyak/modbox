@@ -8,7 +8,6 @@ import {
 	getPluginReporter,
 	Logger,
 	type ModpackBootOptions,
-	ModulesExtractor,
 	ModulesRegistry,
 	Orchestrator,
 	PolyfillFetcher,
@@ -25,10 +24,6 @@ export function buildModpack({
 }: ModpackBootOptions) {
 	const fs = new VirtualFiles(Logger.create("virtual-files"));
 	plugins.push(getModpackPlugin(rest));
-	const extractor = new ModulesExtractor(
-		Logger.create("modules-extractor"),
-		plugins.map((plugin) => plugin.analyze?.process!).filter(Boolean),
-	);
 	const registry = BundlerRegistry.create({
 		blobs: new BlobsRegistry(Logger.create("blobs-registry")),
 		responses: new ResponseRegistry(Logger.create("responses-registry")),
@@ -99,7 +94,16 @@ export function buildModpack({
 		registry,
 		fs,
 		plugins
-			.filter((plugin) => plugin.pipeline?.resolver)
+			.filter(
+				(plugin) =>
+					plugin.pipeline?.resolver && !plugin.pipeline?.resolver?.fallback,
+			)
+			.map((plugin) => ({
+				name: plugin.name,
+				...plugin.pipeline?.resolver!,
+			})),
+		plugins
+			.filter((plugin) => plugin.pipeline?.resolver?.fallback)
 			.map((plugin) => ({
 				name: plugin.name,
 				...plugin.pipeline?.resolver!,

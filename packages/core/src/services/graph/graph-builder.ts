@@ -1,7 +1,6 @@
 import type { Logger } from "../../shared";
 import type { VirtualFiles } from "../../shared/virtual-files";
-import { GraphModule } from "./graph-module";
-import type { ModulesExtractor } from "./modules-extractor";
+import type { GraphModule } from "./graph-module";
 import type { GraphBuilderOptions } from "./types";
 
 export class GraphBuilder {
@@ -10,19 +9,12 @@ export class GraphBuilder {
 	// @ts-expect-error: This is a placeholder for the options type, which can be defined later.
 	private readonly options: GraphBuilderOptions;
 	private readonly logger: Logger;
-	private readonly extractor: ModulesExtractor;
 
-	constructor(
-		logger: Logger,
-		fs: VirtualFiles,
-		extractor: ModulesExtractor,
-		options: GraphBuilderOptions,
-	) {
+	constructor(logger: Logger, fs: VirtualFiles, options: GraphBuilderOptions) {
 		this.modules = new Map<string, GraphModule>();
 		this.fs = fs;
 		this.options = options;
 		this.logger = logger;
-		this.extractor = extractor;
 	}
 
 	public async build() {
@@ -37,34 +29,8 @@ export class GraphBuilder {
 		}
 	}
 
-	private processFile(filePath: string) {
-		const content = this.fs.readFile(filePath);
-		if (!content) {
-			// this.logger.warn(`File "${filePath}" not found.`);
-			return;
-		}
-
-		const extractedDependencies = this.extractor.processFile(filePath, content);
-		if (!extractedDependencies) {
-			// this.logger.warn(`No dependencies extracted from "${filePath}" file.`);
-			return;
-		}
-
-		const { exported, dependencies } = extractedDependencies;
-		// this.logger.debug(
-		// 	`Extracted "${dependencies.length} dependencies" and "${exported.length} exports" from "${filePath}" file.`,
-		// 	{ exported, dependencies },
-		// );
-
-		this.addOrUpdateModule(
-			GraphModule.create({
-				path: filePath,
-				originalPath: filePath,
-				runtime: content,
-			})
-				.addDependencies(dependencies)
-				.addExports(exported),
-		);
+	private processFile(_: string) {
+		// Remove this later
 	}
 
 	public addOrUpdateModule(module: GraphModule): void {

@@ -1,5 +1,6 @@
 import { definePlugin, removeVersionQueryParam } from "@modpack/utils";
-import {
+import startSwc, {
+	initSync,
 	type Module,
 	type Options,
 	type Output,
@@ -40,6 +41,9 @@ export function swc(options: SwcOptions = {}) {
 	} = options;
 	return definePlugin({
 		name: "@modpack/plugin-swc",
+		onBoot: async () => {
+			await startSwc();
+		},
 		pipeline: {
 			fetcher: {
 				fetch: async ({ url, next, options, logger }) => {

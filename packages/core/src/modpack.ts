@@ -6,7 +6,6 @@ import {
 	getPluginLogger,
 	getPluginReporter,
 	ModpackShims,
-	ModulesExtractor,
 	ModulesRegistry,
 	Orchestrator,
 	PolyfillFetcher,
@@ -30,11 +29,6 @@ export class Modpack {
 		if (debug) Logger.enable("*");
 		const fs = new VirtualFiles(Logger.create("virtual-files"));
 		plugins.push(getModpackPlugin(rest));
-		const extractor = new ModulesExtractor(
-			Logger.create("modules-extractor"),
-			plugins.map((plugin) => plugin.analyze?.process!).filter(Boolean),
-		);
-		await extractor.preload();
 		const registry = BundlerRegistry.create({
 			blobs: new BlobsRegistry(Logger.create("blobs-registry")),
 			responses: new ResponseRegistry(Logger.create("responses-registry")),
